@@ -3,7 +3,7 @@ local function T(en, zh, zht) return ChooseTranslationTable({ en, zh = zh, zht =
 name = T('Hotkey of liolok', '热键：李皓奇')
 author = T('liolok', '李皓奇')
 local date = '2025-06-05'
-version = date .. '' -- for revision in same day
+version = date .. '-1' -- for revision in same day
 description = T(
   [[󰀏 Tip:
 Enable this mod and click "Apply", its key bindings will be way more easy,
@@ -15,6 +15,8 @@ and also adjustable in bottom of Settings > Controls page.]],
 api_version = 10
 dst_compatible = true
 client_only_mod = true
+icon = 'modicon.tex'
+icon_atlas = 'modicon.xml'
 configuration_options = {}
 
 local keyboard = { -- from STRINGS.UI.CONTROLSSCREEN.INPUTS[1] of strings.lua, need to match constants.lua too.
