@@ -1,0 +1,38 @@
+[h3]Some hotkeys which may help you as well.[/h3]
+
+No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3445951083]customize shortcuts[/url] in bottom of Settings > Controls page.
+
+[h2]Features[/h2]
+[list]
+[*]Drop Lantern
+[*]Open/Close Polar Bearger Bin
+[*]Save Game (press twice or hold to confirm action)
+[*]Load Game (press twice or hold to confirm action)
+[*]Toggle Movement Prediction
+[/list]
+[h3]Wolfgang[/h3]
+[list]
+[*]Dumbbell: Equip a Dumbbell and start lifting, or switch back to former hand equipment.
+(Priority: Gembell > Marbell > Golden Dumbbell > Dumbbell > Icebell > Firebell > Thermbell)
+[/list]
+[h3]Maxwell[/h3]
+[list]
+[*]Use Magician's Top Hat, or Stop.
+[/list]
+[h3]Wormwood[/h3]
+[list]
+[*]Grow Living Log
+[/list]
+[h3]Wanda[/h3]
+[list]
+[*]Activate Ageless Watch
+[*]Activate Backstep Watch
+[/list]
+
+[h2]Recommendations[/h2]
+[list]
+[*]Wortox: My [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3481766603]Hotkey for Wortox[/url]
+[/list]
+
+[hr][/hr]
+[url=https://github.com/liolok/MyHotkey]Source Code[/url]
