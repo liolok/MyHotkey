@@ -66,17 +66,7 @@ end
 
 local function Find(prefab, filter)
   return FindInvItemBy(function(item)
-    if not item then return end
-
-    local is_prefab_matched
-    for _, value in ipairs(type(prefab) == 'table' and prefab or { prefab }) do
-      if item.prefab == value then
-        is_prefab_matched = true
-        break
-      end
-    end
-    if not is_prefab_matched then return end
-
+    if not (item and item.prefab == prefab) then return end
     if not filter then return true end -- optional extra filter
     if type(filter) == 'function' then return filter(item) end
     if type(filter) == 'string' then return item:HasTag(filter) end
@@ -84,6 +74,13 @@ local function Find(prefab, filter)
       -- TODO: maybe?
     end
   end)
+end
+
+local function FindPrefabs(...)
+  for _, prefab in ipairs({ ... }) do
+    local item = Find(prefab)
+    if item then return item end
+  end
 end
 
 local function Drop(item)
@@ -110,12 +107,11 @@ fn.UseBeargerFurSack = function()
   return (not IsInCD('Polar Bearger Bin') and IsPlaying()) and Use(Find('beargerfur_sack'), 'RUMMAGE')
 end
 
-local CANES = { 'cane', 'orangestaff', 'ruins_bat', 'balloonspeed' }
 local cane_former_hand_item
 fn.UseCane = function()
   if not IsPlaying() then return end
 
-  local cane = Find(CANES)
+  local cane = FindPrefabs('cane', 'orangestaff', 'ruins_bat', 'balloonspeed')
   if not cane then return end
 
   local hand_item = Inv():GetEquippedItem(EQUIPSLOTS.HANDS)
@@ -143,20 +139,19 @@ end
 --------------------------------------------------------------------------------
 -- Wolfgang | 沃尔夫冈
 
-local DUMBBELLS = {
-  'dumbbell_gem',
-  'dumbbell_marble',
-  'dumbbell_golden',
-  'dumbbell',
-  'dumbbell_bluegem',
-  'dumbbell_redgem',
-  'dumbbell_heat',
-}
 local bell_former_hand_item
 fn.UseDumbBell = function()
   if not IsPlaying('wolfgang') then return end
 
-  local bell = Find(DUMBBELLS)
+  local bell = FindPrefabs(
+    'dumbbell_gem',
+    'dumbbell_marble',
+    'dumbbell_golden',
+    'dumbbell',
+    'dumbbell_bluegem',
+    'dumbbell_redgem',
+    'dumbbell_heat'
+  )
   if not bell then return end
 
   local hand_item = Inv():GetEquippedItem(EQUIPSLOTS.HANDS)
