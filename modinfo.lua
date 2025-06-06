@@ -66,6 +66,16 @@ Config(
   T('Open/Close Polar Bearger Bin', '打开/关闭极地熊獾桶')
 )
 Config(
+  'UseCane',
+  T('Walking Cane', '步行手杖'),
+  T(
+    [[Equip a speed-up hand tool, or switch back to former hand equipment.
+Priority: Walking Cane > The Lazy Explorer > Thulecite Club > Speedy Balloon]],
+    [[装备一个加速的手部工具，或切换回之前的手部装备。
+优先级：步行手杖 > 懒人魔杖 > 铥矿棒 > 迅捷气球]]
+  )
+)
+Config(
   'SaveGame',
   T('Save Game', '保存游戏'),
   T('Press twice or hold to confirm action!', '双击或按住以确认操作！')

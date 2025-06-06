@@ -110,6 +110,19 @@ fn.UseBeargerFurSack = function()
   return (not IsInCD('Polar Bearger Bin') and IsPlaying()) and Use(Find('beargerfur_sack'), 'RUMMAGE')
 end
 
+local CANES = { 'cane', 'orangestaff', 'ruins_bat', 'balloonspeed' }
+local cane_former_hand_item
+fn.UseCane = function()
+  if not IsPlaying() then return end
+
+  local cane = Find(CANES)
+  if not cane then return end
+
+  local hand_item = Inv():GetEquippedItem(EQUIPSLOTS.HANDS)
+  if hand_item ~= cane then cane_former_hand_item = hand_item end
+  return Use(hand_item == cane and cane_former_hand_item or cane, 'EQUIP')
+end
+
 fn.SaveGame = function() return IsPlaying() and IsInCD('Confirm Save') and not IsInCD('Save Game', 5) and c_save() end
 
 fn.ResetGame = function() return IsPlaying() and IsInCD('Confirm Load') and not IsInCD('Load Game', 5) and c_reset() end
@@ -139,9 +152,7 @@ local DUMBBELLS = {
   'dumbbell_redgem',
   'dumbbell_heat',
 }
-
-local former_hand_item
-
+local bell_former_hand_item
 fn.UseDumbBell = function()
   if not IsPlaying('wolfgang') then return end
 
@@ -149,8 +160,8 @@ fn.UseDumbBell = function()
   if not bell then return end
 
   local hand_item = Inv():GetEquippedItem(EQUIPSLOTS.HANDS)
-  if hand_item ~= bell then former_hand_item = hand_item end
-  Use(hand_item == bell and former_hand_item or bell, 'EQUIP')
+  if hand_item ~= bell then bell_former_hand_item = hand_item end
+  Use(hand_item == bell and bell_former_hand_item or bell, 'EQUIP')
   return Use(bell, bell:HasTag('lifting') and 'STOP_LIFT_DUMBBELL' or 'LIFT_DUMBBELL')
 end
 
