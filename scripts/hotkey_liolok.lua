@@ -107,7 +107,7 @@ fn.UseBeargerFurSack = function()
   return (not IsInCD('Polar Bearger Bin') and IsPlaying()) and Use(Find('beargerfur_sack'), 'RUMMAGE')
 end
 
-local cane_former_hand_item
+local item_before_cane
 fn.UseCane = function()
   if not IsPlaying() then return end
 
@@ -117,8 +117,8 @@ fn.UseCane = function()
   if not cane then return end
 
   local hand_item = Inv():GetEquippedItem(EQUIPSLOTS.HANDS)
-  if hand_item ~= cane then cane_former_hand_item = hand_item end
-  return Use(hand_item == cane and cane_former_hand_item or cane, 'EQUIP')
+  if hand_item ~= cane then item_before_cane = hand_item end
+  return Use(hand_item == cane and item_before_cane or cane, 'EQUIP')
 end
 
 fn.JumpInOrMigrate = function()
@@ -151,9 +151,25 @@ fn.ToggleMovementPrediction = function()
 end
 
 --------------------------------------------------------------------------------
+-- Willow | 薇洛
+
+local item_before_lighter
+fn.UseLighter = function()
+  if not IsPlaying('willow') then return end
+
+  local lighter = Find('lighter')
+  if not lighter then return end
+
+  local hand_item = Inv():GetEquippedItem(EQUIPSLOTS.HANDS)
+  if hand_item ~= lighter then item_before_lighter = hand_item end
+  Use(hand_item == lighter and item_before_lighter or lighter, 'EQUIP')
+  Use(lighter, ThePlayer:IsChannelCasting() and 'STOP_CHANNELCAST' or 'START_CHANNELCAST')
+end
+
+--------------------------------------------------------------------------------
 -- Wolfgang | 沃尔夫冈
 
-local bell_former_hand_item
+local item_before_dumbbell
 fn.UseDumbBell = function()
   if not IsPlaying('wolfgang') then return end
 
@@ -169,8 +185,8 @@ fn.UseDumbBell = function()
   if not bell then return end
 
   local hand_item = Inv():GetEquippedItem(EQUIPSLOTS.HANDS)
-  if hand_item ~= bell then bell_former_hand_item = hand_item end
-  Use(hand_item == bell and bell_former_hand_item or bell, 'EQUIP')
+  if hand_item ~= bell then item_before_dumbbell = hand_item end
+  Use(hand_item == bell and item_before_dumbbell or bell, 'EQUIP')
   return Use(bell, bell:HasTag('lifting') and 'STOP_LIFT_DUMBBELL' or 'LIFT_DUMBBELL')
 end
 

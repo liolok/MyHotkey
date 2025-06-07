@@ -13,6 +13,10 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 [*]Load Game (press twice or hold to confirm action)
 [*]Toggle Movement Prediction
 [/list]
+[h3]Willow[/h3]
+[list]
+[*]Willow's Lighter: Equip a Lighter and Absorb Fire, or switch back to former hand equipment.
+[/list]
 [h3]Wolfgang[/h3]
 [list]
 [*]Dumbbell: Equip a Dumbbell and start lifting, or switch back to former hand equipment.

@@ -98,6 +98,16 @@ Config(
 )
 Config('ToggleMovementPrediction', T('Toggle Movement Prediction', '切换延迟补偿'))
 
+Header('Willow', '薇洛')
+Config(
+  'UseLighter',
+  T("Willow's Lighter", '薇洛的打火机'),
+  T(
+    'Equip a Lighter and Absorb Fire, or switch back to former hand equipment.',
+    '装备一个打火机并吸火，或切换回之前的手部装备。'
+  )
+)
+
 Header('Wolfgang', '沃尔夫冈')
 Config(
   'UseDumbBell',
