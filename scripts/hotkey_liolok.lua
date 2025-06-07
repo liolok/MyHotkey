@@ -100,7 +100,9 @@ end
 
 --------------------------------------------------------------------------------
 
-fn.DropLantern = function() return IsPlaying() and Drop(Find('lantern')) end
+fn.DropLantern = function()
+  return IsPlaying() and Drop(Find('lantern', function(inst) return not inst:HasTag('fueldepleted') end))
+end
 
 fn.UseBeargerFurSack = function()
   return (not IsInCD('Polar Bearger Bin') and IsPlaying()) and Use(Find('beargerfur_sack'), 'RUMMAGE')
