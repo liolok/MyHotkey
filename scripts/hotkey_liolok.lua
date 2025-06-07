@@ -121,6 +121,18 @@ fn.UseCane = function()
   return Use(hand_item == cane and cane_former_hand_item or cane, 'EQUIP')
 end
 
+fn.JumpInOrMigrate = function()
+  if not IsPlaying() then return end
+
+  local radius, ignore_height, must_tags, cant_tags, must_one_of_tags =
+    40, true, nil, { 'channeling' }, { 'teleporter', 'migrator' }
+  local target = FindClosestEntity(ThePlayer, radius, ignore_height, must_tags, cant_tags, must_one_of_tags)
+  if not target then return end
+
+  local action = target:HasTag('teleporter') and ACTIONS.JUMPIN or ACTIONS.MIGRATE
+  return SendRPCToServer(RPC.ControllerActionButton, action.code, target)
+end
+
 fn.SaveGame = function() return IsPlaying() and IsInCD('Confirm Save') and not IsInCD('Save Game', 5) and c_save() end
 
 fn.ResetGame = function() return IsPlaying() and IsInCD('Confirm Load') and not IsInCD('Load Game', 5) and c_reset() end
