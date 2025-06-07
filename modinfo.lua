@@ -77,10 +77,10 @@ Priority: Walking Cane > The Lazy Explorer > Speedy Balloon > Wooden Walking Sti
 )
 Config(
   'JumpInOrMigrate',
-  T('Jump In / Travel via', '跳入 / 游历'),
+  T('Jump In / Travel via', '跳入/游历'),
   T(
-    'Jump In: Wormhole / Big Slimy Pit / Time Rift\nTravel via: Sinkhole / Stairs',
-    '跳入：虫洞 / 硕大的泥坑 / 时间裂缝\n游历：洞穴 / 楼梯'
+    'Jump In: Wormhole, Big Slimy Pit, Time Rift\nTravel via: Sinkhole, Stairs',
+    '跳入：虫洞、硕大的泥坑、时间裂缝\n游历：洞穴、楼梯'
   )
 )
 Config(
