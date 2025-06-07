@@ -8,6 +8,7 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 [*]Open/Close Polar Bearger Bin
 [*]Walking Cane: Equip a speed-up hand tool, or switch back to former hand equipment.
 (Priority: Walking Cane > The Lazy Explorer > Speedy Balloon > Wooden Walking Stick > Thulecite Club)
+[*]Jump In / Travel via: Wormhole, Big Slimy Pit, Time Rift, Sinkhole, Stairs
 [*]Save Game (press twice or hold to confirm action)
 [*]Load Game (press twice or hold to confirm action)
 [*]Toggle Movement Prediction
