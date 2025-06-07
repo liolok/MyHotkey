@@ -116,8 +116,12 @@ fn.UseCane = function()
   if not cane then return end
 
   local hand_item = Inv():GetEquippedItem(EQUIPSLOTS.HANDS)
-  if hand_item ~= cane then item_before_cane = hand_item end
-  return Use(hand_item == cane and item_before_cane or cane, 'EQUIP')
+  if hand_item == cane then
+    if item_before_cane then return Use(item_before_cane, 'EQUIP') end
+  else
+    item_before_cane = hand_item
+    return Use(cane, 'EQUIP')
+  end
 end
 
 fn.JumpInOrMigrate = function()
@@ -160,9 +164,14 @@ fn.UseLighter = function()
   if not lighter then return end
 
   local hand_item = Inv():GetEquippedItem(EQUIPSLOTS.HANDS)
-  if hand_item ~= lighter then item_before_lighter = hand_item end
-  Use(hand_item == lighter and item_before_lighter or lighter, 'EQUIP')
-  Use(lighter, ThePlayer:IsChannelCasting() and 'STOP_CHANNELCAST' or 'START_CHANNELCAST')
+  if hand_item == lighter then
+    if item_before_lighter then return Use(item_before_lighter, 'EQUIP') end
+  else
+    item_before_lighter = hand_item
+    Use(lighter, 'EQUIP')
+  end
+
+  return Use(lighter, ThePlayer:IsChannelCasting() and 'STOP_CHANNELCAST' or 'START_CHANNELCAST')
 end
 
 --------------------------------------------------------------------------------
@@ -184,8 +193,13 @@ fn.UseDumbBell = function()
   if not bell then return end
 
   local hand_item = Inv():GetEquippedItem(EQUIPSLOTS.HANDS)
-  if hand_item ~= bell then item_before_dumbbell = hand_item end
-  Use(hand_item == bell and item_before_dumbbell or bell, 'EQUIP')
+  if hand_item == bell then
+    if item_before_dumbbell then return Use(item_before_dumbbell, 'EQUIP') end
+  else
+    item_before_dumbbell = hand_item
+    Use(bell, 'EQUIP')
+  end
+
   return Use(bell, bell:HasTag('lifting') and 'STOP_LIFT_DUMBBELL' or 'LIFT_DUMBBELL')
 end
 
