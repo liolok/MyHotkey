@@ -113,7 +113,7 @@ fn.UseCane = function()
 
   local cane = FindPrefabs('cane', 'orangestaff')
     or Find('balloonspeed', function(inst) return not inst:HasTag('fueldepleted') end)
-    or Find('ruins_bat')
+    or FindPrefabs('walking_stick', 'ruins_bat')
   if not cane then return end
 
   local hand_item = Inv():GetEquippedItem(EQUIPSLOTS.HANDS)
