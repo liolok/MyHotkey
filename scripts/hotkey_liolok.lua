@@ -46,8 +46,7 @@ local function FindInvItemBy(IsRight) -- find right item in inventory | 在所�
 
   -- all items of all opened containers | 所有打开的容器的所有物品
   for container in pairs(inventory:GetOpenContainers()) do
-    local container = Get(container, 'replica', 'container')
-    for _, item in pairs(container and container:GetItems() or {}) do
+    for _, item in pairs(Get(container, 'replica', 'container', 'GetItems') or {}) do
       if IsRight(item) then return item end
     end
   end
