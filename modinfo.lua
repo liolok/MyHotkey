@@ -127,6 +127,9 @@ Config(
   T("Use Magician's Top Hat, or Stop.", '使用魔术师高礼帽，或者停止。')
 )
 
+Header('Wigfrid', '薇格弗德')
+Config('StrikeOrBlock', T('Wigfrid: Lightning Strike / Block', '薇格弗德：闪电突袭/格挡'))
+
 Header('Wormwood', '沃姆伍德')
 Config('MakeLivingLog', T('Wormwood: Grow Living Log', '沃姆伍德：生长活木头'))
 Config('MakeLightFlier', T('Wormwood: Transform Bulbous Lightbug', '沃姆伍德：变形球状光虫'))

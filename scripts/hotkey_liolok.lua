@@ -210,6 +210,21 @@ fn.UseMagicianToolOrStop = function()
 end
 
 --------------------------------------------------------------------------------
+-- Wigfrid | 薇格弗德
+
+fn.StrikeOrBlock = function()
+  if not IsPlaying('wigfrid') then return end
+
+  local player = Get(ThePlayer, 'GetPosition')
+  local cursor = Get(TheInput, 'GetWorldPosition')
+  local dx, dz = cursor.x - player.x, cursor.z - player.z
+  local d = math.sqrt(dx ^ 2 + dz ^ 2)
+  local x, z = player.x + dx / d * 7.99, player.z + dz / d * 7.99
+
+  return Do(BufferedAction(ThePlayer, nil, ACTIONS.CASTAOE, nil, Vector3(x, 0, z)), 'LeftClick', x, z)
+end
+
+--------------------------------------------------------------------------------
 -- Wormwood | 沃姆伍德
 
 fn.MakeLivingLog = function() return IsPlaying('wormwood') and Make('livinglog') end

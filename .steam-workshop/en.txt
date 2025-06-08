@@ -26,6 +26,10 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 [list]
 [*]Use Magician's Top Hat, or Stop.
 [/list]
+[h3]Wigfrid[/h3]
+[list]
+[*]Lightning Strike / Block
+[/list]
 [h3]Wormwood[/h3]
 [list]
 [*]Grow Living Log
