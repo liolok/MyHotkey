@@ -213,7 +213,7 @@ end
 -- Wigfrid | 薇格弗德
 
 fn.StrikeOrBlock = function()
-  if not IsPlaying('wigfrid') then return end
+  if not IsPlaying('wathgrithr') then return end
 
   local player = Get(ThePlayer, 'GetPosition')
   local cursor = Get(TheInput, 'GetWorldPosition')
