@@ -90,10 +90,10 @@ Config(
 )
 Config(
   'ResetGame',
-  T('Load Game', '恢复游戏'),
+  T('Reset Game', '重置游戏'),
   T(
-    'Rollback to the last save of game.\nPress twice or hold to confirm action!',
-    '回滚到最后一次保存的游戏。\n双击或按住以确认操作！'
+    'Restart the server from the last save.\nPress twice or hold to confirm action!',
+    '从最后的存档重启服务器。\n双击或按住以确认操作！'
   )
 )
 Config('ToggleMovementPrediction', T('Toggle Movement Prediction', '切换延迟补偿'))

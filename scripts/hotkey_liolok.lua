@@ -140,7 +140,12 @@ end
 
 fn.SaveGame = function() return IsPlaying() and IsInCD('Confirm Save') and not IsInCD('Save Game', 5) and c_save() end
 
-fn.ResetGame = function() return IsPlaying() and IsInCD('Confirm Load') and not IsInCD('Load Game', 5) and c_reset() end
+fn.ResetGame = function()
+  if IsPlaying() and IsInCD('Confirm Reset') and not IsInCD('Reset Game', 5) then
+    Tip(Get(STRINGS, 'UI', 'BUILTINCOMMANDS', 'RESET', 'PRETTYNAME') or 'Reset')
+    ThePlayer:DoTaskInTime(1, function() return c_reset() end)
+  end
+end
 
 fn.ToggleMovementPrediction = function()
   if not IsPlaying() then return end
