@@ -130,6 +130,16 @@ Config(
 Header('Wigfrid', '薇格弗德')
 Config('StrikeOrBlock', T('Wigfrid: Lightning Strike / Block', '薇格弗德：闪电突袭/格挡'))
 
+Header('Winona', '薇诺娜')
+Config(
+  'UseTeleBrella',
+  T('Winona: Portasol', '薇诺娜：传送伞'),
+  T(
+    'Equip a Portasol and Activate it, or switch back to former hand equipment.',
+    '装备一个传送伞并激活，或切换回之前的手部装备。'
+  )
+)
+
 Header('Wormwood', '沃姆伍德')
 Config('MakeLivingLog', T('Wormwood: Grow Living Log', '沃姆伍德：生长活木头'))
 Config('MakeLightFlier', T('Wormwood: Transform Bulbous Lightbug', '沃姆伍德：变形球状光虫'))

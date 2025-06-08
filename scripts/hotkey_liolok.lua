@@ -225,6 +225,16 @@ fn.StrikeOrBlock = function()
 end
 
 --------------------------------------------------------------------------------
+-- Winona | 薇诺娜
+
+fn.UseTeleBrella = function()
+  if not IsPlaying('winona') then return end
+
+  local brella = Find('winona_telebrella', { no_tags = 'fueldepleted' })
+  return SwitchHand(brella) and Use(brella, 'REMOTE_TELEPORT')
+end
+
+--------------------------------------------------------------------------------
 -- Wormwood | 沃姆伍德
 
 fn.MakeLivingLog = function() return IsPlaying('wormwood') and Make('livinglog') end
