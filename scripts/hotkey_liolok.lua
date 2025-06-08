@@ -93,6 +93,28 @@ local function Use(item, act)
     or Ctl():RemoteUseItemFromInvTile(BufferedAction(ThePlayer, nil, ACTIONS[act], item), item)
 end
 
+local function Do(buffered_action, rpc_name, ...)
+  if IsMasterSim() then return Ctl():DoAction(buffered_action) end
+  return SendRPCToServer(RPC[rpc_name], Get(buffered_action, 'action', 'code'), ...)
+end
+
+local function Make(prefab) return SendRPCToServer(RPC.MakeRecipeFromMenu, Get(AllRecipes, prefab, 'rpc_id')) end
+
+local former_hand_item = {}
+local function SwitchHand(item)
+  if not item then return end
+
+  local hand_item = Inv():GetEquippedItem(EQUIPSLOTS.HANDS)
+  if hand_item == item then
+    if former_hand_item[item] then return Use(former_hand_item[item], 'EQUIP') end
+  else
+    former_hand_item[item] = hand_item
+    Use(item, 'EQUIP')
+  end
+
+  return true -- item equipped on hand slot
+end
+
 local function Tip(message)
   local talker, time, no_anim, force = Get(ThePlayer, 'components', 'talker'), nil, true, true
   return talker and talker:Say(message, time, no_anim, force)
@@ -108,34 +130,25 @@ fn.UseBeargerFurSack = function()
   return (not IsInCD('Polar Bearger Bin') and IsPlaying()) and Use(Find('beargerfur_sack'), 'RUMMAGE')
 end
 
-local item_before_cane
 fn.UseCane = function()
   if not IsPlaying() then return end
 
   local cane = FindPrefabs('cane', 'orangestaff')
     or Find('balloonspeed', function(inst) return not inst:HasTag('fueldepleted') end)
     or FindPrefabs('walking_stick', 'ruins_bat')
-  if not cane then return end
-
-  local hand_item = Inv():GetEquippedItem(EQUIPSLOTS.HANDS)
-  if hand_item == cane then
-    if item_before_cane then return Use(item_before_cane, 'EQUIP') end
-  else
-    item_before_cane = hand_item
-    return Use(cane, 'EQUIP')
-  end
+  return SwitchHand(cane)
 end
 
 fn.JumpInOrMigrate = function()
   if not IsPlaying() then return end
 
-  local radius, ignore_height, must_tags, cant_tags, must_one_of_tags =
-    40, true, nil, { 'channeling' }, { 'teleporter', 'migrator' }
+  local radius, ignore_height, must_tags = 40, true
+  local cant_tags, must_one_of_tags = { 'channeling' }, { 'teleporter', 'migrator' }
   local target = FindClosestEntity(ThePlayer, radius, ignore_height, must_tags, cant_tags, must_one_of_tags)
   if not target then return end
 
   local action = target:HasTag('teleporter') and ACTIONS.JUMPIN or ACTIONS.MIGRATE
-  return SendRPCToServer(RPC.ControllerActionButton, action.code, target)
+  return Do(BufferedAction(ThePlayer, target, action), 'ControllerActionButton', target)
 end
 
 fn.SaveGame = function() return IsPlaying() and IsInCD('Confirm Save') and not IsInCD('Save Game', 5) and c_save() end
@@ -163,51 +176,23 @@ end
 --------------------------------------------------------------------------------
 -- Willow | 薇洛
 
-local item_before_lighter
 fn.UseLighter = function()
   if not IsPlaying('willow') then return end
 
   local lighter = Find('lighter')
-  if not lighter then return end
-
-  local hand_item = Inv():GetEquippedItem(EQUIPSLOTS.HANDS)
-  if hand_item == lighter then
-    if item_before_lighter then return Use(item_before_lighter, 'EQUIP') end
-  else
-    item_before_lighter = hand_item
-    Use(lighter, 'EQUIP')
-  end
-
-  return Use(lighter, ThePlayer:IsChannelCasting() and 'STOP_CHANNELCAST' or 'START_CHANNELCAST')
+  local action = ThePlayer:IsChannelCasting() and 'STOP_CHANNELCAST' or 'START_CHANNELCAST'
+  return SwitchHand(lighter) and Use(lighter, action)
 end
 
 --------------------------------------------------------------------------------
 -- Wolfgang | 沃尔夫冈
 
-local item_before_dumbbell
 fn.UseDumbBell = function()
   if not IsPlaying('wolfgang') then return end
 
-  local bell = FindPrefabs(
-    'dumbbell_gem',
-    'dumbbell_marble',
-    'dumbbell_golden',
-    'dumbbell',
-    'dumbbell_bluegem',
-    'dumbbell_redgem',
-    'dumbbell_heat'
-  )
-  if not bell then return end
-
-  local hand_item = Inv():GetEquippedItem(EQUIPSLOTS.HANDS)
-  if hand_item == bell then
-    if item_before_dumbbell then return Use(item_before_dumbbell, 'EQUIP') end
-  else
-    item_before_dumbbell = hand_item
-    Use(bell, 'EQUIP')
-  end
-
-  return Use(bell, bell:HasTag('lifting') and 'STOP_LIFT_DUMBBELL' or 'LIFT_DUMBBELL')
+  local bell = FindPrefabs('dumbbell_gem', 'dumbbell_marble', 'dumbbell_golden', 'dumbbell')
+    or FindPrefabs('dumbbell_bluegem', 'dumbbell_redgem', 'dumbbell_heat')
+  return SwitchHand(bell) and Use(bell, bell:HasTag('lifting') and 'STOP_LIFT_DUMBBELL' or 'LIFT_DUMBBELL')
 end
 
 --------------------------------------------------------------------------------
@@ -217,24 +202,18 @@ fn.UseMagicianToolOrStop = function()
   if IsInCD("Magician's Top Hat") or not IsPlaying('waxwell') then return end
 
   if ThePlayer:HasTag('usingmagiciantool') then -- already opened, close it.
-    local act = BufferedAction(ThePlayer, ThePlayer, ACTIONS.STOPUSINGMAGICTOOL)
     local x, _, z = ThePlayer.Transform:GetWorldPosition()
-    return IsMasterSim() and act:Do() or SendRPCToServer(RPC.RightClick, Get(act, 'action', 'code'), x, z, ThePlayer)
+    return Do(BufferedAction(ThePlayer, ThePlayer, ACTIONS.STOPUSINGMAGICTOOL), 'RightClick', x, z, ThePlayer)
   end
 
   local hat = Find('tophat', 'magiciantool') -- find one to open
-  if not hat then return end
-
-  local act = BufferedAction(ThePlayer, nil, ACTIONS.USEMAGICTOOL, hat)
-  return IsMasterSim() and act:Do() or SendRPCToServer(RPC.UseItemFromInvTile, Get(act, 'action', 'code'), hat, 1)
+  return hat and Do(BufferedAction(ThePlayer, nil, ACTIONS.USEMAGICTOOL, hat), 'UseItemFromInvTile', hat, 1)
 end
 
 --------------------------------------------------------------------------------
 -- Wormwood | 沃姆伍德
 
-fn.MakeLivingLog = function()
-  return IsPlaying('wormwood') and SendRPCToServer(RPC.MakeRecipeFromMenu, Get(AllRecipes, 'livinglog', 'rpc_id'))
-end
+fn.MakeLivingLog = function() return IsPlaying('wormwood') and Make('livinglog') end
 
 --------------------------------------------------------------------------------
 -- Wanda | 旺达
