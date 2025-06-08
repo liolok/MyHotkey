@@ -70,7 +70,8 @@ local function Find(prefab, filter)
     if type(filter) == 'function' then return filter(item) end
     if type(filter) == 'string' then return item:HasTag(filter) end
     if type(filter) == 'table' then
-      -- TODO: maybe?
+      if filter.no_tags and item:HasOneOfTags(filter.no_tags) then return end
+      return true
     end
   end)
 end
@@ -122,9 +123,7 @@ end
 
 --------------------------------------------------------------------------------
 
-fn.DropLantern = function()
-  return IsPlaying() and Drop(Find('lantern', function(inst) return not inst:HasTag('fueldepleted') end))
-end
+fn.DropLantern = function() return IsPlaying() and Drop(Find('lantern', { no_tags = 'fueldepleted' })) end
 
 fn.UseBeargerFurSack = function()
   return (not IsInCD('Polar Bearger Bin') and IsPlaying()) and Use(Find('beargerfur_sack'), 'RUMMAGE')
@@ -134,7 +133,7 @@ fn.UseCane = function()
   if not IsPlaying() then return end
 
   local cane = FindPrefabs('cane', 'orangestaff')
-    or Find('balloonspeed', function(inst) return not inst:HasTag('fueldepleted') end)
+    or Find('balloonspeed', { no_tags = 'fueldepleted' })
     or FindPrefabs('walking_stick', 'ruins_bat')
   return SwitchHand(cane)
 end
