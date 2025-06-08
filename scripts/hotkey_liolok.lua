@@ -38,7 +38,7 @@ end
 
 local function FindInvItemBy(IsRight) -- find right item in inventory | 在所有格子里找正确的物品
   local inventory = Inv()
-  if not (inventory type(IsRight) == 'function') then return end
+  if not (inventory and type(IsRight) == 'function') then return end
 
   -- item on cursor | 光标上的物品
   local item = inventory:GetActiveItem()
