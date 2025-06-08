@@ -214,6 +214,7 @@ end
 -- Wormwood | 沃姆伍德
 
 fn.MakeLivingLog = function() return IsPlaying('wormwood') and Make('livinglog') end
+fn.MakeLightFlier = function() return IsPlaying('wormwood') and Make('wormwood_lightflier') end
 
 --------------------------------------------------------------------------------
 -- Wanda | 旺达

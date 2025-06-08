@@ -101,7 +101,7 @@ Config('ToggleMovementPrediction', T('Toggle Movement Prediction', '切换延迟
 Header('Willow', '薇洛')
 Config(
   'UseLighter',
-  T("Willow's Lighter", '薇洛的打火机'),
+  T('Willow: Lighter', '薇洛：打火机'),
   T(
     'Equip a Lighter and Absorb Fire, or switch back to former hand equipment.',
     '装备一个打火机并吸火，或切换回之前的手部装备。'
@@ -111,7 +111,7 @@ Config(
 Header('Wolfgang', '沃尔夫冈')
 Config(
   'UseDumbBell',
-  T('Dumbbell', '哑铃'),
+  T('Wolfgang: Dumbbell', '沃尔夫冈：哑铃'),
   T(
     [[Equip a Dumbbell and start lifting, or switch back to former hand equipment.
 Priority: Gembell > Marbell > Golden Dumbbell > Dumbbell > Icebell > Firebell > Thermbell]],
@@ -123,13 +123,14 @@ Priority: Gembell > Marbell > Golden Dumbbell > Dumbbell > Icebell > Firebell > 
 Header('Maxwell', '麦斯威尔')
 Config(
   'UseMagicianToolOrStop',
-  T("Magician's Top Hat", '魔术师高礼帽'),
+  T("Maxwell: Magician's Top Hat", '麦斯威尔：魔术师高礼帽'),
   T("Use Magician's Top Hat, or Stop.", '使用魔术师高礼帽，或者停止。')
 )
 
 Header('Wormwood', '沃姆伍德')
-Config('MakeLivingLog', T('Grow Living Log', '生长活木头'))
+Config('MakeLivingLog', T('Wormwood: Grow Living Log', '沃姆伍德：生长活木头'))
+Config('MakeLightFlier', T('Wormwood: Transform Bulbous Lightbug', '沃姆伍德：变形球状光虫'))
 
 Header('Wanda', '旺达')
-Config('UsePocketWatchHeal', T('Activate Ageless Watch', '激活不老表'))
-Config('UsePocketWatchWarp', T('Activate Backstep Watch', '激活倒走表'))
+Config('UsePocketWatchHeal', T('Wanda: Activate Ageless Watch', '旺达：激活不老表'))
+Config('UsePocketWatchWarp', T('Wanda: Activate Backstep Watch', '旺达：激活倒走表'))

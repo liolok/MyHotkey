@@ -29,6 +29,7 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 [h3]Wormwood[/h3]
 [list]
 [*]Grow Living Log
+[*]Transform Bulbous Lightbug
 [/list]
 [h3]Wanda[/h3]
 [list]
