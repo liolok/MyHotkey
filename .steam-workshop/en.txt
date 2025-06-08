@@ -28,6 +28,7 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 [/list]
 [h3]Wigfrid[/h3]
 [list]
+[*]Sing Battle Call (Will open Battle Call Canister first)
 [*]Lightning Strike / Block
 [/list]
 [h3]Winona[/h3]

@@ -212,6 +212,40 @@ end
 --------------------------------------------------------------------------------
 -- Wigfrid | 薇格弗德
 
+local function IsValidBattleSong(item) -- function `singable` from componentactions.lua
+  if not (item and item:HasTag('battlesong')) then return end -- not battle song at all
+
+  local required_skill = Get(item, 'songdata', 'REQUIRE_SKILL')
+  if required_skill then
+    local st = Get(ThePlayer, 'components', 'skilltreeupdater')
+    if not (st and st:IsActivated(required_skill)) then return end -- no skill required by this song
+  end
+
+  for _, v in ipairs(Get(ThePlayer, 'player_classified', 'inspirationsongs') or {}) do
+    if v:value() == Get(item, 'songdata', 'battlesong_netid') then return end -- song already activated
+  end
+
+  local recharge_value = Get(item, 'replica', '_', 'inventoryitem', 'classified', 'recharge', 'value')
+  if recharge_value and recharge_value ~= 180 then return end -- Battle Stinger in CD | 战吼正在冷却
+
+  return true
+end
+
+local function UseValidBattleSong() return Use(FindInvItemBy(IsValidBattleSong), 'SING') end
+
+fn.UseBattleSong = function()
+  if not IsPlaying('wathgrithr') then return end
+
+  local st = Get(ThePlayer, 'components', 'skilltreeupdater')
+  local container = st and st:IsActivated('wathgrithr_songs_container') and Find('battlesong_container')
+  if container and not Get(container, 'replica', 'container', '_isopen') then
+    Use(container, 'RUMMAGE') -- open Battle Call Canister
+    return ThePlayer:DoTaskInTime(0.5, UseValidBattleSong) -- wait a little to sing
+  end
+
+  return UseValidBattleSong()
+end
+
 fn.StrikeOrBlock = function()
   if not IsPlaying('wathgrithr') then return end
 

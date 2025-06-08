@@ -128,6 +128,11 @@ Config(
 )
 
 Header('Wigfrid', '薇格弗德')
+Config(
+  'UseBattleSong',
+  T('Wigfrid: Sing Battle Call', '薇格弗德：吟唱战斗号子'),
+  T('Will open Battle Call Canister first', '会先打开战斗号子罐')
+)
 Config('StrikeOrBlock', T('Wigfrid: Lightning Strike / Block', '薇格弗德：闪电突袭/格挡'))
 
 Header('Winona', '薇诺娜')
