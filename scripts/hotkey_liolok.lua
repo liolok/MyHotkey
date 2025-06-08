@@ -37,23 +37,23 @@ local function IsPlaying(character)
 end
 
 local function FindInvItemBy(IsRight) -- find right item in inventory | 在所有格子里找正确的物品
-  if type(IsRight) ~= 'function' then return end
-
   local inventory = Inv()
+  if not (inventory type(IsRight) == 'function') then return end
 
+  -- item on cursor | 光标上的物品
   local item = inventory:GetActiveItem()
   if IsRight(item) then return item end
+
+  -- all equipped items | 所有已装备物品
+  for _, item in pairs(inventory:GetEquips()) do
+    if IsRight(item) then return item end
+  end
 
   -- all items of all opened containers | 所有打开的容器的所有物品
   for container in pairs(inventory:GetOpenContainers()) do
     for _, item in pairs(Get(container, 'replica', 'container', 'GetItems') or {}) do
       if IsRight(item) then return item end
     end
-  end
-
-  -- all equipped items | 所有已装备物品
-  for _, item in pairs(inventory:GetEquips()) do
-    if IsRight(item) then return item end
   end
 
   -- all slots of inventory bar | 物品栏的所有格子
