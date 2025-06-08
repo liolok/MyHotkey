@@ -2,7 +2,8 @@
 
 No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3445951083]customize shortcuts[/url] in bottom of Settings > Controls page.
 
-[h2]Features[/h2]
+[h1]Features[/h1]
+[h3]General[/h3]
 [list]
 [*]Drop Lantern
 [*]Open/Close Polar Bearger Bin
@@ -13,42 +14,49 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 [*]Reset Game: Restart the server from the last save. (press twice or hold to confirm action)
 [*]Toggle Movement Prediction
 [/list]
+
 [h3]Willow[/h3]
 [list]
 [*]Willow's Lighter: Equip a Lighter and Absorb Fire, or switch back to former hand equipment.
 [/list]
+
 [h3]Wolfgang[/h3]
 [list]
 [*]Dumbbell: Equip a Dumbbell and start lifting, or switch back to former hand equipment.
 (Priority: Gembell > Marbell > Golden Dumbbell > Dumbbell > Icebell > Firebell > Thermbell)
 [/list]
+
 [h3]Maxwell[/h3]
 [list]
 [*]Use Magician's Top Hat, or Stop.
 [/list]
+
 [h3]Wigfrid[/h3]
 [list]
 [*]Sing Battle Call (Will open Battle Call Canister first)
 [*]Lightning Strike / Block
 [/list]
+
 [h3]Winona[/h3]
 [list]
 [*]Portasol: Equip a Portasol and Activate it, or switch back to former hand equipment.
 [/list]
+
 [h3]Wormwood[/h3]
 [list]
 [*]Grow Living Log
 [*]Transform Bulbous Lightbug
 [/list]
+
 [h3]Wanda[/h3]
 [list]
 [*]Activate Ageless Watch
 [*]Activate Backstep Watch
 [/list]
 
-[h2]Recommendations[/h2]
+[h1]Recommendations[/h1]
 [list]
-[*]Wortox: My [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3481766603]Hotkey for Wortox[/url]
+[*]Imp: My [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3481766603]Hotkey for Wortox[/url]
 [/list]
 
 [hr][/hr]
