@@ -215,18 +215,22 @@ end
 local function IsValidBattleSong(item) -- function `singable` from componentactions.lua
   if not (item and item:HasTag('battlesong')) then return end -- not battle song at all
 
-  local required_skill = Get(item, 'songdata', 'REQUIRE_SKILL')
-  if required_skill then
+  local song = item.songdata
+  if not song then return end
+
+  if song.REQUIRE_SKILL then
     local st = Get(ThePlayer, 'components', 'skilltreeupdater')
-    if not (st and st:IsActivated(required_skill)) then return end -- no skill required by this song
+    if not (st and st:IsActivated(song.REQUIRE_SKILL)) then return end -- no skill required by this song
   end
 
-  for _, v in ipairs(Get(ThePlayer, 'player_classified', 'inspirationsongs') or {}) do
-    if v:value() == Get(item, 'songdata', 'battlesong_netid') then return end -- song already activated
+  if song.INSTANT then -- Battle Stinger
+    local recharge_value = Get(item, 'replica', '_', 'inventoryitem', 'classified', 'recharge', 'value')
+    if recharge_value and recharge_value ~= 180 then return end -- Battle Stinger in CD | 战吼正在冷却
+  else -- Battle Song
+    for _, v in ipairs(Get(ThePlayer, 'player_classified', 'inspirationsongs') or {}) do
+      if v:value() == song.battlesong_netid then return end -- Battle Song already activated
+    end
   end
-
-  local recharge_value = Get(item, 'replica', '_', 'inventoryitem', 'classified', 'recharge', 'value')
-  if recharge_value and recharge_value ~= 180 then return end -- Battle Stinger in CD | 战吼正在冷却
 
   return true
 end
