@@ -154,6 +154,7 @@ fn.SaveGame = function() return IsPlaying() and IsInCD('Confirm Save') and not I
 
 fn.ResetGame = function()
   if IsPlaying() and IsInCD('Confirm Reset') and not IsInCD('Reset Game', 5) then
+    TheNet:SetServerPaused(false) -- unpause server
     Tip(Get(STRINGS, 'UI', 'BUILTINCOMMANDS', 'RESET', 'PRETTYNAME') or 'Reset')
     ThePlayer:DoTaskInTime(1, function() return c_reset() end)
   end
