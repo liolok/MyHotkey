@@ -136,6 +136,13 @@ Config(
 )
 Config('StrikeOrBlock', T('Wigfrid: Lightning Strike / Block', '薇格弗德：闪电突袭/格挡'))
 
+Header('Webber', '韦伯')
+Config(
+  'UseSpiderWhistle',
+  T('Webber: Whistle', '韦伯：口哨'),
+  T("Blow to Herd Spiders, or craft a whistle if don't have one.", '吹哨召集蜘蛛，如果没有的话会制作一个口哨。')
+)
+
 Header('Winona', '薇诺娜')
 Config(
   'UseTeleBrella',

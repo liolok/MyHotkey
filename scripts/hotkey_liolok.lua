@@ -266,6 +266,20 @@ fn.StrikeOrBlock = function()
 end
 
 --------------------------------------------------------------------------------
+-- Webber | 韦伯
+
+fn.UseSpiderWhistle = function()
+  if not IsPlaying('webber') then return end
+
+  local whistle = Find('spider_whistle')
+  if whistle then
+    return Use(whistle, 'HERD_FOLLOWERS')
+  else
+    return Make('spider_whistle')
+  end
+end
+
+--------------------------------------------------------------------------------
 -- Winona | 薇诺娜
 
 fn.UseTeleBrella = function()
