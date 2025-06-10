@@ -107,6 +107,7 @@ Config(
     '装备一个打火机并吸火，或切换回之前的手部装备。'
   )
 )
+Config('DropBernie', T('Willow: Drop Bernie', '薇洛：丢弃伯尼'))
 
 Header('Wolfgang', '沃尔夫冈')
 Config(

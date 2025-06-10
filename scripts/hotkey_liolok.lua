@@ -184,6 +184,8 @@ fn.UseLighter = function()
   return SwitchHand(lighter) and Use(lighter, action)
 end
 
+fn.DropBernie = function() return IsPlaying('willow') and Drop(Find('bernie_inactive', { no_tags = 'fueldepleted' })) end
+
 --------------------------------------------------------------------------------
 -- Wolfgang | 沃尔夫冈
 
