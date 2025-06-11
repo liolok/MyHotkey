@@ -101,15 +101,15 @@ end
 
 local function Make(prefab) return SendRPCToServer(RPC.MakeRecipeFromMenu, Get(AllRecipes, prefab, 'rpc_id')) end
 
-local former_hand_item = {}
+local former_hand = {}
 local function SwitchHand(item)
   if not item then return end
 
-  local hand_item = Inv():GetEquippedItem(EQUIPSLOTS.HANDS)
-  if hand_item == item then
-    if former_hand_item[item] then return Use(former_hand_item[item], 'EQUIP') end
+  local current_hand_item = Inv():GetEquippedItem(EQUIPSLOTS.HANDS)
+  if current_hand_item == item then
+    if former_hand[item] then return Use(former_hand[item], 'EQUIP') end
   else
-    former_hand_item[item] = hand_item
+    former_hand[item] = current_hand_item
     Use(item, 'EQUIP')
   end
 
