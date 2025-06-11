@@ -20,6 +20,7 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 [list]
 [*]Lighter: Equip a Lighter and Absorb Fire, or switch back to former hand equipment.
 [*]Drop Bernie
+[*]Lunar/Shadow Fire
 [/list]
 
 [h3]Wolfgang[/h3]

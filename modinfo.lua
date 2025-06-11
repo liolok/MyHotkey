@@ -116,6 +116,7 @@ Config(
   )
 )
 Config('DropBernie', T('Willow: Drop Bernie', '薇洛：丢弃伯尼'))
+Config('CastFire', T('Willow: Lunar/Shadow Fire', '薇洛：月焰/暗焰'))
 
 Header('Wolfgang', '沃尔夫冈')
 Config(

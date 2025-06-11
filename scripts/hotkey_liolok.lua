@@ -121,6 +121,24 @@ local function Tip(message)
   return talker and talker:Say(message, time, no_anim, force)
 end
 
+local function HasSkill(name)
+  if not name then return true end
+  local skill_tree = Get(ThePlayer, 'components', 'skilltreeupdater')
+  return skill_tree and skill_tree:IsActivated(name)
+end
+
+local function GetTargetPosition(distance)
+  local player = Get(ThePlayer, 'GetPosition')
+  local cursor = Get(TheInput, 'GetWorldPosition')
+  if not (player and cursor) then return end
+
+  local distance = distance or 7.99
+  local dx, dz = cursor.x - player.x, cursor.z - player.z
+  local d = math.sqrt(dx ^ 2 + dz ^ 2)
+  local x, z = player.x + dx / d * distance, player.z + dz / d * distance
+  return Vector3(x, 0, z)
+end
+
 --------------------------------------------------------------------------------
 
 fn.DropLantern = function() return IsPlaying() and Drop(Find('lantern', { no_tags = 'fueldepleted' })) end
@@ -204,6 +222,45 @@ end
 
 fn.DropBernie = function() return IsPlaying('willow') and Drop(Find('bernie_inactive', { no_tags = 'fueldepleted' })) end
 
+local function GetSpellID(spell_book, spell_name)
+  for id, spell in pairs(Get(spell_book, 'items') or {}) do
+    if spell.label == spell_name then return id, spell end
+  end
+end
+
+fn.CastFire = function()
+  if not IsPlaying('willow') then return end
+
+  local ember = Find('willow_ember')
+  local spell_book = Get(ember, 'components', 'spellbook')
+  local cooldown = Get(ThePlayer, 'components', 'spellbookcooldowns')
+  if not (ember and spell_book and cooldown) then return end
+
+  local spell_name, cooldown_time, cooldown_percent
+  if HasSkill('willow_allegiance_lunar_fire') and Inv():Has('willow_ember', TUNING.WILLOW_EMBER_LUNAR or 5) then
+    if Get(ThePlayer, 'replica', 'rider', 'IsRiding') then return end
+    spell_name = STRINGS.PYROMANCY.LUNAR_FIRE
+    cooldown_time = TUNING.WILLOW_LUNAR_FIRE_COOLDOWN or 13
+    cooldown_percent = cooldown:GetSpellCooldownPercent('lunar_fire')
+  elseif HasSkill('willow_allegiance_shadow_fire') and Inv():Has('willow_ember', TUNING.WILLOW_EMBER_SHADOW or 5) then
+    spell_name = STRINGS.PYROMANCY.SHADOW_FIRE
+    cooldown_time = TUNING.WILLOW_SHADOW_FIRE_COOLDOWN or 8
+    cooldown_percent = cooldown:GetSpellCooldownPercent('shadow_fire')
+  else
+    return
+  end
+
+  if type(cooldown_time) == 'number' and type(cooldown_percent) == 'number' then
+    return Tip(math.ceil(cooldown_time * cooldown_percent) .. 's')
+  end
+
+  local spell_id = GetSpellID(spell_book, spell_name)
+  spell_book:SelectSpell(spell_id)
+  local pos = GetTargetPosition() or ThePlayer:GetPosition()
+  local act = BufferedAction(ThePlayer, nil, ACTIONS.CASTAOE, ember, pos)
+  return Do(act, 'LeftClick', pos.x, pos.z, nil, nil, nil, nil, nil, nil, nil, ember, spell_id)
+end
+
 --------------------------------------------------------------------------------
 -- Wolfgang | 沃尔夫冈
 
@@ -239,10 +296,7 @@ local function IsValidBattleSong(item) -- function `singable` from componentacti
   local song = item.songdata
   if not song then return end
 
-  if song.REQUIRE_SKILL then
-    local st = Get(ThePlayer, 'components', 'skilltreeupdater')
-    if not (st and st:IsActivated(song.REQUIRE_SKILL)) then return end -- no skill required by this song
-  end
+  if not HasSkill(song.REQUIRE_SKILL) then return end -- no skill required by this song
 
   if song.INSTANT then -- Battle Stinger
     local recharge_value = Get(item, 'replica', '_', 'inventoryitem', 'classified', 'recharge', 'value')
@@ -261,8 +315,7 @@ local function UseValidBattleSong() return Use(FindInvItemBy(IsValidBattleSong),
 fn.UseBattleSong = function()
   if not IsPlaying('wathgrithr') then return end
 
-  local st = Get(ThePlayer, 'components', 'skilltreeupdater')
-  local container = st and st:IsActivated('wathgrithr_songs_container') and Find('battlesong_container')
+  local container = HasSkill('wathgrithr_songs_container') and Find('battlesong_container')
   if container and not Get(container, 'replica', 'container', '_isopen') then
     Use(container, 'RUMMAGE') -- open Battle Call Canister
     return ThePlayer:DoTaskInTime(0.5, UseValidBattleSong) -- wait a little to sing
@@ -274,13 +327,8 @@ end
 fn.StrikeOrBlock = function()
   if not IsPlaying('wathgrithr') then return end
 
-  local player = Get(ThePlayer, 'GetPosition')
-  local cursor = Get(TheInput, 'GetWorldPosition')
-  local dx, dz = cursor.x - player.x, cursor.z - player.z
-  local d = math.sqrt(dx ^ 2 + dz ^ 2)
-  local x, z = player.x + dx / d * 7.99, player.z + dz / d * 7.99
-
-  return Do(BufferedAction(ThePlayer, nil, ACTIONS.CASTAOE, nil, Vector3(x, 0, z)), 'LeftClick', x, z)
+  local pos = GetTargetPosition()
+  return pos and Do(BufferedAction(ThePlayer, nil, ACTIONS.CASTAOE, nil, pos), 'LeftClick', pos.x, pos.z)
 end
 
 --------------------------------------------------------------------------------
