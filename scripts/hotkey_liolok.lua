@@ -228,7 +228,39 @@ local function GetSpellID(spell_book, spell_name)
   end
 end
 
-fn.CastFire = function()
+local FIRE_SKILL = {
+  THROW = 'willow_embers',
+  BURST = 'willow_fire_burst',
+  BALL = 'willow_fire_ball',
+  FRENZY = 'willow_fire_frenzy',
+  LUNAR = 'willow_allegiance_lunar_fire',
+  SHADOW = 'willow_allegiance_shadow_fire',
+}
+
+local function Fire(name, target)
+  if not (IsPlaying('willow') and HasSkill(FIRE_SKILL[name])) then return end
+
+  if not Inv():Has('willow_ember', TUNING['WILLOW_EMBER_' .. name]) then return end
+
+  local ember = Find('willow_ember')
+  local spell_book = Get(ember, 'components', 'spellbook')
+  if not (ember and spell_book) then return end
+
+  local pos = target == 'cursor' and Get(TheInput, 'GetWorldPosition') or Get(ThePlayer, 'GetPosition')
+  local spell_id = GetSpellID(spell_book, STRINGS.PYROMANCY['FIRE_' .. name])
+  if not (pos and spell_id) then return end
+
+  spell_book:SelectSpell(spell_id)
+  local act = BufferedAction(ThePlayer, nil, ACTIONS.CASTAOE, ember, pos)
+  return Do(act, 'LeftClick', pos.x, pos.z, nil, nil, nil, nil, nil, nil, nil, ember, spell_id)
+end
+
+fn.FireThrow = function() return Fire('THROW', 'cursor') end
+fn.FireBurst = function() return Fire('BURST') end
+fn.FireBall = function() return Fire('BALL', 'cursor') end
+fn.FireFrenzy = function() return Fire('FRENZY') end
+
+fn.LunarOrShadowFire = function()
   if not IsPlaying('willow') then return end
 
   local ember = Find('willow_ember')
@@ -237,12 +269,12 @@ fn.CastFire = function()
   if not (ember and spell_book and cooldown) then return end
 
   local spell_name, cooldown_time, cooldown_percent
-  if HasSkill('willow_allegiance_lunar_fire') and Inv():Has('willow_ember', TUNING.WILLOW_EMBER_LUNAR or 5) then
+  if HasSkill(FIRE_SKILL.LUNAR) and Inv():Has('willow_ember', TUNING.WILLOW_EMBER_LUNAR or 5) then
     if Get(ThePlayer, 'replica', 'rider', 'IsRiding') then return end
     spell_name = STRINGS.PYROMANCY.LUNAR_FIRE
     cooldown_time = TUNING.WILLOW_LUNAR_FIRE_COOLDOWN or 13
     cooldown_percent = cooldown:GetSpellCooldownPercent('lunar_fire')
-  elseif HasSkill('willow_allegiance_shadow_fire') and Inv():Has('willow_ember', TUNING.WILLOW_EMBER_SHADOW or 5) then
+  elseif HasSkill(FIRE_SKILL.SHADOW) and Inv():Has('willow_ember', TUNING.WILLOW_EMBER_SHADOW or 5) then
     spell_name = STRINGS.PYROMANCY.SHADOW_FIRE
     cooldown_time = TUNING.WILLOW_SHADOW_FIRE_COOLDOWN or 8
     cooldown_percent = cooldown:GetSpellCooldownPercent('shadow_fire')
@@ -254,9 +286,11 @@ fn.CastFire = function()
     return Tip(math.ceil(cooldown_time * cooldown_percent) .. 's')
   end
 
-  local spell_id = GetSpellID(spell_book, spell_name)
-  spell_book:SelectSpell(spell_id)
   local pos = GetTargetPosition() or ThePlayer:GetPosition()
+  local spell_id = GetSpellID(spell_book, spell_name)
+  if not (pos and spell_id) then return end
+
+  spell_book:SelectSpell(spell_id)
   local act = BufferedAction(ThePlayer, nil, ACTIONS.CASTAOE, ember, pos)
   return Do(act, 'LeftClick', pos.x, pos.z, nil, nil, nil, nil, nil, nil, nil, ember, spell_id)
 end

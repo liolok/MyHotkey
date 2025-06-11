@@ -20,6 +20,10 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 [list]
 [*]Lighter: Equip a Lighter and Absorb Fire, or switch back to former hand equipment.
 [*]Drop Bernie
+[*]Flame Cast
+[*]Combustion
+[*]Fire Ball
+[*]Burning Frenzy
 [*]Lunar/Shadow Fire
 [/list]
 

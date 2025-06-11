@@ -116,7 +116,11 @@ Config(
   )
 )
 Config('DropBernie', T('Willow: Drop Bernie', '薇洛：丢弃伯尼'))
-Config('CastFire', T('Willow: Lunar/Shadow Fire', '薇洛：月焰/暗焰'))
+Config('FireThrow', T('Willow: Flame Cast', '薇洛：火焰投掷'))
+Config('FireBurst', T('Willow: Combustion', '薇洛：燃烧术'))
+Config('FireBall', T('Willow: Fire Ball', '薇洛：火球术'))
+Config('FireFrenzy', T('Willow: Burning Frenzy', '薇洛：狂热焚烧'))
+Config('LunarOrShadowFire', T('Willow: Lunar/Shadow Fire', '薇洛：月焰/暗焰'))
 
 Header('Wolfgang', '沃尔夫冈')
 Config(
