@@ -84,6 +84,14 @@ Config(
   )
 )
 Config(
+  'ToggleUmbrella',
+  T('Open/Close Umbralla', '打开/关闭暗影伞'),
+  T(
+    'If no Umbralla on ground, will try to drop one and open.',
+    '如果地上没有暗影伞，会尝试丢下一个并打开。'
+  )
+)
+Config(
   'SaveGame',
   T('Save Game', '保存游戏'),
   T('Press twice or hold to confirm action!', '双击或按住以确认操作！')
@@ -140,7 +148,10 @@ Header('Webber', '韦伯')
 Config(
   'UseSpiderWhistle',
   T('Webber: Whistle', '韦伯：口哨'),
-  T("Blow to Herd Spiders, or craft a whistle if don't have one.", '吹哨召集蜘蛛，如果没有的话会制作一个口哨。')
+  T(
+    "Blow to Herd Spiders, or craft a whistle if don't have one.",
+    '吹哨召集蜘蛛，如果没有的话会制作一个口哨。'
+  )
 )
 
 Header('Winona', '薇诺娜')

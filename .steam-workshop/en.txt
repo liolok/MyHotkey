@@ -10,6 +10,7 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 [*]Walking Cane: Equip a speed-up hand tool, or switch back to former hand equipment.
 (Priority: Walking Cane > The Lazy Explorer > Speedy Balloon > Wooden Walking Stick > Thulecite Club)
 [*]Jump In / Travel via: Wormhole, Big Slimy Pit, Time Rift, Sinkhole, Stairs
+[*]Open/Close Umbralla: If no Umbralla on ground, will try to drop one and open.
 [*]Save Game (press twice or hold to confirm action)
 [*]Reset Game: Restart the server from the last save. (press twice or hold to confirm action)
 [*]Toggle Movement Prediction

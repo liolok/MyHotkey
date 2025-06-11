@@ -150,6 +150,24 @@ fn.JumpInOrMigrate = function()
   return Do(BufferedAction(ThePlayer, target, action), 'ControllerActionButton', target)
 end
 
+fn.ToggleUmbrella = function()
+  if not IsPlaying() then return end
+
+  local radius, ignore_height, cant_tags = 12, true, { 'fueldepleted' } -- broken
+  local must_tags = { 'shadow_item', 'umbrella', 'acidrainimmune', 'lunarhailprotection' }
+  local target = FindClosestEntity(ThePlayer, radius, ignore_height, must_tags, cant_tags)
+  if not target then
+    local inventory_umbrella = Find('voidcloth_umbrella', { no_tags = 'fueldepleted' })
+    if not inventory_umbrella then return end
+
+    Drop(inventory_umbrella)
+    return ThePlayer:DoTaskInTime(0.5, fn.ActivateUmbrella)
+  end
+
+  local action = target:HasTag('turnedon') and ACTIONS.TURNOFF or ACTIONS.TURNON
+  return Do(BufferedAction(ThePlayer, target, action), 'ControllerActionButton', target)
+end
+
 fn.SaveGame = function() return IsPlaying() and IsInCD('Confirm Save') and not IsInCD('Save Game', 5) and c_save() end
 
 fn.ResetGame = function()
