@@ -33,6 +33,11 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 (Priority: Gembell > Marbell > Golden Dumbbell > Dumbbell > Icebell > Firebell > Thermbell)
 [/list]
 
+[h3]Wendy[/h3]
+[list]
+[*]Apply Spectral Cure-All (Will open Picnic Casket first)
+[/list]
+
 [h3]Maxwell[/h3]
 [list]
 [*]Use Magician's Top Hat, or Stop.

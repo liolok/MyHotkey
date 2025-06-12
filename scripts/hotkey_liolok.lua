@@ -307,6 +307,21 @@ fn.UseDumbBell = function()
 end
 
 --------------------------------------------------------------------------------
+-- Wendy | 温蒂
+
+fn.UseFastRegenElixir = function()
+  if not IsPlaying('wendy') then return end
+
+  local container = HasSkill('wendy_potion_container') and Find('elixir_container')
+  if container and not Get(container, 'replica', 'container', '_isopen') then
+    Use(container, 'RUMMAGE') -- open Picnic Casket
+    return ThePlayer:DoTaskInTime(0.5, fn.UseFastRegenElixir) -- wait a little
+  end
+
+  return Use(Find('ghostlyelixir_fastregen'), 'APPLYELIXIR')
+end
+
+--------------------------------------------------------------------------------
 -- Maxwell | 麦斯威尔
 
 fn.UseMagicianToolOrStop = function()

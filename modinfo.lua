@@ -134,6 +134,13 @@ Priority: Gembell > Marbell > Golden Dumbbell > Dumbbell > Icebell > Firebell > 
   )
 )
 
+Header('Wendy', '温蒂')
+Config(
+  'UseFastRegenElixir',
+  T('Wendy: Apply Spectral Cure-All', '温蒂：使用灵魂万灵药'),
+  T('Will open Picnic Casket first', '会先打开野餐盒')
+)
+
 Header('Maxwell', '麦斯威尔')
 Config(
   'UseMagicianToolOrStop',
