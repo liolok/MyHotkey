@@ -322,15 +322,21 @@ fn.UseFastRegenElixir = function()
 end
 
 local function IsSister(ghost, player) return Get(ghost, 'replica', 'follower', 'GetLeader') == player end -- credit: RICK workshop-2895442474/scripts/CharacterKeybinds.lua
-local function SetSpellID(book, name) return book:SelectSpell(GetSpellID(book, name)) end
 
+local GHOST_COMMAND_SKILL = {
+  ESCAPE = 'wendy_ghostcommand_1',
+  ATTACK_AT = 'wendy_ghostcommand_2',
+  HAUNT_AT = 'wendy_ghostcommand_3',
+  SCARE = 'wendy_ghostcommand_3',
+}
 local HAS_GHOST_COMMAND_CD = { ESCAPE = true, ATTACK_AT = true, HAUNT_AT = true, SCARE = true }
 local IS_GHOST_COMMAND_AOE = { ATTACK_AT = true, HAUNT_AT = true }
 
 local function GhostCommand(name)
+  if not HasSkill(GHOST_COMMAND_SKILL[name]) then return end
+
   local flower = Find('abigail_flower')
-  local spell_book = Get(flower, 'components', 'spellbook')
-  if not spell_book then return end
+  if not flower then return end
 
   if ThePlayer:HasTag('ghostfriend_notsummoned') then return Use(flower, 'CASTSUMMON') end
 
@@ -344,6 +350,9 @@ local function GhostCommand(name)
     end
     if type(percent) == 'number' and type(time) == 'number' then return Tip(math.ceil(percent * time) .. 's') end
   end
+
+  local spell_book = Get(flower, 'components', 'spellbook')
+  if not spell_book then return end
 
   SetSpellID(spell_book, STRINGS.GHOSTCOMMANDS[name] or STRINGS.ACTIONS.COMMUNEWITHSUMMONED[name])
   if IS_GHOST_COMMAND_AOE[name] then
