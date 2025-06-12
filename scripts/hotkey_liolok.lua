@@ -139,6 +139,23 @@ local function GetTargetPosition(distance)
   return Vector3(x, 0, z)
 end
 
+local function GetSpellID(spell_book, spell_name)
+  for id, spell in pairs(Get(spell_book, 'items') or {}) do
+    if spell.label == spell_name then return id, spell end
+  end
+end
+
+local function SetSpell(book, name) return book and book:SelectSpell(GetSpellID(book, name)) end
+
+local function IsNumber(...)
+  for _, value in ipairs({ ... }) do
+    if type(value) ~= 'number' then return end
+  end
+  return true
+end
+
+local function TipCooldown(percent, time) return Tip(math.ceil(percent * time) .. 's') end
+
 --------------------------------------------------------------------------------
 
 fn.DropLantern = function() return IsPlaying() and Drop(Find('lantern', { no_tags = 'fueldepleted' })) end
@@ -222,12 +239,6 @@ end
 
 fn.DropBernie = function() return IsPlaying('willow') and Drop(Find('bernie_inactive', { no_tags = 'fueldepleted' })) end
 
-local function GetSpellID(spell_book, spell_name)
-  for id, spell in pairs(Get(spell_book, 'items') or {}) do
-    if spell.label == spell_name then return id, spell end
-  end
-end
-
 local FIRE_SKILL = {
   THROW = 'willow_embers',
   BURST = 'willow_fire_burst',
@@ -246,13 +257,7 @@ local function Fire(name, target)
   local spell_book = Get(ember, 'components', 'spellbook')
   if not (ember and spell_book) then return end
 
-  local pos = target == 'cursor' and Get(TheInput, 'GetWorldPosition') or Get(ThePlayer, 'GetPosition')
-  local spell_id = GetSpellID(spell_book, STRINGS.PYROMANCY['FIRE_' .. name])
-  if not (pos and spell_id) then return end
-
-  spell_book:SelectSpell(spell_id)
-  local act = BufferedAction(ThePlayer, nil, ACTIONS.CASTAOE, ember, pos)
-  return Do(act, 'LeftClick', pos.x, pos.z, nil, nil, nil, nil, nil, nil, nil, ember, spell_id)
+  return SetSpell(spell_book, STRINGS.PYROMANCY['FIRE_' .. name]) and Ctl():StartAOETargetingUsing(ember)
 end
 
 fn.FireThrow = function() return Fire('THROW', 'cursor') end
@@ -264,34 +269,33 @@ fn.LunarOrShadowFire = function()
   if not IsPlaying('willow') then return end
 
   local ember = Find('willow_ember')
-  local spell_book = Get(ember, 'components', 'spellbook')
-  local cooldown = Get(ThePlayer, 'components', 'spellbookcooldowns')
-  if not (ember and spell_book and cooldown) then return end
+  if not ember then return end
 
-  local spell_name, cooldown_time, cooldown_percent
+  local cooldown = Get(ThePlayer, 'components', 'spellbookcooldowns')
+  if not cooldown then return end
+
+  local spell_name, cooldown_percent, cooldown_time
   if HasSkill(FIRE_SKILL.LUNAR) and Inv():Has('willow_ember', TUNING.WILLOW_EMBER_LUNAR or 5) then
     if Get(ThePlayer, 'replica', 'rider', 'IsRiding') then return end
     spell_name = STRINGS.PYROMANCY.LUNAR_FIRE
-    cooldown_time = TUNING.WILLOW_LUNAR_FIRE_COOLDOWN or 13
     cooldown_percent = cooldown:GetSpellCooldownPercent('lunar_fire')
+    cooldown_time = TUNING.WILLOW_LUNAR_FIRE_COOLDOWN or 13
   elseif HasSkill(FIRE_SKILL.SHADOW) and Inv():Has('willow_ember', TUNING.WILLOW_EMBER_SHADOW or 5) then
     spell_name = STRINGS.PYROMANCY.SHADOW_FIRE
-    cooldown_time = TUNING.WILLOW_SHADOW_FIRE_COOLDOWN or 8
     cooldown_percent = cooldown:GetSpellCooldownPercent('shadow_fire')
+    cooldown_time = TUNING.WILLOW_SHADOW_FIRE_COOLDOWN or 8
   else
     return
   end
 
-  if type(cooldown_time) == 'number' and type(cooldown_percent) == 'number' then
-    return Tip(math.ceil(cooldown_time * cooldown_percent) .. 's')
-  end
+  if IsNumber(cooldown_percent, cooldown_time) then return TipCooldown(cooldown_percent, cooldown_time) end
 
   local pos = GetTargetPosition() or ThePlayer:GetPosition()
-  local spell_id = GetSpellID(spell_book, spell_name)
-  if not (pos and spell_id) then return end
+  local spell_book = Get(ember, 'components', 'spellbook')
+  if not (pos and SetSpell(spell_book, spell_name)) then return end
 
-  spell_book:SelectSpell(spell_id)
   local act = BufferedAction(ThePlayer, nil, ACTIONS.CASTAOE, ember, pos)
+  local spell_id = GetSpellID(spell_book, spell_name)
   return Do(act, 'LeftClick', pos.x, pos.z, nil, nil, nil, nil, nil, nil, nil, ember, spell_id)
 end
 
@@ -348,17 +352,17 @@ local function GhostCommand(name)
       percent = cooldown and cooldown:GetSpellCooldownPercent('do_ghost_attackat')
       time = TUNING.WENDYSKILL_GESTALT_ATTACKAT_COMMAND_COOLDOWN or 10
     end
-    if type(percent) == 'number' and type(time) == 'number' then return Tip(math.ceil(percent * time) .. 's') end
+    if IsNumber(percent, time) then return TipCooldown(percent, time) end
   end
 
   local spell_book = Get(flower, 'components', 'spellbook')
-  if not spell_book then return end
+  local spell_name = STRINGS.GHOSTCOMMANDS[name] or STRINGS.ACTIONS.COMMUNEWITHSUMMONED[name]
+  if not SetSpell(spell_book, spell_name) then return end
 
-  SetSpellID(spell_book, STRINGS.GHOSTCOMMANDS[name] or STRINGS.ACTIONS.COMMUNEWITHSUMMONED[name])
   if IS_GHOST_COMMAND_AOE[name] then
-    return Ctl() and Ctl():StartAOETargetingUsing(flower)
+    return Ctl():StartAOETargetingUsing(flower)
   else
-    return Inv() and Inv():CastSpellBookFromInv(flower)
+    return Inv():CastSpellBookFromInv(flower)
   end
 end
 
