@@ -307,7 +307,7 @@ fn.UseDumbBell = function()
 end
 
 --------------------------------------------------------------------------------
--- Wendy | 温蒂
+-- Abigail | 阿比盖尔
 
 fn.UseFastRegenElixir = function()
   if not IsPlaying('wendy') then return end
@@ -320,6 +320,58 @@ fn.UseFastRegenElixir = function()
 
   return Use(Find('ghostlyelixir_fastregen'), 'APPLYELIXIR')
 end
+
+local function IsSister(ghost, player) return Get(ghost, 'replica', 'follower', 'GetLeader') == player end -- credit: RICK workshop-2895442474/scripts/CharacterKeybinds.lua
+local function SetSpellID(book, name) return book:SelectSpell(GetSpellID(book, name)) end
+
+local HAS_GHOST_COMMAND_CD = { ESCAPE = true, ATTACK_AT = true, HAUNT_AT = true, SCARE = true }
+local IS_GHOST_COMMAND_AOE = { ATTACK_AT = true, HAUNT_AT = true }
+
+local function GhostCommand(name)
+  local flower = Find('abigail_flower')
+  local spell_book = Get(flower, 'components', 'spellbook')
+  if not spell_book then return end
+
+  if ThePlayer:HasTag('ghostfriend_notsummoned') then return Use(flower, 'CASTSUMMON') end
+
+  if HAS_GHOST_COMMAND_CD[name] then
+    local cooldown = Get(ThePlayer, 'components', 'spellbookcooldowns')
+    local percent = cooldown and cooldown:GetSpellCooldownPercent('ghostcommand')
+    local time = TUNING.WENDYSKILL_COMMAND_COOLDOWN or 4
+    if name == 'ATTACK_AT' and FindEntity(ThePlayer, 80, IsSister, { 'gestalt' }) then -- Gestalt Abigail
+      percent = cooldown and cooldown:GetSpellCooldownPercent('do_ghost_attackat')
+      time = TUNING.WENDYSKILL_GESTALT_ATTACKAT_COMMAND_COOLDOWN or 10
+    end
+    if type(percent) == 'number' and type(time) == 'number' then return Tip(math.ceil(percent * time) .. 's') end
+  end
+
+  SetSpellID(spell_book, STRINGS.GHOSTCOMMANDS[name] or STRINGS.ACTIONS.COMMUNEWITHSUMMONED[name])
+  if IS_GHOST_COMMAND_AOE[name] then
+    return Ctl() and Ctl():StartAOETargetingUsing(flower)
+  else
+    return Inv() and Inv():CastSpellBookFromInv(flower)
+  end
+end
+
+fn.SummonOrRecallAbigail = function()
+  if not IsPlaying('wendy') then return end
+
+  if ThePlayer:HasTag('ghostfriend_notsummoned') then
+    return Use(Find('abigail_flower'), 'CASTSUMMON')
+  elseif ThePlayer:HasTag('ghostfriend_summoned') then
+    return GhostCommand('UNSUMMON')
+  end
+end
+
+fn.CommuneWithSummoned = function()
+  return IsPlaying('wendy')
+    and GhostCommand(ThePlayer:HasTag('has_aggressive_follower') and 'MAKE_DEFENSIVE' or 'MAKE_AGGRESSIVE')
+end
+
+fn.AbigailEscape = function() return IsPlaying('wendy') and GhostCommand('ESCAPE') end
+fn.AbigailAttackAt = function() return IsPlaying('wendy') and GhostCommand('ATTACK_AT') end
+fn.AbigailHauntAt = function() return IsPlaying('wendy') and GhostCommand('HAUNT_AT') end
+fn.AbigailScare = function() return IsPlaying('wendy') and GhostCommand('SCARE') end
 
 --------------------------------------------------------------------------------
 -- Maxwell | 麦斯威尔

@@ -134,12 +134,18 @@ Priority: Gembell > Marbell > Golden Dumbbell > Dumbbell > Icebell > Firebell > 
   )
 )
 
-Header('Wendy', '温蒂')
+Header('Abigail', '阿比盖尔')
 Config(
   'UseFastRegenElixir',
-  T('Wendy: Apply Spectral Cure-All', '温蒂：使用灵魂万灵药'),
+  T('Abigail: Apply Spectral Cure-All', '阿比盖尔：使用灵魂万灵药'),
   T('Will open Picnic Casket first', '会先打开野餐盒')
 )
+Config('SummonOrRecallAbigail', T('Abigail: Summon / Recall', '阿比盖尔：召唤/解除召唤'))
+Config('CommuneWithSummoned', T('Abigail: Rile Up / Soothe', '阿比盖尔：激怒/安慰'))
+Config('AbigailEscape', T('Abigail: Escape', '阿比盖尔：逃离'))
+Config('AbigailAttackAt', T('Abigail: Attack At', '阿比盖尔：攻击'))
+Config('AbigailHauntAt', T('Abigail: Haunt At', '阿比盖尔：作祟'))
+Config('AbigailScare', T('Abigail: Scare', '阿比盖尔：惊吓'))
 
 Header('Maxwell', '麦斯威尔')
 Config(
