@@ -63,6 +63,10 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 [h3]Winona[/h3]
 [list]
 [*]Portasol: Equip a Portasol and Activate it, or switch back to former hand equipment.
+[*]Catapult: Arm
+[*]Catapult: Barrage
+[*]Catapult: Target
+[*]Catapult: Planar Strike
 [/list]
 
 [h3]Wormwood[/h3]

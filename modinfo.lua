@@ -181,6 +181,10 @@ Config(
     '装备一个传送伞并激活，或切换回之前的手部装备。'
   )
 )
+Config('CatapultWakeUp', T('Catapult: Arm', '投石机：武装'))
+Config('CatapultBoost', T('Catapult: Barrage', '投石机：齐射'))
+Config('CatapultVolley', T('Catapult: Target', '投石机：瞄准'))
+Config('CatapultElementalVolley', T('Catapult: Planar Strike', '投石机：位面袭击'))
 
 Header('Wormwood', '沃姆伍德')
 Config('MakeLivingLog', T('Wormwood: Grow Living Log', '沃姆伍德：生长活木头'))

@@ -76,6 +76,8 @@ local function Find(prefab, filter)
   end)
 end
 
+local function FindFueled(prefab) return Find(prefab, { no_tags = 'fueldepleted' }) end
+
 local function FindPrefabs(...)
   for _, prefab in ipairs({ ... }) do
     local item = Find(prefab)
@@ -121,10 +123,17 @@ local function Tip(message)
   return talker and talker:Say(message, time, no_anim, force)
 end
 
-local function HasSkill(name)
-  if not name then return true end
+local function HasSkill(skill)
+  if not skill then return true end
+
   local skill_tree = Get(ThePlayer, 'components', 'skilltreeupdater')
-  return skill_tree and skill_tree:IsActivated(name)
+  if not skill_tree then return end
+
+  if type(skill) == 'string' then return skill_tree:IsActivated(skill) end
+
+  for _, v in ipairs(type(skill) == 'table' and skill or {}) do
+    if skill_tree:IsActivated(v) then return true end
+  end
 end
 
 local function GetTargetPosition(distance)
@@ -158,7 +167,7 @@ local function TipCooldown(percent, time) return Tip(math.ceil(percent * time) .
 
 --------------------------------------------------------------------------------
 
-fn.DropLantern = function() return IsPlaying() and Drop(Find('lantern', { no_tags = 'fueldepleted' })) end
+fn.DropLantern = function() return IsPlaying() and Drop(FindFueled('lantern')) end
 
 fn.UseBeargerFurSack = function()
   return (not IsInCD('Polar Bearger Bin') and IsPlaying()) and Use(Find('beargerfur_sack'), 'RUMMAGE')
@@ -168,7 +177,7 @@ fn.UseCane = function()
   if not IsPlaying() then return end
 
   local cane = FindPrefabs('cane', 'orangestaff')
-    or Find('balloonspeed', { no_tags = 'fueldepleted' })
+    or FindFueled('balloonspeed')
     or FindPrefabs('walking_stick', 'ruins_bat')
   return SwitchHand(cane)
 end
@@ -192,7 +201,7 @@ fn.ToggleUmbrella = function()
   local must_tags = { 'shadow_item', 'umbrella', 'acidrainimmune', 'lunarhailprotection' }
   local target = FindClosestEntity(ThePlayer, radius, ignore_height, must_tags, cant_tags)
   if not target then
-    local inventory_umbrella = Find('voidcloth_umbrella', { no_tags = 'fueldepleted' })
+    local inventory_umbrella = FindFueled('voidcloth_umbrella')
     if not inventory_umbrella then return end
 
     Drop(inventory_umbrella)
@@ -237,7 +246,7 @@ fn.UseLighter = function()
   return SwitchHand(lighter) and Use(lighter, action)
 end
 
-fn.DropBernie = function() return IsPlaying('willow') and Drop(Find('bernie_inactive', { no_tags = 'fueldepleted' })) end
+fn.DropBernie = function() return IsPlaying('willow') and Drop(FindFueled('bernie_inactive')) end
 
 local FIRE_SKILL = {
   THROW = 'willow_embers',
@@ -465,9 +474,29 @@ end
 fn.UseTeleBrella = function()
   if not IsPlaying('winona') then return end
 
-  local brella = Find('winona_telebrella', { no_tags = 'fueldepleted' })
+  local brella = FindFueled('winona_telebrella')
   return SwitchHand(brella) and Use(brella, 'REMOTE_TELEPORT')
 end
+
+local ENGINEER_REMOTE_SKILL = {
+  WAKEUP = 'winona_portable_structures',
+  VOLLEY = 'winona_catapult_volley_1',
+  BOOST = 'winona_catapult_boost_1',
+  ELEMENTAL_VOLLEY = { 'winona_shadow_3', 'winona_lunar_3' },
+}
+
+local function EngineerRemote(name)
+  if not (IsPlaying('winona') and HasSkill(ENGINEER_REMOTE_SKILL[name])) then return end
+
+  local remote = FindFueled('winona_remote')
+  local spell_book = Get(remote, 'components', 'spellbook')
+  return SetSpell(spell_book, STRINGS.ENGINEER_REMOTE[name]) and Ctl():StartAOETargetingUsing(remote)
+end
+
+fn.CatapultWakeUp = function() return EngineerRemote('WAKEUP') end
+fn.CatapultBoost = function() return EngineerRemote('BOOST') end
+fn.CatapultVolley = function() return EngineerRemote('VOLLEY') end
+fn.CatapultElementalVolley = function() return EngineerRemote('ELEMENTAL_VOLLEY') end
 
 --------------------------------------------------------------------------------
 -- Wormwood | 沃姆伍德
