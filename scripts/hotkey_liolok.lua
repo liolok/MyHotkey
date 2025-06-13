@@ -260,7 +260,7 @@ local FIRE_SKILL = {
   SHADOW = 'willow_allegiance_shadow_fire',
 }
 
-local function Fire(name, target)
+local function Fire(name)
   if not (IsPlaying('willow') and HasSkill(FIRE_SKILL[name])) then return end
 
   if not Inv():Has('willow_ember', TUNING['WILLOW_EMBER_' .. name]) then return end
@@ -270,9 +270,9 @@ local function Fire(name, target)
   return SetSpell(ember, spell_name) and Ctl():StartAOETargetingUsing(ember)
 end
 
-fn.FireThrow = function() return Fire('THROW', 'cursor') end
+fn.FireThrow = function() return Fire('THROW') end
 fn.FireBurst = function() return Fire('BURST') end
-fn.FireBall = function() return Fire('BALL', 'cursor') end
+fn.FireBall = function() return Fire('BALL') end
 fn.FireFrenzy = function() return Fire('FRENZY') end
 
 fn.LunarOrShadowFire = function()
@@ -518,7 +518,7 @@ fn.MakeLightFlier = function() return IsPlaying('wormwood') and Make('wormwood_l
 -- Woby | 沃比
 
 fn.WobyRummage = function()
-  if IsInCD('Open Woby') or not IsPlaying('walter') then return end
+  if IsInCD('Rummage Woby') or not IsPlaying('walter') then return end
 
   local woby = Get(ThePlayer, 'woby_commands_classified', 'GetWoby')
   if woby == Get(ThePlayer, 'replica', 'rider', 'GetMount') then -- is riding on Woby
