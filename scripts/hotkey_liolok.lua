@@ -424,9 +424,7 @@ local function IsValidBattleSong(item) -- function `singable` from componentacti
   if not (item and item:HasTag('battlesong')) then return end -- not battle song at all
 
   local song = item.songdata
-  if not song then return end
-
-  if not HasSkill(song.REQUIRE_SKILL) then return end -- no skill required by this song
+  if not (song and HasSkill(song.REQUIRE_SKILL)) then return end
 
   if song.INSTANT then -- Battle Stinger
     local recharge_value = Get(item, 'replica', '_', 'inventoryitem', 'classified', 'recharge', 'value')
@@ -440,7 +438,7 @@ local function IsValidBattleSong(item) -- function `singable` from componentacti
   return true
 end
 
-local function UseValidBattleSong() return Use(FindInvItemBy(IsValidBattleSong), 'SING') end
+local function Sing() return Use(FindInvItemBy(IsValidBattleSong), 'SING') end
 
 fn.UseBattleSong = function()
   if not IsPlaying('wathgrithr') then return end
@@ -448,10 +446,10 @@ fn.UseBattleSong = function()
   local container = HasSkill('wathgrithr_songs_container') and Find('battlesong_container')
   if container and not Get(container, 'replica', 'container', '_isopen') then
     Use(container, 'RUMMAGE') -- open Battle Call Canister
-    return ThePlayer:DoTaskInTime(0.5, UseValidBattleSong) -- wait a little to sing
+    return ThePlayer:DoTaskInTime(0.5, Sing) -- wait a little to sing
   end
 
-  return UseValidBattleSong()
+  return Sing()
 end
 
 fn.StrikeOrBlock = function()
@@ -529,19 +527,19 @@ fn.WobyCourier = function()
   if not (IsPlaying('walter') and HasSkill('walter_camp_wobycourier')) then return end
 
   local woby = Get(ThePlayer, 'woby_commands_classified', 'GetWoby')
-  if not woby or woby:HasOneOfTags('transforming', 'INLIMBO') then return end
-
-  return SetSpell(woby, Get(STRINGS, 'WOBY_COMMANDS', 'COURIER')) and Ctl():PullUpMap(woby, ACTIONS.DIRECTCOURIER_MAP)
+  return ThePlayer:IsNear(woby, 16)
+    and SetSpell(woby, Get(STRINGS, 'WOBY_COMMANDS', 'COURIER'))
+    and Ctl():PullUpMap(woby, ACTIONS.DIRECTCOURIER_MAP)
 end
 
 fn.WobyDash = function() -- credit: 川小胖 workshop-3460815078 from DoDoubleTapDir() in components/playercontroller.lua
   if not (IsPlaying('walter') and HasSkill('walter_woby_dash')) then return end
 
-  local target_pos, player_pos = Get(TheInput, 'GetWorldPosition'), Get(ThePlayer, 'GetPosition')
-  if not (target_pos and player_pos) then return end
+  local cursor, player = Get(TheInput, 'GetWorldPosition'), Get(ThePlayer, 'GetPosition')
+  if not (cursor and player) then return end
 
   local picker = Get(ThePlayer, 'components', 'playeractionpicker')
-  local dir = Get(target_pos - player_pos, 'GetNormalized')
+  local dir = Get(cursor - player, 'GetNormalized')
   local act = Get(picker and picker:GetDoubleClickActions(nil, dir), 1)
   if Get(act, 'action') ~= ACTIONS.DASH then return end
 
