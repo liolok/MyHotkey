@@ -8,7 +8,7 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 [*]Drop Lantern
 [*]Open/Close Polar Bearger Bin
 [*]Walking Cane: Equip a speed-up hand tool, or switch back to former hand equipment.
-(Priority: Walking Cane > The Lazy Explorer > Speedy Balloon > Wooden Walking Stick > Thulecite Club)
+(Priority: Walking Cane > The Lazy Explorer > Wooden Walking Stick > Thulecite Club > Speedy Balloon)
 [*]Jump In / Travel via: Wormhole, Big Slimy Pit, Time Rift, Sinkhole, Stairs
 [*]Open/Close Umbralla: If no Umbralla on ground, will try to drop one and open.
 [*]Save Game (press twice or hold to confirm action)

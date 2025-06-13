@@ -177,12 +177,8 @@ fn.UseBeargerFurSack = function()
 end
 
 fn.UseCane = function()
-  if not IsPlaying() then return end
-
-  local cane = FindPrefabs('cane', 'orangestaff')
-    or FindFueled('balloonspeed')
-    or FindPrefabs('walking_stick', 'ruins_bat')
-  return SwitchHand(cane)
+  return IsPlaying()
+    and SwitchHand(FindPrefabs('cane', 'orangestaff', 'walking_stick', 'ruins_bat') or FindFueled('balloonspeed'))
 end
 
 fn.JumpInOrMigrate = function()

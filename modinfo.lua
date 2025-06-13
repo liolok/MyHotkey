@@ -72,7 +72,7 @@ Config(
     [[Equip a speed-up hand tool, or switch back to former hand equipment.
 Priority: Walking Cane > The Lazy Explorer > Speedy Balloon > Wooden Walking Stick > Thulecite Club]],
     [[装备一个加速的手部工具，或切换回之前的手部装备。
-优先级：步行手杖 > 懒人魔杖 > 迅捷气球 > 木手杖 > 铥矿棒]]
+优先级：步行手杖 > 懒人魔杖 > 木手杖 > 铥矿棒 > 迅捷气球]]
   )
 )
 Config(
