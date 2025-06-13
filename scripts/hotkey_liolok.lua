@@ -515,7 +515,7 @@ fn.MakeLivingLog = function() return IsPlaying('wormwood') and Make('livinglog')
 fn.MakeLightFlier = function() return IsPlaying('wormwood') and Make('wormwood_lightflier') end
 
 --------------------------------------------------------------------------------
--- Walter | 沃尔特
+-- Woby | 沃比
 
 fn.WobyRummage = function()
   if IsInCD('Open Woby') or not IsPlaying('walter') then return end
@@ -536,6 +536,23 @@ fn.WobyCourier = function()
   if not woby or woby:HasOneOfTags('transforming', 'INLIMBO') then return end
 
   return SetSpell(woby, Get(STRINGS, 'WOBY_COMMANDS', 'COURIER')) and Ctl():PullUpMap(woby, ACTIONS.DIRECTCOURIER_MAP)
+end
+
+fn.WobyDash = function() -- credit: 川小胖 workshop-3460815078 from DoDoubleTapDir() in components/playercontroller.lua
+  if not (IsPlaying('walter') and HasSkill('walter_woby_dash')) then return end
+
+  local target_pos, player_pos = Get(TheInput, 'GetWorldPosition'), Get(ThePlayer, 'GetPosition')
+  if not (target_pos and player_pos) then return end
+
+  local picker = Get(ThePlayer, 'components', 'playeractionpicker')
+  local dir = Get(target_pos - player_pos, 'GetNormalized')
+  local act = Get(picker and picker:GetDoubleClickActions(nil, dir), 1)
+  if Get(act, 'action') ~= ACTIONS.DASH then return end
+
+  local x, z, no_force = Get(act, 'pos', 'local_pt', 'x'), Get(act, 'pos', 'local_pt', 'z')
+  local mod_name, platform = Get(act, 'action', 'mod_name'), Get(act, 'pos', 'walkable_platform')
+  local platform_relative = platform ~= nil
+  return Do(act, 'DoubleTapAction', x, z, no_force, mod_name, platform, platform_relative)
 end
 
 --------------------------------------------------------------------------------

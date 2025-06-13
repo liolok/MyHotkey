@@ -194,9 +194,14 @@ Header('Wormwood', '沃姆伍德')
 Config('MakeLivingLog', T('Wormwood: Grow Living Log', '沃姆伍德：生长活木头'))
 Config('MakeLightFlier', T('Wormwood: Transform Bulbous Lightbug', '沃姆伍德：变形球状光虫'))
 
-Header('Walter', '沃尔特')
+Header('Woby', '沃比')
 Config('WobyRummage', T('Woby: Open/Close', '沃比：打开/关闭'))
 Config('WobyCourier', T('Woby: Deliver', '沃比：运送'))
+Config(
+  'WobyDash',
+  T('Woby: Dash', '沃比：冲刺'),
+  T('Bind this key Will disable vanilla double tapping dash.', '绑定此键会禁用原生的双击冲刺。')
+)
 
 Header('Wanda', '旺达')
 Config('UsePocketWatchHeal', T('Wanda: Activate Ageless Watch', '旺达：激活不老表'))
