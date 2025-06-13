@@ -79,6 +79,12 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 [*]Transform Bulbous Lightbug
 [/list]
 
+[h3]Walter[/h3]
+[list]
+[*]Woby: Open/Close
+[*]Woby: Deliver
+[/list]
+
 [h3]Wanda[/h3]
 [list]
 [*]Activate Ageless Watch

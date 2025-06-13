@@ -148,13 +148,16 @@ local function GetTargetPosition(distance)
   return Vector3(x, 0, z)
 end
 
-local function GetSpellID(spell_book, spell_name)
-  for id, spell in pairs(Get(spell_book, 'items') or {}) do
-    if spell.label == spell_name then return id, spell end
+local function GetSpellID(book, name)
+  for id, spell in pairs(Get(book, 'items') or {}) do
+    if spell.label == name then return id, spell end
   end
 end
 
-local function SetSpell(book, name) return book and book:SelectSpell(GetSpellID(book, name)) end
+local function SetSpell(inst, name)
+  local book = Get(inst, 'components', 'spellbook')
+  return book and book:SelectSpell(GetSpellID(book, name))
+end
 
 local function IsNumber(...)
   for _, value in ipairs({ ... }) do
@@ -263,9 +266,8 @@ local function Fire(name, target)
   if not Inv():Has('willow_ember', TUNING['WILLOW_EMBER_' .. name]) then return end
 
   local ember = Find('willow_ember')
-  local spell_book = Get(ember, 'components', 'spellbook')
   local spell_name = Get(STRINGS, 'PYROMANCY', 'FIRE_' .. name)
-  return SetSpell(spell_book, spell_name) and Ctl():StartAOETargetingUsing(ember)
+  return SetSpell(ember, spell_name) and Ctl():StartAOETargetingUsing(ember)
 end
 
 fn.FireThrow = function() return Fire('THROW', 'cursor') end
@@ -299,11 +301,10 @@ fn.LunarOrShadowFire = function()
   if IsNumber(cooldown_percent, cooldown_time) then return TipCooldown(cooldown_percent, cooldown_time) end
 
   local pos = GetTargetPosition() or ThePlayer:GetPosition()
-  local spell_book = Get(ember, 'components', 'spellbook')
-  if not (pos and SetSpell(spell_book, spell_name)) then return end
+  if not (pos and SetSpell(ember, spell_name)) then return end
 
   local act = BufferedAction(ThePlayer, nil, ACTIONS.CASTAOE, ember, pos)
-  local spell_id = GetSpellID(spell_book, spell_name)
+  local spell_id = GetSpellID(Get(ember, 'components', 'spellbook'), spell_name)
   return Do(act, 'LeftClick', pos.x, pos.z, nil, nil, nil, nil, nil, nil, nil, ember, spell_id)
 end
 
@@ -363,9 +364,8 @@ local function GhostCommand(name)
     if IsNumber(percent, time) then return TipCooldown(percent, time) end
   end
 
-  local spell_book = Get(flower, 'components', 'spellbook')
   local spell_name = Get(STRINGS, 'GHOSTCOMMANDS', name) or Get(STRINGS, 'ACTIONS', 'COMMUNEWITHSUMMONED', name)
-  if not SetSpell(spell_book, spell_name) then return end
+  if not SetSpell(ember, spell_name) then return end
 
   if IS_GHOST_CMD_AOE[name] then
     return Ctl():StartAOETargetingUsing(flower)
@@ -413,8 +413,7 @@ local function Spell(name)
   if not IsPlaying('waxwell') then return end
 
   local journal = FindFueled('waxwelljournal')
-  local spell_book = Get(journal, 'components', 'spellbook')
-  return SetSpell(spell_book, Get(STRINGS, 'SPELLS', name)) and Ctl():StartAOETargetingUsing(journal)
+  return SetSpell(journal, Get(STRINGS, 'SPELLS', name)) and Ctl():StartAOETargetingUsing(journal)
 end
 
 fn.ShadowWorker = function() return Spell('SHADOW_WORKER') end
@@ -501,9 +500,7 @@ local function EngineerRemote(name)
   if not (IsPlaying('winona') and HasSkill(REMOTE_SKILL[name])) then return end
 
   local remote = FindFueled('winona_remote')
-  local spell_book = Get(remote, 'components', 'spellbook')
-  local spell_name = Get(STRINGS, 'ENGINEER_REMOTE', name)
-  return SetSpell(spell_book, spell_name) and Ctl():StartAOETargetingUsing(remote)
+  return SetSpell(remote, Get(STRINGS, 'ENGINEER_REMOTE', name)) and Ctl():StartAOETargetingUsing(remote)
 end
 
 fn.CatapultWakeUp = function() return EngineerRemote('WAKEUP') end
@@ -516,6 +513,30 @@ fn.CatapultElementalVolley = function() return EngineerRemote('ELEMENTAL_VOLLEY'
 
 fn.MakeLivingLog = function() return IsPlaying('wormwood') and Make('livinglog') end
 fn.MakeLightFlier = function() return IsPlaying('wormwood') and Make('wormwood_lightflier') end
+
+--------------------------------------------------------------------------------
+-- Walter | 沃尔特
+
+fn.WobyRummage = function()
+  if IsInCD('Open Woby') or not IsPlaying('walter') then return end
+
+  local woby = Get(ThePlayer, 'woby_commands_classified', 'GetWoby')
+  if woby == Get(ThePlayer, 'replica', 'rider', 'GetMount') then -- is riding on Woby
+    return SetSpell(ThePlayer, Get(STRINGS, 'ACTIONS', 'RUMMAGE', 'GENERIC')) and Inv():CastSpellBookFromInv(ThePlayer)
+  elseif ThePlayer:IsNear(woby, 16) then -- Woby is nearby
+    return Do(BufferedAction(ThePlayer, woby, ACTIONS.RUMMAGE), 'ControllerActionButton', woby)
+  end
+end
+
+fn.WobyCourier = function()
+  if Get(ThePlayer, 'woby_commands_classified', 'IsOutForDelivery') then return end
+  if not (IsPlaying('walter') and HasSkill('walter_camp_wobycourier')) then return end
+
+  local woby = Get(ThePlayer, 'woby_commands_classified', 'GetWoby')
+  if not woby or woby:HasOneOfTags('transforming', 'INLIMBO') then return end
+
+  return SetSpell(woby, Get(STRINGS, 'WOBY_COMMANDS', 'COURIER')) and Ctl():PullUpMap(woby, ACTIONS.DIRECTCOURIER_MAP)
+end
 
 --------------------------------------------------------------------------------
 -- Wanda | 旺达
