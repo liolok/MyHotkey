@@ -47,6 +47,10 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 [h3]Maxwell[/h3]
 [list]
 [*]Use Magician's Top Hat, or Stop.
+[*]Shadow Servant
+[*]Shadow Duelist
+[*]Shadow Sneak
+[*]Shadow Prison
 [/list]
 
 [h3]Wigfrid[/h3]

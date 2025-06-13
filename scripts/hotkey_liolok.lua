@@ -264,9 +264,8 @@ local function Fire(name, target)
 
   local ember = Find('willow_ember')
   local spell_book = Get(ember, 'components', 'spellbook')
-  if not (ember and spell_book) then return end
-
-  return SetSpell(spell_book, STRINGS.PYROMANCY['FIRE_' .. name]) and Ctl():StartAOETargetingUsing(ember)
+  local spell_name = Get(STRINGS, 'PYROMANCY', 'FIRE_' .. name)
+  return SetSpell(spell_book, spell_name) and Ctl():StartAOETargetingUsing(ember)
 end
 
 fn.FireThrow = function() return Fire('THROW', 'cursor') end
@@ -286,11 +285,11 @@ fn.LunarOrShadowFire = function()
   local spell_name, cooldown_percent, cooldown_time
   if HasSkill(FIRE_SKILL.LUNAR) and Inv():Has('willow_ember', TUNING.WILLOW_EMBER_LUNAR or 5) then
     if Get(ThePlayer, 'replica', 'rider', 'IsRiding') then return end
-    spell_name = STRINGS.PYROMANCY.LUNAR_FIRE
+    spell_name = Get(STRINGS, 'PYROMANCY', 'LUNAR_FIRE')
     cooldown_percent = cooldown:GetSpellCooldownPercent('lunar_fire')
     cooldown_time = TUNING.WILLOW_LUNAR_FIRE_COOLDOWN or 13
   elseif HasSkill(FIRE_SKILL.SHADOW) and Inv():Has('willow_ember', TUNING.WILLOW_EMBER_SHADOW or 5) then
-    spell_name = STRINGS.PYROMANCY.SHADOW_FIRE
+    spell_name = Get(STRINGS, 'PYROMANCY', 'SHADOW_FIRE')
     cooldown_percent = cooldown:GetSpellCooldownPercent('shadow_fire')
     cooldown_time = TUNING.WILLOW_SHADOW_FIRE_COOLDOWN or 8
   else
@@ -336,24 +335,24 @@ end
 
 local function IsSister(ghost, player) return Get(ghost, 'replica', 'follower', 'GetLeader') == player end -- credit: RICK workshop-2895442474/scripts/CharacterKeybinds.lua
 
-local GHOST_COMMAND_SKILL = {
+local GHOST_CMD_SKILL = {
   ESCAPE = 'wendy_ghostcommand_1',
   ATTACK_AT = 'wendy_ghostcommand_2',
   HAUNT_AT = 'wendy_ghostcommand_3',
   SCARE = 'wendy_ghostcommand_3',
 }
-local HAS_GHOST_COMMAND_CD = { ESCAPE = true, ATTACK_AT = true, HAUNT_AT = true, SCARE = true }
-local IS_GHOST_COMMAND_AOE = { ATTACK_AT = true, HAUNT_AT = true }
+local HAS_GHOST_CMD_CD = { ESCAPE = true, ATTACK_AT = true, HAUNT_AT = true, SCARE = true }
+local IS_GHOST_CMD_AOE = { ATTACK_AT = true, HAUNT_AT = true }
 
 local function GhostCommand(name)
-  if not HasSkill(GHOST_COMMAND_SKILL[name]) then return end
+  if not HasSkill(GHOST_CMD_SKILL[name]) then return end
 
   local flower = Find('abigail_flower')
   if not flower then return end
 
   if ThePlayer:HasTag('ghostfriend_notsummoned') then return Use(flower, 'CASTSUMMON') end
 
-  if HAS_GHOST_COMMAND_CD[name] then
+  if HAS_GHOST_CMD_CD[name] then
     local cooldown = Get(ThePlayer, 'components', 'spellbookcooldowns')
     local percent = cooldown and cooldown:GetSpellCooldownPercent('ghostcommand')
     local time = TUNING.WENDYSKILL_COMMAND_COOLDOWN or 4
@@ -365,10 +364,10 @@ local function GhostCommand(name)
   end
 
   local spell_book = Get(flower, 'components', 'spellbook')
-  local spell_name = STRINGS.GHOSTCOMMANDS[name] or STRINGS.ACTIONS.COMMUNEWITHSUMMONED[name]
+  local spell_name = Get(STRINGS, 'GHOSTCOMMANDS', name) or Get(STRINGS, 'ACTIONS', 'COMMUNEWITHSUMMONED', name)
   if not SetSpell(spell_book, spell_name) then return end
 
-  if IS_GHOST_COMMAND_AOE[name] then
+  if IS_GHOST_CMD_AOE[name] then
     return Ctl():StartAOETargetingUsing(flower)
   else
     return Inv():CastSpellBookFromInv(flower)
@@ -409,6 +408,19 @@ fn.UseMagicianToolOrStop = function()
   local hat = Find('tophat', 'magiciantool') -- find one to open
   return hat and Do(BufferedAction(ThePlayer, nil, ACTIONS.USEMAGICTOOL, hat), 'UseItemFromInvTile', hat, 1)
 end
+
+local function Spell(name)
+  if not IsPlaying('waxwell') then return end
+
+  local journal = FindFueled('waxwelljournal')
+  local spell_book = Get(journal, 'components', 'spellbook')
+  return SetSpell(spell_book, Get(STRINGS, 'SPELLS', name)) and Ctl():StartAOETargetingUsing(journal)
+end
+
+fn.ShadowWorker = function() return Spell('SHADOW_WORKER') end
+fn.ShadowProtector = function() return Spell('SHADOW_PROTECTOR') end
+fn.ShadowTrap = function() return Spell('SHADOW_TRAP') end
+fn.ShadowPillars = function() return Spell('SHADOW_PILLARS') end
 
 --------------------------------------------------------------------------------
 -- Wigfrid | 薇格弗德
@@ -478,7 +490,7 @@ fn.UseTeleBrella = function()
   return SwitchHand(brella) and Use(brella, 'REMOTE_TELEPORT')
 end
 
-local ENGINEER_REMOTE_SKILL = {
+local REMOTE_SKILL = {
   WAKEUP = 'winona_portable_structures',
   VOLLEY = 'winona_catapult_volley_1',
   BOOST = 'winona_catapult_boost_1',
@@ -486,11 +498,12 @@ local ENGINEER_REMOTE_SKILL = {
 }
 
 local function EngineerRemote(name)
-  if not (IsPlaying('winona') and HasSkill(ENGINEER_REMOTE_SKILL[name])) then return end
+  if not (IsPlaying('winona') and HasSkill(REMOTE_SKILL[name])) then return end
 
   local remote = FindFueled('winona_remote')
   local spell_book = Get(remote, 'components', 'spellbook')
-  return SetSpell(spell_book, STRINGS.ENGINEER_REMOTE[name]) and Ctl():StartAOETargetingUsing(remote)
+  local spell_name = Get(STRINGS, 'ENGINEER_REMOTE', name)
+  return SetSpell(spell_book, spell_name) and Ctl():StartAOETargetingUsing(remote)
 end
 
 fn.CatapultWakeUp = function() return EngineerRemote('WAKEUP') end

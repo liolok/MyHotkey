@@ -153,6 +153,10 @@ Config(
   T("Maxwell: Magician's Top Hat", '麦斯威尔：魔术师高礼帽'),
   T("Use Magician's Top Hat, or Stop.", '使用魔术师高礼帽，或者停止。')
 )
+Config('ShadowWorker', T('Maxwell: Shadow Servant', '麦斯威尔：暗影仆人'))
+Config('ShadowProtector', T('Maxwell: Shadow Duelist', '麦斯威尔：暗影角斗士'))
+Config('ShadowTrap', T('Maxwell: Shadow Sneak', '麦斯威尔：暗影陷阱'))
+Config('ShadowPillars', T('Maxwell: Shadow Prison', '麦斯威尔：暗影囚牢'))
 
 Header('Wigfrid', '薇格弗德')
 Config(
