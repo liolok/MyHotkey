@@ -1,7 +1,9 @@
 local fn = {}
 
--- cooldown for functions | 冷却
-local is_in_cd = {}
+--------------------------------------------------------------------------------
+-- Utility Function | 工具函数
+
+local is_in_cd = {} -- cooldown | 冷却
 local function IsInCD(key, cooldown)
   if is_in_cd[key] then return true end
   is_in_cd[key] = ThePlayer and ThePlayer:DoTaskInTime(cooldown or 1, function() is_in_cd[key] = false end)
@@ -14,8 +16,8 @@ local function Get(head_node, ...)
     if not current then return end
 
     local next = current[key]
-    if type(next) == 'function' then
-      current = next(current) -- this could be `false` so avoid using `and next(current) or next` assignment
+    if type(next) == 'function' then -- for code like `ThePlayer.replica.inventory:GetActiveItem()`
+      current = next(current) -- this could be `false`/`nil` so avoid assigning with `type(next) == 'function' and next(current) or next`
     else
       current = next
     end
@@ -30,8 +32,7 @@ local function Inv() return Get(ThePlayer, 'replica', 'inventory') end
 local function IsPlaying(character)
   if not (TheWorld and ThePlayer) then return end -- in game, yeah
   if character and ThePlayer.prefab ~= character then return end -- optionally check for right character
-  if not (ThePlayer.HUD and ThePlayer.Transform) then return end -- for safe call later
-  if ThePlayer.HUD:HasInputFocus() then return end -- typing or in some menu
+  if ThePlayer.HUD and ThePlayer.HUD:HasInputFocus() then return end -- typing or in some menu
   if not (Ctl() and Inv()) then return end -- for safe call later
   return true -- it's all good, man
 end
@@ -86,19 +87,34 @@ local function FindPrefabs(...)
 end
 
 local function Drop(item)
-  return item and (IsMasterSim() and Inv():DropItemFromInvTile(item) or Ctl():RemoteDropItemFromInvTile(item))
+  if item then
+    if IsMasterSim() then
+      Inv():DropItemFromInvTile(item)
+    else
+      Ctl():RemoteDropItemFromInvTile(item)
+    end
+    return true
+  end
 end
 
-local function Use(item, act)
-  if not item then return end
-
-  return IsMasterSim() and Inv():UseItemFromInvTile(item)
-    or Ctl():RemoteUseItemFromInvTile(BufferedAction(ThePlayer, nil, ACTIONS[act], item), item)
+local function Use(item, action)
+  if item then
+    if IsMasterSim() then
+      Inv():UseItemFromInvTile(item)
+    else
+      Ctl():RemoteUseItemFromInvTile(BufferedAction(ThePlayer, nil, ACTIONS[action], item), item)
+    end
+    return true
+  end
 end
 
 local function Do(buffered_action, rpc_name, ...)
   if IsMasterSim() then return Ctl():DoAction(buffered_action) end
   return SendRPCToServer(RPC[rpc_name], Get(buffered_action, 'action', 'code'), ...)
+end
+
+local function DoControllerAction(target, action)
+  return target and Do(BufferedAction(ThePlayer, target, ACTION[action]), 'ControllerActionButton', target)
 end
 
 local function Make(prefab) return SendRPCToServer(RPC.MakeRecipeFromMenu, Get(AllRecipes, prefab, 'rpc_id')) end
@@ -159,16 +175,15 @@ local function SetSpell(inst, name)
   return book and book:SelectSpell(GetSpellID(book, name))
 end
 
-local function IsNumber(...)
-  for _, value in ipairs({ ... }) do
-    if type(value) ~= 'number' then return end
+local function TryTipCD(percent, time)
+  if type(percent) == 'number' and type(time) == 'number' then
+    Tip(math.ceil(percent * time) .. 's')
+    return true
   end
-  return true
 end
 
-local function TipCooldown(percent, time) return Tip(math.ceil(percent * time) .. 's') end
-
 --------------------------------------------------------------------------------
+-- General Hotkey | 通用热键
 
 fn.DropLantern = function() return IsPlaying() and Drop(FindFueled('lantern')) end
 
@@ -187,10 +202,7 @@ fn.JumpInOrMigrate = function()
   local radius, ignore_height, must_tags = 40, true
   local cant_tags, must_one_of_tags = { 'channeling' }, { 'teleporter', 'migrator' }
   local target = FindClosestEntity(ThePlayer, radius, ignore_height, must_tags, cant_tags, must_one_of_tags)
-  if not target then return end
-
-  local action = target:HasTag('teleporter') and ACTIONS.JUMPIN or ACTIONS.MIGRATE
-  return Do(BufferedAction(ThePlayer, target, action), 'ControllerActionButton', target)
+  return DoControllerAction(target, target:HasTag('teleporter') and 'JUMPIN' or 'MIGRATE')
 end
 
 fn.ToggleUmbrella = function()
@@ -199,16 +211,11 @@ fn.ToggleUmbrella = function()
   local radius, ignore_height, cant_tags = 12, true, { 'fueldepleted' } -- broken
   local must_tags = { 'shadow_item', 'umbrella', 'acidrainimmune', 'lunarhailprotection' }
   local target = FindClosestEntity(ThePlayer, radius, ignore_height, must_tags, cant_tags)
-  if not target then
-    local inventory_umbrella = FindFueled('voidcloth_umbrella')
-    if not inventory_umbrella then return end
-
-    Drop(inventory_umbrella)
-    return ThePlayer:DoTaskInTime(0.5, fn.ActivateUmbrella)
+  if target then -- toggle the nearby Umbralla
+    return DoControllerAction(target, target:HasTag('turnedon') and 'TURNOFF' or 'TURNON')
+  else -- drop inventory Umbralla then open it
+    return Drop(FindFueled('voidcloth_umbrella')) and ThePlayer:DoTaskInTime(0.5, fn.ActivateUmbrella)
   end
-
-  local action = target:HasTag('turnedon') and ACTIONS.TURNOFF or ACTIONS.TURNON
-  return Do(BufferedAction(ThePlayer, target, action), 'ControllerActionButton', target)
 end
 
 fn.SaveGame = function() return IsPlaying() and IsInCD('Confirm Save') and not IsInCD('Save Game', 5) and c_save() end
@@ -252,8 +259,6 @@ local FIRE_SKILL = {
   BURST = 'willow_fire_burst',
   BALL = 'willow_fire_ball',
   FRENZY = 'willow_fire_frenzy',
-  LUNAR = 'willow_allegiance_lunar_fire',
-  SHADOW = 'willow_allegiance_shadow_fire',
 }
 
 local function Fire(name)
@@ -262,8 +267,7 @@ local function Fire(name)
   if not Inv():Has('willow_ember', TUNING['WILLOW_EMBER_' .. name]) then return end
 
   local ember = Find('willow_ember')
-  local spell_name = Get(STRINGS, 'PYROMANCY', 'FIRE_' .. name)
-  return SetSpell(ember, spell_name) and Ctl():StartAOETargetingUsing(ember)
+  return SetSpell(ember, Get(STRINGS, 'PYROMANCY', 'FIRE_' .. name)) and Ctl():StartAOETargetingUsing(ember)
 end
 
 fn.FireThrow = function() return Fire('THROW') end
@@ -277,26 +281,19 @@ fn.LunarOrShadowFire = function()
   local ember = Find('willow_ember')
   if not ember then return end
 
+  local is_lunar = HasSkill('willow_allegiance_lunar_fire')
+    and Inv():Has('willow_ember', TUNING.WILLOW_EMBER_LUNAR)
+    and not Get(ThePlayer, 'replica', 'rider', 'IsRiding')
+  local is_shadow = HasSkill('willow_allegiance_shadow_fire') and Inv():Has('willow_ember', TUNING.WILLOW_EMBER_SHADOW)
+  if not (is_lunar or is_shadow) then return end
+
   local cooldown = Get(ThePlayer, 'components', 'spellbookcooldowns')
-  if not cooldown then return end
-
-  local spell_name, cooldown_percent, cooldown_time
-  if HasSkill(FIRE_SKILL.LUNAR) and Inv():Has('willow_ember', TUNING.WILLOW_EMBER_LUNAR or 5) then
-    if Get(ThePlayer, 'replica', 'rider', 'IsRiding') then return end
-    spell_name = Get(STRINGS, 'PYROMANCY', 'LUNAR_FIRE')
-    cooldown_percent = cooldown:GetSpellCooldownPercent('lunar_fire')
-    cooldown_time = TUNING.WILLOW_LUNAR_FIRE_COOLDOWN or 13
-  elseif HasSkill(FIRE_SKILL.SHADOW) and Inv():Has('willow_ember', TUNING.WILLOW_EMBER_SHADOW or 5) then
-    spell_name = Get(STRINGS, 'PYROMANCY', 'SHADOW_FIRE')
-    cooldown_percent = cooldown:GetSpellCooldownPercent('shadow_fire')
-    cooldown_time = TUNING.WILLOW_SHADOW_FIRE_COOLDOWN or 8
-  else
-    return
-  end
-
-  if IsNumber(cooldown_percent, cooldown_time) then return TipCooldown(cooldown_percent, cooldown_time) end
+  local cooldown_percent = cooldown and cooldown:GetSpellCooldownPercent(is_lunar and 'lunar_fire' or 'shadow_fire')
+  local cooldown_time = is_lunar and TUNING.WILLOW_LUNAR_FIRE_COOLDOWN or TUNING.WILLOW_SHADOW_FIRE_COOLDOWN
+  if TryTipCD(cooldown_percent, cooldown_time) then return end
 
   local pos = GetTargetPosition() or ThePlayer:GetPosition()
+  local spell_name = Get(STRINGS, 'PYROMANCY', is_lunar and 'LUNAR_FIRE' or 'SHADOW_FIRE')
   if not (pos and SetSpell(ember, spell_name)) then return end
 
   local act = BufferedAction(ThePlayer, nil, ACTIONS.CASTAOE, ember, pos)
@@ -330,8 +327,6 @@ fn.UseFastRegenElixir = function()
   return Use(Find('ghostlyelixir_fastregen'), 'APPLYELIXIR')
 end
 
-local function IsSister(ghost, player) return Get(ghost, 'replica', 'follower', 'GetLeader') == player end -- credit: RICK workshop-2895442474/scripts/CharacterKeybinds.lua
-
 local GHOST_CMD_SKILL = {
   ESCAPE = 'wendy_ghostcommand_1',
   ATTACK_AT = 'wendy_ghostcommand_2',
@@ -340,6 +335,9 @@ local GHOST_CMD_SKILL = {
 }
 local HAS_GHOST_CMD_CD = { ESCAPE = true, ATTACK_AT = true, HAUNT_AT = true, SCARE = true }
 local IS_GHOST_CMD_AOE = { ATTACK_AT = true, HAUNT_AT = true }
+
+-- credit: RICK workshop-2895442474, from summoningitem of componentactions.lua
+local function IsSister(ghost, player) return Get(ghost, 'replica', 'follower', 'GetLeader') == player end
 
 local function GhostCommand(name)
   if not HasSkill(GHOST_CMD_SKILL[name]) then return end
@@ -357,7 +355,7 @@ local function GhostCommand(name)
       percent = cooldown and cooldown:GetSpellCooldownPercent('do_ghost_attackat')
       time = TUNING.WENDYSKILL_GESTALT_ATTACKAT_COMMAND_COOLDOWN or 10
     end
-    if IsNumber(percent, time) then return TipCooldown(percent, time) end
+    if TryTipCD(percent, time) then return end
   end
 
   local spell_name = Get(STRINGS, 'GHOSTCOMMANDS', name) or Get(STRINGS, 'ACTIONS', 'COMMUNEWITHSUMMONED', name)
@@ -463,14 +461,7 @@ end
 -- Webber | 韦伯
 
 fn.UseSpiderWhistle = function()
-  if not IsPlaying('webber') then return end
-
-  local whistle = Find('spider_whistle')
-  if whistle then
-    return Use(whistle, 'HERD_FOLLOWERS')
-  else
-    return Make('spider_whistle')
-  end
+  return IsPlaying('webber') and (Use(Find('spider_whistle'), 'HERD_FOLLOWERS') or Make('spider_whistle'))
 end
 
 --------------------------------------------------------------------------------
@@ -518,7 +509,7 @@ fn.WobyRummage = function()
   if woby == Get(ThePlayer, 'replica', 'rider', 'GetMount') then -- is riding on Woby
     return SetSpell(ThePlayer, Get(STRINGS, 'ACTIONS', 'RUMMAGE', 'GENERIC')) and Inv():CastSpellBookFromInv(ThePlayer)
   elseif ThePlayer:IsNear(woby, 16) then -- Woby is nearby
-    return Do(BufferedAction(ThePlayer, woby, ACTIONS.RUMMAGE), 'ControllerActionButton', woby)
+    return DoControllerAction(woby, 'RUMMAGE')
   end
 end
 
