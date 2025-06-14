@@ -97,6 +97,7 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 [h1]Recommendations[/h1]
 [list]
 [*]Imp: My [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3481766603]Hotkey for Wortox[/url]
+[*]Beefalo/Woby: ZoomZoomBang's [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3048315935]Mount/Dismount Assist[/url]
 [/list]
 
 [hr][/hr]

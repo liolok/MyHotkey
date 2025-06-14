@@ -97,6 +97,7 @@
 [h1]推荐[/h1]
 [list]
 [*]小恶魔：我另作的[url=https://steamcommunity.com/sharedfiles/filedetails/?id=3481766603]热键：沃拓克斯[/url]
+[*]骑牛/沃比: ZoomZoomBang 的 [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3048315935]Mount/Dismount Assist[/url]
 [/list]
 
 [hr][/hr]
