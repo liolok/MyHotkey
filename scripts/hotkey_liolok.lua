@@ -41,9 +41,8 @@ local function FindInvItemBy(IsRight) -- find right item in inventory | 在所�
   local inventory = Inv()
   if not (inventory and type(IsRight) == 'function') then return end
 
-  -- item on cursor | 光标上的物品
-  local item = inventory:GetActiveItem()
-  if IsRight(item) then return item end
+  -- try to put item on cursor back into slot | 尝试将光标上的物品放回格子里
+  if inventory:GetActiveItem() then inventory:ReturnActiveItem() end
 
   -- all equipped items | 所有已装备物品
   for _, item in pairs(inventory:GetEquips()) do
