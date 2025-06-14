@@ -33,7 +33,6 @@ local function IsPlaying(character)
   if not (TheWorld and ThePlayer) then return end -- in game, yeah
   if character and ThePlayer.prefab ~= character then return end -- optionally check for right character
   if ThePlayer.HUD and ThePlayer.HUD:HasInputFocus() then return end -- typing or in some menu
-  if not (Ctl() and Inv()) then return end -- for safe call later
   return true -- it's all good, man
 end
 
@@ -87,9 +86,9 @@ end
 
 local function Drop(item)
   if item then
-    if IsMasterSim() then
+    if IsMasterSim() and Inv() then
       Inv():DropItemFromInvTile(item)
-    else
+    elseif Ctl() then
       Ctl():RemoteDropItemFromInvTile(item)
     end
     return true
@@ -98,9 +97,9 @@ end
 
 local function Use(item, action)
   if item then
-    if IsMasterSim() then
+    if IsMasterSim() and Inv() then
       Inv():UseItemFromInvTile(item)
-    else
+    elseif Ctl() then
       Ctl():RemoteUseItemFromInvTile(BufferedAction(ThePlayer, nil, ACTIONS[action], item), item)
     end
     return true
@@ -108,7 +107,7 @@ local function Use(item, action)
 end
 
 local function Do(buffered_action, rpc_name, ...)
-  if IsMasterSim() then return Ctl():DoAction(buffered_action) end
+  if IsMasterSim() and Ctl() then return Ctl():DoAction(buffered_action) end
   return SendRPCToServer(RPC[rpc_name], Get(buffered_action, 'action', 'code'), ...)
 end
 
@@ -122,7 +121,7 @@ local former_hand = {}
 local function SwitchHand(item)
   if not item then return end
 
-  local current_hand_item = Inv():GetEquippedItem(EQUIPSLOTS.HANDS)
+  local current_hand_item = Inv() and Inv():GetEquippedItem(EQUIPSLOTS.HANDS)
   if current_hand_item == item then
     if former_hand[item] then return Use(former_hand[item], 'EQUIP') end
   else
@@ -280,10 +279,10 @@ local FIRE_SKILL = {
 local function Fire(name)
   if not (IsPlaying('willow') and HasSkill(FIRE_SKILL[name])) then return end
 
-  if not Inv():Has('willow_ember', TUNING['WILLOW_EMBER_' .. name]) then return end
+  if not Inv() or Inv():Has('willow_ember', TUNING['WILLOW_EMBER_' .. name]) then return end
 
   local ember = Find('willow_ember')
-  return SetSpell(ember, Get(STRINGS, 'PYROMANCY', 'FIRE_' .. name)) and Ctl():StartAOETargetingUsing(ember)
+  return SetSpell(ember, Get(STRINGS, 'PYROMANCY', 'FIRE_' .. name)) and Ctl() and Ctl():StartAOETargetingUsing(ember)
 end
 
 fn.FireThrow = function() return Fire('THROW') end
@@ -298,9 +297,10 @@ fn.LunarOrShadowFire = function()
   if not ember then return end
 
   local is_lunar = HasSkill('willow_allegiance_lunar_fire')
-    and Inv():Has('willow_ember', TUNING.WILLOW_EMBER_LUNAR)
+    and (Inv() and Inv():Has('willow_ember', TUNING.WILLOW_EMBER_LUNAR))
     and not Get(ThePlayer, 'replica', 'rider', 'IsRiding')
-  local is_shadow = HasSkill('willow_allegiance_shadow_fire') and Inv():Has('willow_ember', TUNING.WILLOW_EMBER_SHADOW)
+  local is_shadow = HasSkill('willow_allegiance_shadow_fire')
+    and (Inv() and Inv():Has('willow_ember', TUNING.WILLOW_EMBER_SHADOW))
   if not (is_lunar or is_shadow) then return end
 
   local cooldown = Get(ThePlayer, 'components', 'spellbookcooldowns')
@@ -374,9 +374,9 @@ local function GhostCommand(name)
   if not SetSpell(ember, spell_name) then return end
 
   if IS_GHOST_CMD_AOE[name] then
-    return Ctl():StartAOETargetingUsing(flower)
+    return Ctl() and Ctl():StartAOETargetingUsing(flower)
   else
-    return Inv():CastSpellBookFromInv(flower)
+    return Inv() and Inv():CastSpellBookFromInv(flower)
   end
 end
 
@@ -419,7 +419,7 @@ local function Spell(name)
   if not IsPlaying('waxwell') then return end
 
   local journal = FindFueled('waxwelljournal')
-  return SetSpell(journal, Get(STRINGS, 'SPELLS', name)) and Ctl():StartAOETargetingUsing(journal)
+  return SetSpell(journal, Get(STRINGS, 'SPELLS', name)) and Ctl() and Ctl():StartAOETargetingUsing(journal)
 end
 
 fn.ShadowWorker = function() return Spell('SHADOW_WORKER') end
@@ -491,7 +491,7 @@ local function EngineerRemote(name)
   if not (IsPlaying('winona') and HasSkill(REMOTE_SKILL[name])) then return end
 
   local remote = FindFueled('winona_remote')
-  return SetSpell(remote, Get(STRINGS, 'ENGINEER_REMOTE', name)) and Ctl():StartAOETargetingUsing(remote)
+  return SetSpell(remote, Get(STRINGS, 'ENGINEER_REMOTE', name)) and Ctl() and Ctl():StartAOETargetingUsing(remote)
 end
 
 fn.CatapultWakeUp = function() return EngineerRemote('WAKEUP') end
@@ -522,7 +522,8 @@ fn.WobyRummage = function()
 
   local woby = Get(ThePlayer, 'woby_commands_classified', 'GetWoby')
   if woby == Get(ThePlayer, 'replica', 'rider', 'GetMount') then -- is riding on Woby
-    return SetSpell(ThePlayer, Get(STRINGS, 'ACTIONS', 'RUMMAGE', 'GENERIC')) and Inv():CastSpellBookFromInv(ThePlayer)
+    return SetSpell(ThePlayer, Get(STRINGS, 'ACTIONS', 'RUMMAGE', 'GENERIC'))
+      and (Inv() and Inv():CastSpellBookFromInv(ThePlayer))
   elseif ThePlayer:IsNear(woby, 16) then -- Woby is nearby
     return DoControllerAction(woby, 'RUMMAGE')
   end
@@ -535,7 +536,7 @@ fn.WobyCourier = function()
   local woby = Get(ThePlayer, 'woby_commands_classified', 'GetWoby')
   return ThePlayer:IsNear(woby, 16)
     and SetSpell(woby, Get(STRINGS, 'WOBY_COMMANDS', 'COURIER'))
-    and Ctl():PullUpMap(woby, ACTIONS.DIRECTCOURIER_MAP)
+    and (Ctl() and Ctl():PullUpMap(woby, ACTIONS.DIRECTCOURIER_MAP))
 end
 
 fn.WobyDash = function() -- credit: 川小胖 workshop-3460815078 from DoDoubleTapDir() in components/playercontroller.lua
