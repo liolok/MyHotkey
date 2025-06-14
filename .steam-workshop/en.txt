@@ -11,6 +11,7 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 (Priority: Walking Cane > The Lazy Explorer > Wooden Walking Stick > Thulecite Club > Speedy Balloon)
 [*]Jump In / Travel via: Wormhole, Big Slimy Pit, Time Rift, Sinkhole, Stairs
 [*]Open/Close Umbralla: If no Umbralla on ground, will try to drop one and open.
+[*]Murder (Will ignore Scorching Sunfish & Ice Bream)
 [*]Save Game (press twice or hold to confirm action)
 [*]Reset Game: Restart the server from the last save. (press twice or hold to confirm action)
 [*]Toggle Movement Prediction

@@ -92,6 +92,11 @@ Config(
   )
 )
 Config(
+  'Murder',
+  T('Murder', '谋杀'),
+  T('Will ignore Scorching Sunfish & Ice Bream', '会略过炽热太阳鱼和冰鲷鱼')
+)
+Config(
   'SaveGame',
   T('Save Game', '保存游戏'),
   T('Press twice or hold to confirm action!', '双击或按住以确认操作！')

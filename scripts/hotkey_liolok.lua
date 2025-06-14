@@ -217,6 +217,14 @@ fn.ToggleUmbrella = function()
   end
 end
 
+local IS_MURDER_PROTECT = { oceanfish_small_8 = true, oceanfish_medium_8 = true } -- Scorching Sunfish & Ice Bream | 炽热太阳鱼和冰鲷鱼
+
+local function IsMurderTarget(item) -- health from componentactions.lua
+  return Get(item, 'replica', 'health', 'CanMurder') and not IS_MURDER_PROTECT[Get(item, 'prefab')]
+end
+
+fn.Murder = function() return IsPlaying() and Use(FindInvItemBy(IsMurderTarget), 'MURDER') end
+
 fn.SaveGame = function() return IsPlaying() and IsInCD('Confirm Save') and not IsInCD('Save Game', 5) and c_save() end
 
 fn.ResetGame = function()
