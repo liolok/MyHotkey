@@ -36,7 +36,7 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 
 [h3]Abigail[/h3]
 [list]
-[*]Apply Spectral Cure-All (Will open Picnic Casket first)
+[*]Apply Spectral Cure-All (Picnic Casket Supported)
 [*]Summon / Recall
 [*]Rile Up / Soothe
 [*]Escape
@@ -56,7 +56,7 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 
 [h3]Wigfrid[/h3]
 [list]
-[*]Sing Battle Call (Will open Battle Call Canister first)
+[*]Sing Battle Call (Battle Call Canister Supported)
 [*]Lightning Strike / Block
 [/list]
 
@@ -78,6 +78,7 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 [list]
 [*]Grow Living Log
 [*]Transform Bulbous Lightbug
+[*]Fertilize self with Rot (Tackle Box Supported)
 [/list]
 
 [h3]Woby[/h3]

@@ -143,7 +143,7 @@ Header('Abigail', '阿比盖尔')
 Config(
   'UseFastRegenElixir',
   T('Abigail: Apply Spectral Cure-All', '阿比盖尔：使用灵魂万灵药'),
-  T('Will open Picnic Casket first', '会先打开野餐盒')
+  T('Picnic Casket Supported', '支持野餐盒')
 )
 Config('SummonOrRecallAbigail', T('Abigail: Summon / Recall', '阿比盖尔：召唤/解除召唤'))
 Config('CommuneWithSummoned', T('Abigail: Rile Up / Soothe', '阿比盖尔：激怒/安慰'))
@@ -167,7 +167,7 @@ Header('Wigfrid', '薇格弗德')
 Config(
   'UseBattleSong',
   T('Wigfrid: Sing Battle Call', '薇格弗德：吟唱战斗号子'),
-  T('Will open Battle Call Canister first', '会先打开战斗号子罐')
+  T('Battle Call Canister Supported', '支持战斗号子罐')
 )
 Config('StrikeOrBlock', T('Wigfrid: Lightning Strike / Block', '薇格弗德：闪电突袭/格挡'))
 
@@ -198,6 +198,11 @@ Config('CatapultElementalVolley', T('Catapult: Planar Strike', '投石机：位�
 Header('Wormwood', '沃姆伍德')
 Config('MakeLivingLog', T('Wormwood: Grow Living Log', '沃姆伍德：生长活木头'))
 Config('MakeLightFlier', T('Wormwood: Transform Bulbous Lightbug', '沃姆伍德：变形球状光虫'))
+Config(
+  'FertilizeSpoiledFood',
+  T('Wormwood: Fertilize self with Rot', '沃姆伍德：用腐烂物给自己施肥'),
+  T('Tackle Box Supported', '支持钓具箱')
+)
 
 Header('Woby', '沃比')
 Config('WobyRummage', T('Woby: Open/Close', '沃比：打开/关闭'))

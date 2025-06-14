@@ -181,6 +181,15 @@ local function TryTipCD(percent, time)
   end
 end
 
+local function TryTaskTwice(callback, container)
+  if type(callback) == 'function' and not callback() then -- task not done, open container and retry.
+    if container and not Get(container, 'replica', 'container', '_isopen') then -- not opened yet
+      Use(container, 'RUMMAGE') -- open
+      return ThePlayer:DoTaskInTime(0.5, callback) -- wait a little then retry
+    end
+  end
+end
+
 --------------------------------------------------------------------------------
 -- General Hotkey | 通用热键
 
@@ -323,15 +332,11 @@ end
 -- Abigail | 阿比盖尔
 
 fn.UseFastRegenElixir = function()
-  if not IsPlaying('wendy') then return end
-
-  local container = HasSkill('wendy_potion_container') and Find('elixir_container')
-  if container and not Get(container, 'replica', 'container', '_isopen') then
-    Use(container, 'RUMMAGE') -- open Picnic Casket
-    return ThePlayer:DoTaskInTime(0.5, fn.UseFastRegenElixir) -- wait a little
-  end
-
-  return Use(Find('ghostlyelixir_fastregen'), 'APPLYELIXIR')
+  return IsPlaying('wendy')
+    and TryTaskTwice(
+      function() return Use(Find('ghostlyelixir_fastregen'), 'APPLYELIXIR') end,
+      HasSkill('wendy_potion_container') and Find('elixir_container') -- Picnic Casket
+    )
 end
 
 local GHOST_CMD_SKILL = {
@@ -428,33 +433,27 @@ fn.ShadowPillars = function() return Spell('SHADOW_PILLARS') end
 local function IsValidBattleSong(item) -- function `singable` from componentactions.lua
   if not (item and item:HasTag('battlesong')) then return end -- not battle song at all
 
-  local song = item.songdata
-  if not (song and HasSkill(song.REQUIRE_SKILL)) then return end
+  local data = item.songdata
+  if not (data and HasSkill(data.REQUIRE_SKILL)) then return end
 
-  if song.INSTANT then -- Battle Stinger
+  if data.INSTANT then -- Battle Stinger
     local recharge_value = Get(item, 'replica', '_', 'inventoryitem', 'classified', 'recharge', 'value')
     if recharge_value and recharge_value ~= 180 then return end -- Battle Stinger in CD | 战吼正在冷却
   else -- Battle Song
     for _, v in ipairs(Get(ThePlayer, 'player_classified', 'inspirationsongs') or {}) do
-      if v:value() == song.battlesong_netid then return end -- Battle Song already activated
+      if v:value() == data.battlesong_netid then return end -- Battle Song already activated
     end
   end
 
   return true
 end
 
-local function Sing() return Use(FindInvItemBy(IsValidBattleSong), 'SING') end
-
 fn.UseBattleSong = function()
-  if not IsPlaying('wathgrithr') then return end
-
-  local container = HasSkill('wathgrithr_songs_container') and Find('battlesong_container')
-  if container and not Get(container, 'replica', 'container', '_isopen') then
-    Use(container, 'RUMMAGE') -- open Battle Call Canister
-    return ThePlayer:DoTaskInTime(0.5, Sing) -- wait a little to sing
-  end
-
-  return Sing()
+  return IsPlaying('wathgrithr')
+    and TryTaskTwice(
+      function() return Use(FindInvItemBy(IsValidBattleSong), 'SING') end,
+      HasSkill('wathgrithr_songs_container') and Find('battlesong_container') -- Battle Call Canister
+    )
 end
 
 fn.StrikeOrBlock = function()
@@ -505,6 +504,15 @@ fn.CatapultElementalVolley = function() return EngineerRemote('ELEMENTAL_VOLLEY'
 
 fn.MakeLivingLog = function() return IsPlaying('wormwood') and Make('livinglog') end
 fn.MakeLightFlier = function() return IsPlaying('wormwood') and Make('wormwood_lightflier') end
+
+fn.FertilizeSpoiledFood = function()
+  return not IsInCD('Fertilize self with Rot', 4)
+    and IsPlaying('wormwood')
+    and TryTaskTwice(
+      function() return Use(Find('spoiled_food'), 'FERTILIZE') end,
+      FindPrefabs('supertacklecontainer', 'tacklecontainer') -- Spectackler Box or Tackle Box
+    )
+end
 
 --------------------------------------------------------------------------------
 -- Woby | 沃比
