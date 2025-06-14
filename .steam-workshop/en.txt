@@ -81,6 +81,11 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 [*]Fertilize self with Rot (Tackle Box Supported)
 [/list]
 
+[h3]Wurt[/h3]
+[list]
+[*]Hire Loyal Merm Guard (Food Priority: Ripe Stone Fruit > (Cooked) Kelp Fronds)
+[/list]
+
 [h3]Woby[/h3]
 [list]
 [*]Open/Close

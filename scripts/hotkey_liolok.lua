@@ -515,6 +515,24 @@ fn.FertilizeSpoiledFood = function()
 end
 
 --------------------------------------------------------------------------------
+-- Wurt | 沃特
+
+local function IsNotFollowing(merm, player) return Get(merm, 'replica', 'follower', 'GetLeader') ~= player end
+
+fn.HireMermGuard = function()
+  if not IsPlaying('wurt') then return end
+
+  local food = FindPrefabs('rock_avocado_fruit_ripe', 'kelp_cooked', 'kelp')
+  if not food then return end
+
+  local target = FindEntity(ThePlayer, 20, IsNotFollowing, { 'mermguard' })
+  if not target then return end
+
+  local act = BufferedAction(ThePlayer, target, ACTIONS.GIVE, food)
+  return Do(act, 'ControllerUseItemOnSceneFromInvTile', food, target)
+end
+
+--------------------------------------------------------------------------------
 -- Woby | 沃比
 
 fn.WobyRummage = function()
