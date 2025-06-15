@@ -195,6 +195,9 @@ local function TryTaskTwice(callback, container)
   end
 end
 
+local function IsFollowing(inst, player) return Get(inst, 'replica', 'follower', 'GetLeader') == player end
+local function IsNotFollowing(inst, player) return Get(inst, 'replica', 'follower', 'GetLeader') ~= player end
+
 --------------------------------------------------------------------------------
 -- General Hotkey | 通用热键
 
@@ -354,9 +357,6 @@ local GHOST_CMD_SKILL = {
 local HAS_GHOST_CMD_CD = { ESCAPE = true, ATTACK_AT = true, HAUNT_AT = true, SCARE = true }
 local IS_GHOST_CMD_AOE = { ATTACK_AT = true, HAUNT_AT = true }
 
--- credit: RICK workshop-2895442474, from summoningitem of componentactions.lua
-local function IsSister(ghost, player) return Get(ghost, 'replica', 'follower', 'GetLeader') == player end
-
 local function GhostCommand(name)
   if not HasSkill(GHOST_CMD_SKILL[name]) then return end
 
@@ -369,7 +369,7 @@ local function GhostCommand(name)
     local cooldown = Get(ThePlayer, 'components', 'spellbookcooldowns')
     local percent = cooldown and cooldown:GetSpellCooldownPercent('ghostcommand')
     local time = TUNING.WENDYSKILL_COMMAND_COOLDOWN or 4
-    if name == 'ATTACK_AT' and FindEntity(ThePlayer, 80, IsSister, { 'gestalt' }) then -- Gestalt Abigail
+    if name == 'ATTACK_AT' and FindEntity(ThePlayer, 80, IsFollowing, { 'gestalt' }) then -- Gestalt Abigail
       percent = cooldown and cooldown:GetSpellCooldownPercent('do_ghost_attackat')
       time = TUNING.WENDYSKILL_GESTALT_ATTACKAT_COMMAND_COOLDOWN or 10
     end
@@ -542,19 +542,13 @@ end
 --------------------------------------------------------------------------------
 -- Wurt | 沃特
 
-local function IsNotFollowing(merm, player) return Get(merm, 'replica', 'follower', 'GetLeader') ~= player end
-
 fn.HireMermGuard = function()
   if not IsPlaying('wurt') then return end
 
-  local food = FindPrefabs('rock_avocado_fruit_ripe', 'kelp_cooked', 'kelp')
-  if not food then return end
-
-  local target = FindEntity(ThePlayer, 20, IsNotFollowing, { 'mermguard' })
-  if not target then return end
-
-  local act = BufferedAction(ThePlayer, target, ACTIONS.GIVE, food)
-  return Do(act, 'ControllerUseItemOnSceneFromInvTile', food, target)
+  local RPC_NAME = 'ControllerUseItemOnSceneFromInvTile'
+  local food = FindPrefabs('rock_avocado_fruit_ripe', 'pondfish', 'kelp')
+  local merm = food and FindClosestEntity(ThePlayer, 20, true, { 'mermguard' }, nil, nil, IsNotFollowing)
+  return merm and Do(BufferedAction(ThePlayer, merm, ACTIONS.GIVE, food), RPC_NAME, food, merm)
 end
 
 --------------------------------------------------------------------------------
