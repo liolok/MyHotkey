@@ -83,7 +83,7 @@
 
 [h3]沃特[/h3]
 [list]
-[*]雇佣忠诚鱼人守卫（食物优先级：成熟石果 > （熟）海带叶）
+[*]雇佣忠诚鱼人守卫（食物优先级：成熟石果 > 熟海带叶 > 海带叶）
 [/list]
 
 [h3]沃比[/h3]
@@ -102,7 +102,7 @@
 [h1]推荐[/h1]
 [list]
 [*]小恶魔：我另作的[url=https://steamcommunity.com/sharedfiles/filedetails/?id=3481766603]热键：沃拓克斯[/url]
-[*]骑牛/沃比: ZoomZoomBang 的 [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3048315935]Mount/Dismount Assist[/url]
+[*]骑牛/沃比：ZoomZoomBang 的 [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3048315935]Mount/Dismount Assist[/url]
 [/list]
 
 [hr][/hr]
