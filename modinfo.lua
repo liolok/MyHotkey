@@ -173,7 +173,11 @@ Config(
   T('Wigfrid: Sing Battle Call', '薇格弗德：吟唱战斗号子'),
   T('Battle Call Canister Supported', '支持战斗号子罐')
 )
-Config('StrikeOrBlock', T('Wigfrid: Lightning Strike / Block', '薇格弗德：闪电突袭/格挡'))
+Config(
+  'StrikeOrBlock',
+  T('Wigfrid: Lightning Strike / Block', '薇格弗德：闪电突袭/格挡'),
+  T('Dash distance up to 8 walls', '冲刺距离最远可达两格地皮')
+)
 
 Header('Webber', '韦伯')
 Config(

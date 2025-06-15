@@ -57,7 +57,7 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 [h3]Wigfrid[/h3]
 [list]
 [*]Sing Battle Call (Battle Call Canister Supported)
-[*]Lightning Strike / Block
+[*]Lightning Strike / Block (Dash distance up to 8 walls)
 [/list]
 
 [h3]Webber[/h3]
