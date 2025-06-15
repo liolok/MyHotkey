@@ -86,10 +86,11 @@ end
 
 local function Drop(item)
   if item then
+    local is_single = true
     if IsMasterSim() and Inv() then
-      Inv():DropItemFromInvTile(item)
+      Inv():DropItemFromInvTile(item, is_single)
     elseif Ctl() then
-      Ctl():RemoteDropItemFromInvTile(item)
+      Ctl():RemoteDropItemFromInvTile(item, is_single)
     end
     return true
   end
@@ -201,7 +202,7 @@ local function IsNotFollowing(inst, player) return Get(inst, 'replica', 'followe
 --------------------------------------------------------------------------------
 -- General Hotkey | 通用热键
 
-fn.DropLantern = function() return IsPlaying() and Drop(FindFueled('lantern')) end
+fn.DropLantern = function() return IsPlaying() and Drop(FindFueled('lantern') or Find('lightbulb')) end
 
 fn.UseBeargerFurSack = function()
   return (not IsInCD('Polar Bearger Bin') and IsPlaying()) and Use(Find('beargerfur_sack'), 'RUMMAGE')

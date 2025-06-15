@@ -59,7 +59,11 @@ local function Config(name, label, hover)
     { name = name, label = label, hover = hover, options = keys, default = 'KEY_DISABLED' }
 end
 
-Config('DropLantern', T('Drop Lantern', '丢弃提灯'))
+Config(
+  'DropLantern',
+  T('Drop Lantern', '丢弃提灯'),
+  T('Drop Light Bulb if no Lantern', '没有提灯的话会丢弃荧光果')
+)
 Config(
   'UseBeargerFurSack',
   T('Polar Bearger Bin', '极地熊獾桶'),

@@ -5,7 +5,7 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 [h1]Features[/h1]
 [h3]General[/h3]
 [list]
-[*]Drop Lantern
+[*]Drop Lantern (or Light Bulb if no Lantern)
 [*]Open/Close Polar Bearger Bin
 [*]Walking Cane: Equip a speed-up hand tool, or switch back to former hand equipment.
 (Priority: Walking Cane > The Lazy Explorer > Wooden Walking Stick > Thulecite Club > Speedy Balloon)
