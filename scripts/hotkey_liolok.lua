@@ -197,7 +197,6 @@ local function TryTaskTwice(callback, container)
 end
 
 local function IsFollowing(inst, player) return Get(inst, 'replica', 'follower', 'GetLeader') == player end
-local function IsNotFollowing(inst, player) return Get(inst, 'replica', 'follower', 'GetLeader') ~= player end
 
 --------------------------------------------------------------------------------
 -- General Hotkey | 通用热键
@@ -543,13 +542,29 @@ end
 --------------------------------------------------------------------------------
 -- Wurt | 沃特
 
+local function IsToHire(inst, player)
+  if Get(inst, 'prefab') ~= 'mermguard' or not Get(inst, 'replica', 'follower') then return end
+
+  local leader = Get(inst, 'replica', 'follower', 'GetLeader')
+  if not leader then return true end -- no leader yet, need to hire.
+
+  if leader == player then -- already following, hire if hungry.
+    local as = Get(inst, 'AnimState')
+    if as and as:IsCurrentAnimation('hungry') then return true end -- state "funnyidle" from stategraphs/SGmerm.lua
+  end
+end
+
 fn.HireMermGuard = function()
   if not IsPlaying('wurt') then return end
 
-  local RPC_NAME = 'ControllerUseItemOnSceneFromInvTile'
   local food = FindPrefabs('rock_avocado_fruit_ripe', 'pondfish', 'kelp')
-  local merm = food and FindClosestEntity(ThePlayer, 20, true, { 'mermguard' }, nil, nil, IsNotFollowing)
-  return merm and Do(BufferedAction(ThePlayer, merm, ACTIONS.GIVE, food), RPC_NAME, food, merm)
+  if not food then return end
+
+  local radius, ignore_height, must_tags, cant_tags, must_one_of_tags = 20, true, { 'mermguard' }, { 'player' }, {}
+  local merm = FindClosestEntity(ThePlayer, radius, ignore_height, must_tags, cant_tags, must_one_of_tags, IsToHire)
+  if not merm then return end
+
+  return Do(BufferedAction(ThePlayer, merm, ACTIONS.GIVE, food), 'ControllerUseItemOnSceneFromInvTile', food, merm)
 end
 
 --------------------------------------------------------------------------------
