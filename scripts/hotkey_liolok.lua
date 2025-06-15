@@ -107,12 +107,18 @@ local function Use(item, action)
 end
 
 local function Do(buffered_action, rpc_name, ...)
-  if IsMasterSim() and Ctl() then return Ctl():DoAction(buffered_action) end
-  return SendRPCToServer(RPC[rpc_name], Get(buffered_action, 'action', 'code'), ...)
+  local action = Get(buffered_action, 'action', 'code')
+  if Get(Ctl(), 'CanLocomote') then
+    local other_args = { ... }
+    buffered_action.preview_cb = function() return SendRPCToServer(RPC[rpc_name], action, unpack(other_args)) end
+    return Ctl() and Ctl():DoAction(buffered_action)
+  else
+    return SendRPCToServer(RPC[rpc_name], action, ...)
+  end
 end
 
 local function DoControllerAction(target, action)
-  return target and Do(BufferedAction(ThePlayer, target, ACTION[action]), 'ControllerActionButton', target)
+  return target and Do(BufferedAction(ThePlayer, target, ACTIONS[action]), 'ControllerActionButton', target)
 end
 
 local function Make(prefab) return SendRPCToServer(RPC.MakeRecipeFromMenu, Get(AllRecipes, prefab, 'rpc_id')) end
@@ -430,6 +436,10 @@ fn.ShadowPillars = function() return Spell('SHADOW_PILLARS') end
 --------------------------------------------------------------------------------
 -- Wigfrid | 薇格弗德
 
+local function IsRecharging(item)
+  return Get(item, 'replica', '_', 'inventoryitem', 'classified', 'recharge', 'value') ~= 180
+end
+
 local function IsValidBattleSong(item) -- function `singable` from componentactions.lua
   if not (item and item:HasTag('battlesong')) then return end -- not battle song at all
 
@@ -437,8 +447,7 @@ local function IsValidBattleSong(item) -- function `singable` from componentacti
   if not (data and HasSkill(data.REQUIRE_SKILL)) then return end
 
   if data.INSTANT then -- Battle Stinger
-    local recharge_value = Get(item, 'replica', '_', 'inventoryitem', 'classified', 'recharge', 'value')
-    if recharge_value and recharge_value ~= 180 then return end -- Battle Stinger in CD | 战吼正在冷却
+    if IsRecharging(item) then return end -- Battle Stinger in CD | 战吼正在冷却
   else -- Battle Song
     for _, v in ipairs(Get(ThePlayer, 'player_classified', 'inspirationsongs') or {}) do
       if v:value() == data.battlesong_netid then return end -- Battle Song already activated
@@ -456,11 +465,27 @@ fn.UseBattleSong = function()
     )
 end
 
+local function GetStrikeTargetPosition()
+  if not (TheWorld and TheWorld.Map) then return end
+
+  for distance = 7.99, 0.1, -0.1 do
+    local p = GetTargetPosition(distance)
+    if p and TheWorld.Map:IsPassableAtPoint(p.x, 0, p.z) then return p end
+  end
+end
+
 fn.StrikeOrBlock = function()
   if not IsPlaying('wathgrithr') then return end
 
-  local pos = GetTargetPosition()
-  return pos and Do(BufferedAction(ThePlayer, nil, ACTIONS.CASTAOE, nil, pos), 'LeftClick', pos.x, pos.z)
+  local item = FindPrefabs('spear_wathgrithr_lightning_charged', 'spear_wathgrithr_lightning', 'wathgrithr_shield')
+  if item == (Inv() and Inv():GetEquippedItem(EQUIPSLOTS.HANDS)) then -- already equipped on hand slot
+    if IsRecharging(item) then return end
+  else -- not equipped yet
+    return Use(item, 'EQUIP')
+  end
+
+  local pos = GetStrikeTargetPosition()
+  return pos and Do(BufferedAction(ThePlayer, nil, ACTIONS.CASTAOE, item, pos), 'LeftClick', pos.x, pos.z)
 end
 
 --------------------------------------------------------------------------------
@@ -568,8 +593,9 @@ fn.WobyDash = function() -- credit: 川小胖 workshop-3460815078 from DoDoubleT
   local act = Get(picker and picker:GetDoubleClickActions(nil, dir), 1)
   if Get(act, 'action') ~= ACTIONS.DASH then return end
 
-  local x, z, no_force = Get(act, 'pos', 'local_pt', 'x'), Get(act, 'pos', 'local_pt', 'z')
-  local mod_name, platform = Get(act, 'action', 'mod_name'), Get(act, 'pos', 'walkable_platform')
+  local x, z = Get(act, 'pos', 'local_pt', 'x'), Get(act, 'pos', 'local_pt', 'z')
+  local no_force, mod_name = Get(act, 'action', 'canforce'), Get(act, 'action', 'mod_name')
+  local platform = Get(act, 'pos', 'walkable_platform')
   local platform_relative = platform ~= nil
   return Do(act, 'DoubleTapAction', x, z, no_force, mod_name, platform, platform_relative)
 end
