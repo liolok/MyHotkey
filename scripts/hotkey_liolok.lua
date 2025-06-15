@@ -557,7 +557,7 @@ end
 fn.HireMermGuard = function()
   if not IsPlaying('wurt') then return end
 
-  local food = FindPrefabs('rock_avocado_fruit_ripe', 'pondfish', 'kelp')
+  local food = FindPrefabs('rock_avocado_fruit_ripe', 'kelp', 'pondfish')
   if not food then return end
 
   local radius, ignore_height, must_tags, cant_tags, must_one_of_tags = 20, true, { 'mermguard' }, { 'player' }, {}
