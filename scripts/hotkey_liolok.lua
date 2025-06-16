@@ -296,10 +296,12 @@ local FIRE_SKILL = {
 
 local IS_FIRE_ON_SELF = { BURST = true, FRENZY = true }
 
+local function HasEmber(count) return Inv() and Inv():Has('willow_ember', count) end
+
 local function Fire(name)
   if not (IsPlaying('willow') and HasSkill(FIRE_SKILL[name])) then return end
 
-  if not (Inv() and Inv():Has('willow_ember', TUNING['WILLOW_EMBER_' .. name])) then return end
+  if not HasEmber(TUNING['WILLOW_EMBER_' .. name]) then return end
 
   local spell_name = Get(STRINGS, 'PYROMANCY', 'FIRE_' .. name)
   local target_position = IS_FIRE_ON_SELF[name] and Get(ThePlayer, 'GetPosition')
@@ -314,11 +316,9 @@ fn.FireFrenzy = function() return Fire('FRENZY') end
 fn.LunarOrShadowFire = function()
   if not IsPlaying('willow') then return end
 
-  local is_lunar = HasSkill('willow_allegiance_lunar_fire')
-    and (Inv() and Inv():Has('willow_ember', TUNING.WILLOW_EMBER_LUNAR))
+  local is_lunar = (HasSkill('willow_allegiance_lunar_fire') and HasEmber(TUNING.WILLOW_EMBER_LUNAR))
     and not Get(ThePlayer, 'replica', 'rider', 'IsRiding')
-  local is_shadow = HasSkill('willow_allegiance_shadow_fire')
-    and (Inv() and Inv():Has('willow_ember', TUNING.WILLOW_EMBER_SHADOW))
+  local is_shadow = not is_lunar and HasSkill('willow_allegiance_shadow_fire') and HasEmber(TUNING.WILLOW_EMBER_SHADOW)
   if not (is_lunar or is_shadow) then return end
 
   local cooldown = Get(ThePlayer, 'components', 'spellbookcooldowns')
