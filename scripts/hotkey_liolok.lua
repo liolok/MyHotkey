@@ -377,7 +377,7 @@ local function GhostCommand(name)
   end
 
   local spell_name = Get(STRINGS, 'GHOSTCOMMANDS', name) or Get(STRINGS, 'ACTIONS', 'COMMUNEWITHSUMMONED', name)
-  if not SetSpell(ember, spell_name) then return end
+  if not SetSpell(flower, spell_name) then return end
 
   if IS_GHOST_CMD_AOE[name] then
     return Ctl() and Ctl():StartAOETargetingUsing(flower)
