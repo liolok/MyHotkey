@@ -169,15 +169,24 @@ local function GetTargetPosition(distance)
   return Vector3(x, 0, z)
 end
 
-local function GetSpellID(book, name)
-  for id, spell in pairs(Get(book, 'items') or {}) do
-    if spell.label == name then return id, spell end
+local function SetSpell(inst, spell_name)
+  local book = Get(inst, 'components', 'spellbook')
+  for id, item in pairs(Get(book, 'items') or {}) do
+    if item.label == spell_name then return book:SelectSpell(id) and id end
   end
 end
 
-local function SetSpell(inst, name)
-  local book = Get(inst, 'components', 'spellbook')
-  return book and book:SelectSpell(GetSpellID(book, name))
+local function CastFromInv(inst, spell_name)
+  return SetSpell(inst, spell_name) and Inv() and Inv():CastSpellBookFromInv(inst)
+end
+
+local function DoCastAOE(inst, spell_name, target_position)
+  local spell_id = SetSpell(inst, spell_name)
+  if not spell_id then return end
+
+  local pos = target_position or Get(TheInput, 'GetWorldPosition')
+  local act = BufferedAction(ThePlayer, nil, ACTIONS.CASTAOE, inst, pos)
+  return Do(act, 'LeftClick', pos.x, pos.z, nil, nil, nil, nil, nil, nil, nil, inst, spell_id)
 end
 
 local function TryTipCD(percent, time)
@@ -285,13 +294,16 @@ local FIRE_SKILL = {
   FRENZY = 'willow_fire_frenzy',
 }
 
+local IS_FIRE_ON_SELF = { BURST = true, FRENZY = true }
+
 local function Fire(name)
   if not (IsPlaying('willow') and HasSkill(FIRE_SKILL[name])) then return end
 
   if not (Inv() and Inv():Has('willow_ember', TUNING['WILLOW_EMBER_' .. name])) then return end
 
-  local ember = Find('willow_ember')
-  return SetSpell(ember, Get(STRINGS, 'PYROMANCY', 'FIRE_' .. name)) and Ctl() and Ctl():StartAOETargetingUsing(ember)
+  local spell_name = Get(STRINGS, 'PYROMANCY', 'FIRE_' .. name)
+  local target_position = IS_FIRE_ON_SELF[name] and Get(ThePlayer, 'GetPosition')
+  return DoCastAOE(Find('willow_ember'), spell_name, target_position)
 end
 
 fn.FireThrow = function() return Fire('THROW') end
@@ -301,9 +313,6 @@ fn.FireFrenzy = function() return Fire('FRENZY') end
 
 fn.LunarOrShadowFire = function()
   if not IsPlaying('willow') then return end
-
-  local ember = Find('willow_ember')
-  if not ember then return end
 
   local is_lunar = HasSkill('willow_allegiance_lunar_fire')
     and (Inv() and Inv():Has('willow_ember', TUNING.WILLOW_EMBER_LUNAR))
@@ -315,15 +324,8 @@ fn.LunarOrShadowFire = function()
   local cooldown = Get(ThePlayer, 'components', 'spellbookcooldowns')
   local cooldown_percent = cooldown and cooldown:GetSpellCooldownPercent(is_lunar and 'lunar_fire' or 'shadow_fire')
   local cooldown_time = is_lunar and TUNING.WILLOW_LUNAR_FIRE_COOLDOWN or TUNING.WILLOW_SHADOW_FIRE_COOLDOWN
-  if TryTipCD(cooldown_percent, cooldown_time) then return end
-
-  local pos = GetTargetPosition() or ThePlayer:GetPosition()
   local spell_name = Get(STRINGS, 'PYROMANCY', is_lunar and 'LUNAR_FIRE' or 'SHADOW_FIRE')
-  if not (pos and SetSpell(ember, spell_name)) then return end
-
-  local act = BufferedAction(ThePlayer, nil, ACTIONS.CASTAOE, ember, pos)
-  local spell_id = GetSpellID(Get(ember, 'components', 'spellbook'), spell_name)
-  return Do(act, 'LeftClick', pos.x, pos.z, nil, nil, nil, nil, nil, nil, nil, ember, spell_id)
+  return TryTipCD(cooldown_percent, cooldown_time) or DoCastAOE(Find('willow_ember'), spell_name, GetTargetPosition())
 end
 
 --------------------------------------------------------------------------------
@@ -377,13 +379,9 @@ local function GhostCommand(name)
   end
 
   local spell_name = Get(STRINGS, 'GHOSTCOMMANDS', name) or Get(STRINGS, 'ACTIONS', 'COMMUNEWITHSUMMONED', name)
-  if not SetSpell(flower, spell_name) then return end
+  if IS_GHOST_CMD_AOE[name] then return DoCastAOE(flower, spell_name) end
 
-  if IS_GHOST_CMD_AOE[name] then
-    return Ctl() and Ctl():StartAOETargetingUsing(flower)
-  else
-    return Inv() and Inv():CastSpellBookFromInv(flower)
-  end
+  return CastFromInv(flower, spell_name)
 end
 
 fn.SummonOrRecallAbigail = function()
@@ -422,10 +420,7 @@ fn.UseMagicianToolOrStop = function()
 end
 
 local function Spell(name)
-  if not IsPlaying('waxwell') then return end
-
-  local journal = FindFueled('waxwelljournal')
-  return SetSpell(journal, Get(STRINGS, 'SPELLS', name)) and Ctl() and Ctl():StartAOETargetingUsing(journal)
+  return IsPlaying('waxwell') and DoCastAOE(FindFueled('waxwelljournal'), Get(STRINGS, 'SPELLS', name))
 end
 
 fn.ShadowWorker = function() return Spell('SHADOW_WORKER') end
@@ -513,10 +508,8 @@ local REMOTE_SKILL = {
 }
 
 local function EngineerRemote(name)
-  if not (IsPlaying('winona') and HasSkill(REMOTE_SKILL[name])) then return end
-
-  local remote = FindFueled('winona_remote')
-  return SetSpell(remote, Get(STRINGS, 'ENGINEER_REMOTE', name)) and Ctl() and Ctl():StartAOETargetingUsing(remote)
+  return (IsPlaying('winona') and HasSkill(REMOTE_SKILL[name]))
+    and DoCastAOE(FindFueled('winona_remote'), Get(STRINGS, 'ENGINEER_REMOTE', name))
 end
 
 fn.CatapultWakeUp = function() return EngineerRemote('WAKEUP') end
@@ -575,8 +568,7 @@ fn.WobyRummage = function()
 
   local woby = Get(ThePlayer, 'woby_commands_classified', 'GetWoby')
   if woby == Get(ThePlayer, 'replica', 'rider', 'GetMount') then -- is riding on Woby
-    return SetSpell(ThePlayer, Get(STRINGS, 'ACTIONS', 'RUMMAGE', 'GENERIC'))
-      and (Inv() and Inv():CastSpellBookFromInv(ThePlayer))
+    return CastFromInv(ThePlayer, Get(STRINGS, 'ACTIONS', 'RUMMAGE', 'GENERIC'))
   elseif ThePlayer:IsNear(woby, 16) then -- Woby is nearby
     return DoControllerAction(woby, 'RUMMAGE')
   end
