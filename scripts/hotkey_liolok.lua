@@ -288,7 +288,7 @@ local FIRE_SKILL = {
 local function Fire(name)
   if not (IsPlaying('willow') and HasSkill(FIRE_SKILL[name])) then return end
 
-  if not Inv() or Inv():Has('willow_ember', TUNING['WILLOW_EMBER_' .. name]) then return end
+  if not (Inv() and Inv():Has('willow_ember', TUNING['WILLOW_EMBER_' .. name])) then return end
 
   local ember = Find('willow_ember')
   return SetSpell(ember, Get(STRINGS, 'PYROMANCY', 'FIRE_' .. name)) and Ctl() and Ctl():StartAOETargetingUsing(ember)
