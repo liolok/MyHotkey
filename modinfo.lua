@@ -129,7 +129,8 @@ Config('FireThrow', T('Willow: Flame Cast', '薇洛：火焰投掷'))
 Config('FireBurst', T('Willow: Combustion', '薇洛：燃烧术'))
 Config('FireBall', T('Willow: Fire Ball', '薇洛：火球术'))
 Config('FireFrenzy', T('Willow: Burning Frenzy', '薇洛：狂热焚烧'))
-Config('LunarOrShadowFire', T('Willow: Lunar/Shadow Fire', '薇洛：月焰/暗焰'))
+Config('FireLunar', T('Willow: Lunar Fire', '薇洛：月焰'))
+Config('FireShadow', T('Willow: Shadow Fire', '薇洛：暗焰'))
 
 Header('Wolfgang', '沃尔夫冈')
 Config(

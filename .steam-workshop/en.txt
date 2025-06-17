@@ -25,7 +25,8 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 [*]Combustion
 [*]Fire Ball
 [*]Burning Frenzy
-[*]Lunar/Shadow Fire
+[*]Lunar Fire
+[*]Shadow Fire
 [/list]
 
 [h3]Wolfgang[/h3]
