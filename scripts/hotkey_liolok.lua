@@ -239,7 +239,7 @@ fn.ToggleUmbrella = function()
   if target then -- toggle the nearby Umbralla
     return DoControllerAction(target, target:HasTag('turnedon') and 'TURNOFF' or 'TURNON')
   else -- drop inventory Umbralla then open it
-    return Drop(FindFueled('voidcloth_umbrella')) and ThePlayer:DoTaskInTime(0.5, fn.ActivateUmbrella)
+    return Drop(FindFueled('voidcloth_umbrella')) and ThePlayer:DoTaskInTime(0.1, fn.ToggleUmbrella)
   end
 end
 
