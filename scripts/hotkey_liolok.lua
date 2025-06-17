@@ -246,9 +246,10 @@ fn.ToggleUmbrella = function()
   end
 end
 
-local BLOCK_MURDER = { oceanfish_small_8 = true, oceanfish_medium_8 = true } -- Scorching Sunfish & Ice Bream | 炽热太阳鱼和冰鲷鱼
-local function CanMurder(item)
-  return Get(item, 'replica', 'health', 'CanMurder') and not BLOCK_MURDER[Get(item, 'prefab')]
+local BLOCK_MURDER = { oceanfish_small_8_inv = true, oceanfish_medium_8_inv = true } -- Scorching Sunfish & Ice Bream | 炽热太阳鱼和冰鲷鱼
+local function CanMurder(item) -- murderable and health of componentactions.lua
+  return (item and not BLOCK_MURDER[item.prefab])
+    and (item:HasTag('murderable') or Get(item, 'replica', 'health', 'CanMurder'))
 end
 fn.Murder = function() return IsPlaying() and Use(FindInvItemBy(CanMurder), 'MURDER') end
 
