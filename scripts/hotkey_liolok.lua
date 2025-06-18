@@ -523,11 +523,11 @@ local function IsToHire(inst, player)
   if Get(inst, 'prefab') ~= 'mermguard' or not Get(inst, 'replica', 'follower') then return end
 
   local leader = Get(inst, 'replica', 'follower', 'GetLeader')
-  if not leader then return true end -- no leader yet, need to hire.
+  if not leader or Get(inst, 'should_hire') then return true end -- no leader yet or marked, need to hire.
 
   if leader == player then -- already following, hire if hungry.
-    local as = Get(inst, 'AnimState')
-    if as and as:IsCurrentAnimation('hungry') then return true end -- state "funnyidle" from stategraphs/SGmerm.lua
+    inst.should_hire = Get(inst, 'AnimState') and Get(inst, 'AnimState'):IsCurrentAnimation('hungry') -- state "funnyidle" from stategraphs/SGmerm.lua
+    return inst.should_hire
   end
 end
 
