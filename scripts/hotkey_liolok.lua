@@ -253,6 +253,25 @@ local function CanMurder(item) -- murderable and health of componentactions.lua
 end
 fn.Murder = function() return IsPlaying() and Use(FindInvItemBy(CanMurder), 'MURDER') end
 
+local IS_SMALL_USAGE_BOOK = {
+  book_birds = true,
+  book_horticulture_upgraded = true,
+  book_fire = true,
+  book_light = true,
+  book_moon = true,
+  book_bees = true,
+  book_research_station = true,
+}
+local function CanRead(item)
+  if not (item and item:HasTags('book', 'bookcabinet_item')) then return end
+
+  local prefab = Get(item, 'prefab')
+  local percent = Get(item, 'replica', 'inventoryitem', 'classified', 'percentused', 'value') -- (0, 100]
+  local threshold_percent = IS_SMALL_USAGE_BOOK[prefab] and 33 or 20 -- last one usage of 3 or 5
+  return type(percent) == 'number' and percent > threshold_percent
+end
+fn.Read = function() return IsPlaying() and ThePlayer:HasTag('reader') and Use(FindInvItemBy(CanRead), 'READ') end
+
 fn.SaveGame = function() return IsPlaying() and IsInCD('Confirm Save') and not IsInCD('Save Game', 5) and c_save() end
 
 fn.ResetGame = function()

@@ -100,6 +100,7 @@ Config(
   T('Murder', '谋杀'),
   T('Will ignore Scorching Sunfish & Ice Bream', '会略过炽热太阳鱼和冰鲷鱼')
 )
+Config('Read', T('Read', '阅读'), T('Support durability protection', '支持耐久保护'))
 Config(
   'SaveGame',
   T('Save Game', '保存游戏'),
