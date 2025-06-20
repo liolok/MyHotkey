@@ -226,6 +226,14 @@ fn.UseCane = function()
     and SwitchHand(FindPrefabs('cane', 'orangestaff', 'walking_stick', 'ruins_bat') or FindFueled('balloonspeed'))
 end
 
+fn.UseArmorSnurtleShell = function()
+  if not IsPlaying() then return end
+
+  local armor = Find('armorsnurtleshell')
+  local body_item = Inv() and Inv():GetEquippedItem(EQUIPSLOTS.BODY)
+  return Use(armor, body_item == armor and 'USEITEM' or 'EQUIP')
+end
+
 fn.JumpInOrMigrate = function()
   if not IsPlaying() then return end
 

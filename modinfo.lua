@@ -79,6 +79,7 @@ Priority: Walking Cane > The Lazy Explorer > Speedy Balloon > Wooden Walking Sti
 优先级：步行手杖 > 懒人魔杖 > 木手杖 > 铥矿棒 > 迅捷气球]]
   )
 )
+Config('UseArmorSnurtleShell', T('Snurtle Shell Armor', '蜗壳护甲'), T('Equip / Use', '装备/使用'))
 Config(
   'JumpInOrMigrate',
   T('Jump In / Travel via', '跳入/游历'),

@@ -9,6 +9,7 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 [*]Open/Close Polar Bearger Bin
 [*]Walking Cane: Equip a speed-up hand tool, or switch back to former hand equipment.
 (Priority: Walking Cane > The Lazy Explorer > Wooden Walking Stick > Thulecite Club > Speedy Balloon)
+[*]Equip / Use Snurtle Shell Armor
 [*]Jump In / Travel via: Wormhole, Big Slimy Pit, Time Rift, Sinkhole, Stairs
 [*]Open/Close Umbralla: If no Umbralla on ground, will try to drop one and open.
 [*]Murder (Will ignore Scorching Sunfish & Ice Bream)
