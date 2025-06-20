@@ -36,6 +36,8 @@ local function IsPlaying(character)
   return true -- it's all good, man
 end
 
+local function IsRiding() return Get(ThePlayer, 'replica', 'rider', 'IsRiding') end
+
 local function FindInvItemBy(IsRight) -- find right item in inventory | 在所有格子里找正确的物品
   local inventory = Inv()
   if not (inventory and type(IsRight) == 'function') then return end
@@ -347,7 +349,8 @@ fn.UseDumbBell = function()
 
   local bell = FindPrefabs('dumbbell_gem', 'dumbbell_marble', 'dumbbell_golden', 'dumbbell')
     or FindPrefabs('dumbbell_bluegem', 'dumbbell_redgem', 'dumbbell_heat')
-  return SwitchHand(bell) and Use(bell, bell:HasTag('lifting') and 'STOP_LIFT_DUMBBELL' or 'LIFT_DUMBBELL')
+  return SwitchHand(bell)
+    and (not IsRiding() and Use(bell, bell:HasTag('lifting') and 'STOP_LIFT_DUMBBELL' or 'LIFT_DUMBBELL'))
 end
 
 --------------------------------------------------------------------------------
