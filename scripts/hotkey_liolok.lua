@@ -240,7 +240,7 @@ fn.JumpInOrMigrate = function()
   local radius, ignore_height, must_tags = 40, true
   local cant_tags, must_one_of_tags = { 'channeling' }, { 'teleporter', 'migrator' }
   local target = FindClosestEntity(ThePlayer, radius, ignore_height, must_tags, cant_tags, must_one_of_tags)
-  return DoControllerAction(target, target:HasTag('teleporter') and 'JUMPIN' or 'MIGRATE')
+  return target and DoControllerAction(target, target:HasTag('teleporter') and 'JUMPIN' or 'MIGRATE')
 end
 
 fn.ToggleUmbrella = function()
