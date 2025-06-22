@@ -103,6 +103,14 @@ Config(
 )
 Config('Read', T('Read', '阅读'), T('Support durability protection', '支持耐久保护'))
 Config(
+  'ClickContainerButton',
+  T('Click Container Button', '点击容器按钮'),
+  T(
+    'For example Cook/Wrap/Destroy (need press twice to confirm Destroy)',
+    '比如烹饪/打包/摧毁（需双击以确认）'
+  )
+)
+Config(
   'SaveGame',
   T('Save Game', '保存游戏'),
   T('Press twice or hold to confirm action!', '双击或按住以确认操作！')

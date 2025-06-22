@@ -282,6 +282,19 @@ local function CanRead(item)
 end
 fn.Read = function() return IsPlaying() and ThePlayer:HasTag('reader') and Use(FindInvItemBy(CanRead), 'READ') end
 
+fn.ClickContainerButton = function() -- credit: Tony workshop-2111412487/main/modules/quick_wrap.lua
+  if not IsPlaying() then return end
+
+  for container in pairs(Get(ThePlayer, 'HUD', 'controls', 'containers') or {}) do
+    local button = Get(container, 'replica', 'container', 'GetWidget', 'buttoninfo')
+    if button and (type(button.validfn) ~= 'function' or button.validfn(container)) then
+      if button.text ~= Get(STRINGS, 'ACTIONS', 'INCINERATE') or IsInCD('Confirm Destroy', 0.5) then
+        return type(button.fn) == 'function' and button.fn(container, ThePlayer)
+      end
+    end
+  end
+end
+
 fn.SaveGame = function() return IsPlaying() and IsInCD('Confirm Save') and not IsInCD('Save Game', 5) and c_save() end
 
 fn.ResetGame = function()

@@ -14,6 +14,7 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 [*]Open/Close Umbralla: If no Umbralla on ground, will try to drop one and open.
 [*]Murder (Will ignore Scorching Sunfish & Ice Bream)
 [*]Read (Support durability protection)
+[*]Click Container Button: For example Cook/Wrap/Destroy (need press twice to confirm Destroy)
 [*]Save Game (press twice or hold to confirm action)
 [*]Reset Game: Restart the server from the last save. (press twice or hold to confirm action)
 [*]Toggle Movement Prediction
