@@ -553,13 +553,15 @@ fn.CatapultElementalVolley = function() return EngineerRemote('ELEMENTAL_VOLLEY'
 fn.MakeLivingLog = function() return IsPlaying('wormwood') and Make('livinglog') end
 fn.MakeLightFlier = function() return IsPlaying('wormwood') and Make('wormwood_lightflier') end
 
+local function FertilizeSpoiledFoodTask()
+  if Get(ThePlayer, 'replica', 'health', 'GetPercent') == 1 then return true end
+  return not ThePlayer:HasOneOfTags('busy', 'moving')
+    and Use(Find('spoiled_food'), 'FERTILIZE')
+    and ThePlayer:DoTaskInTime(4.1, FertilizeSpoiledFoodTask)
+end
 fn.FertilizeSpoiledFood = function()
-  return not IsInCD('Fertilize self with Rot', 4)
-    and IsPlaying('wormwood')
-    and TryTaskTwice(
-      function() return Use(Find('spoiled_food'), 'FERTILIZE') end,
-      FindPrefabs('supertacklecontainer', 'tacklecontainer') -- Spectackler Box or Tackle Box
-    )
+  return IsPlaying('wormwood')
+    and TryTaskTwice(FertilizeSpoiledFoodTask, FindPrefabs('supertacklecontainer', 'tacklecontainer')) -- Spectackler Box or Tackle Box
 end
 
 --------------------------------------------------------------------------------
