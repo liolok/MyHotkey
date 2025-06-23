@@ -14,3 +14,5 @@ function KeyBind(name, key)
 
   if name == 'WobyDash' then GLOBAL.DOUBLE_CLICK_TIMEOUT = key and 0 or OLD_DOUBLE_CLICK_TIMEOUT end
 end
+
+AddPrefabPostInit('mermguard', function(inst) return inst:DoTaskInTime(1, FN.HookMermGuard) end)

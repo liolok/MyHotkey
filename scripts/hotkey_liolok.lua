@@ -565,16 +565,21 @@ end
 --------------------------------------------------------------------------------
 -- Wurt | 沃特
 
-local function IsToHire(inst, player)
-  if Get(inst, 'prefab') ~= 'mermguard' or not Get(inst, 'replica', 'follower') then return end
+fn.HookMermGuard = function(inst) -- let Merm Guards refresh their status
+  return Get(ThePlayer, 'prefab') == 'wurt'
+    and inst:DoPeriodicTask(1, function(inst)
+      local leader = Get(inst, 'replica', 'follower', 'GetLeader')
+      local anim_state = Get(inst, 'AnimState')
+      if not anim_state then return end
 
-  local leader = Get(inst, 'replica', 'follower', 'GetLeader')
-  if not leader or Get(inst, 'should_hire') then return true end -- no leader yet or marked, need to hire.
-
-  if leader == player then -- already following, hire if hungry.
-    inst.should_hire = Get(inst, 'AnimState') and Get(inst, 'AnimState'):IsCurrentAnimation('hungry') -- state "funnyidle" from stategraphs/SGmerm.lua
-    return inst.should_hire
-  end
+      local is_hungry = anim_state:IsCurrentAnimation('hungry') -- state "funnyidle" from stategraphs/SGmerm.lua
+      local is_hired = anim_state:IsCurrentAnimation('eat') or anim_state:IsCurrentAnimation('buff')
+      if inst:HasTag('should_hire') then
+        if is_hired then inst:RemoveTag('should_hire') end
+      elseif leader ~= ThePlayer or is_hungry then
+        inst:AddTag('should_hire')
+      end
+    end)
 end
 
 fn.HireMermGuard = function()
@@ -583,8 +588,8 @@ fn.HireMermGuard = function()
   local food = FindPrefabs('rock_avocado_fruit_ripe', 'kelp', 'pondfish')
   if not food then return end
 
-  local radius, ignore_height, must_tags, cant_tags, must_one_of_tags = 20, true, { 'mermguard' }, { 'player' }, {}
-  local merm = FindClosestEntity(ThePlayer, radius, ignore_height, must_tags, cant_tags, must_one_of_tags, IsToHire)
+  local radius, ignore_height, must_tags = 20, true, { 'mermguard', 'should_hire' }
+  local merm = FindClosestEntity(ThePlayer, radius, ignore_height, must_tags)
   if not merm then return end
 
   return Do(BufferedAction(ThePlayer, merm, ACTIONS.GIVE, food), 'ControllerUseItemOnSceneFromInvTile', food, merm)
