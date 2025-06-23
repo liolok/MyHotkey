@@ -223,7 +223,10 @@ end
 
 fn.UseCane = function()
   return IsPlaying()
-    and SwitchHand(FindPrefabs('cane', 'orangestaff', 'walking_stick', 'ruins_bat') or FindFueled('balloonspeed'))
+    and SwitchHand(
+      FindPrefabs('cane', 'orangestaff', 'spear_wathgrithr_lightning', 'walking_stick', 'ruins_bat')
+        or FindFueled('balloonspeed')
+    )
 end
 
 fn.UseArmorSnurtleShell = function()
