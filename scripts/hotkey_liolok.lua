@@ -50,10 +50,14 @@ local function FindInvItemBy(IsRight) -- find right item in inventory | 在所�
     if IsRight(item) then return item end
   end
 
-  -- all items of all opened containers | 所有打开的容器的所有物品
-  for container in pairs(inventory:GetOpenContainers()) do
-    for _, item in pairs(Get(container, 'replica', 'container', 'GetItems') or {}) do
-      if IsRight(item) then return item end
+  -- all slots of all opened containers | 所有打开的容器的所有格子
+  for open_container in pairs(inventory:GetOpenContainers()) do
+    local container = Get(open_container, 'replica', 'container')
+    if container then
+      for slot = 1, container:GetNumSlots() do
+        local item = container:GetItemInSlot(slot)
+        if IsRight(item) then return item end
+      end
     end
   end
 
@@ -286,9 +290,9 @@ end
 fn.Read = function() return IsPlaying() and ThePlayer:HasTag('reader') and Use(FindInvItemBy(CanRead), 'READ') end
 
 fn.ClickContainerButton = function() -- credit: Tony workshop-2111412487/main/modules/quick_wrap.lua
-  if not IsPlaying() then return end
+  if not (IsPlaying() and Inv()) then return end
 
-  for container in pairs(Get(ThePlayer, 'HUD', 'controls', 'containers') or {}) do
+  for container in pairs(Inv():GetOpenContainers()) do
     local button = Get(container, 'replica', 'container', 'GetWidget', 'buttoninfo')
     if button and (type(button.validfn) ~= 'function' or button.validfn(container)) then
       if button.text ~= Get(STRINGS, 'ACTIONS', 'INCINERATE') or IsInCD('Confirm Destroy', 0.5) then
