@@ -11,23 +11,19 @@ end
 
 -- shortcut for code like `ThePlayer and ThePlayer.replica and ThePlayer.replica.inventory`
 local function Get(head_node, ...)
-  local current = head_node
+  local current_node = head_node
   for _, key in ipairs({ ... }) do
-    if not current then return end
+    if not current_node then return end
 
-    local next = current[key]
-    if type(next) == 'function' then -- for code like `ThePlayer.replica.inventory:GetActiveItem()`
-      current = next(current) -- this could be `false`/`nil` so avoid assigning with `type(next) == 'function' and next(current) or next`
+    local next_node = current_node[key]
+    if type(next_node) == 'function' then -- for code like `ThePlayer.replica.inventory:GetActiveItem()`
+      current_node = next_node(current_node) -- this could be `false`/`nil` so avoid assigning with `and or`
     else
-      current = next
+      current_node = next_node
     end
   end
-  return current
+  return current_node
 end
-
-local function IsMasterSim() return Get(TheWorld, 'ismastersim') end -- detect local forest-only world
-local function Ctl() return Get(ThePlayer, 'components', 'playercontroller') end
-local function Inv() return Get(ThePlayer, 'replica', 'inventory') end
 
 local function IsPlaying(character)
   if not (TheWorld and ThePlayer) then return end -- in game, yeah
@@ -36,7 +32,23 @@ local function IsPlaying(character)
   return true -- it's all good, man
 end
 
-local function IsRiding() return Get(ThePlayer, 'replica', 'rider', 'IsRiding') end
+local function HasSkill(skill)
+  if not skill then return true end
+
+  local skill_tree = Get(ThePlayer, 'components', 'skilltreeupdater')
+  if not skill_tree then return end
+
+  if type(skill) == 'string' then return skill_tree:IsActivated(skill) end
+
+  for _, v in ipairs(type(skill) == 'table' and skill or {}) do
+    if skill_tree:IsActivated(v) then return true end
+  end
+end
+
+--------------------------------------------------------------------------------
+-- Inventory Item | 格子物品
+
+local function Inv() return Get(ThePlayer, 'replica', 'inventory') end
 
 local function FindInvItemBy(IsRight) -- find right item in inventory | 在所有格子里找正确的物品
   local inventory = Inv()
@@ -90,10 +102,15 @@ local function FindPrefabs(...)
   end
 end
 
+--------------------------------------------------------------------------------
+-- Inventory Item Action | 格子物品操作
+
+local function Ctl() return Get(ThePlayer, 'components', 'playercontroller') end
+
 local function Drop(item)
   if item then
     local is_single = true
-    if IsMasterSim() and Inv() then
+    if Get(TheWorld, 'ismastersim') and Inv() then -- local forest-only world
       Inv():DropItemFromInvTile(item, is_single)
     elseif Ctl() then
       Ctl():RemoteDropItemFromInvTile(item, is_single)
@@ -104,7 +121,7 @@ end
 
 local function Use(item, action)
   if item then
-    if IsMasterSim() and Inv() then
+    if Get(TheWorld, 'ismastersim') and Inv() then -- local forest-only world
       Inv():UseItemFromInvTile(item)
     elseif Ctl() then
       Ctl():RemoteUseItemFromInvTile(BufferedAction(ThePlayer, nil, ACTIONS[action], item), item)
@@ -112,6 +129,33 @@ local function Use(item, action)
     return true
   end
 end
+
+local former_hand = {}
+local function SwitchHand(item)
+  if not item then return end
+
+  local current_hand_item = Inv() and Inv():GetEquippedItem(EQUIPSLOTS.HANDS)
+  if current_hand_item == item then
+    if former_hand[item] then return Use(former_hand[item], 'EQUIP') end
+  else
+    former_hand[item] = current_hand_item
+    Use(item, 'EQUIP')
+  end
+
+  return true -- item equipped on hand slot
+end
+
+local function TryTaskTwice(callback, container)
+  if type(callback) == 'function' and not callback() then -- task not done, open container and retry.
+    if container and not Get(container, 'replica', 'container', '_isopen') then -- not opened yet
+      Use(container, 'RUMMAGE') -- open
+      return ThePlayer:DoTaskInTime(0.5, callback) -- wait a little then retry
+    end
+  end
+end
+
+--------------------------------------------------------------------------------
+-- Other Actions | 其他操作
 
 local function Do(buffered_action, rpc_name, ...)
   local action = Get(buffered_action, 'action', 'code')
@@ -130,38 +174,13 @@ end
 
 local function Make(prefab) return SendRPCToServer(RPC.MakeRecipeFromMenu, Get(AllRecipes, prefab, 'rpc_id')) end
 
-local former_hand = {}
-local function SwitchHand(item)
-  if not item then return end
-
-  local current_hand_item = Inv() and Inv():GetEquippedItem(EQUIPSLOTS.HANDS)
-  if current_hand_item == item then
-    if former_hand[item] then return Use(former_hand[item], 'EQUIP') end
-  else
-    former_hand[item] = current_hand_item
-    Use(item, 'EQUIP')
-  end
-
-  return true -- item equipped on hand slot
-end
-
 local function Tip(message)
   local talker, time, no_anim, force = Get(ThePlayer, 'components', 'talker'), nil, true, true
   return talker and talker:Say(message, time, no_anim, force)
 end
 
-local function HasSkill(skill)
-  if not skill then return true end
-
-  local skill_tree = Get(ThePlayer, 'components', 'skilltreeupdater')
-  if not skill_tree then return end
-
-  if type(skill) == 'string' then return skill_tree:IsActivated(skill) end
-
-  for _, v in ipairs(type(skill) == 'table' and skill or {}) do
-    if skill_tree:IsActivated(v) then return true end
-  end
-end
+--------------------------------------------------------------------------------
+-- Cast Spell | 施法
 
 local function GetTargetPosition(distance)
   local player = Get(ThePlayer, 'GetPosition')
@@ -208,17 +227,6 @@ local function TryTipCD(name, time)
   Tip(math.ceil(percent * time) .. 's')
   return true
 end
-
-local function TryTaskTwice(callback, container)
-  if type(callback) == 'function' and not callback() then -- task not done, open container and retry.
-    if container and not Get(container, 'replica', 'container', '_isopen') then -- not opened yet
-      Use(container, 'RUMMAGE') -- open
-      return ThePlayer:DoTaskInTime(0.5, callback) -- wait a little then retry
-    end
-  end
-end
-
-local function IsFollowing(inst, player) return Get(inst, 'replica', 'follower', 'GetLeader') == player end
 
 --------------------------------------------------------------------------------
 -- General Hotkey | 通用热键
@@ -382,7 +390,8 @@ fn.UseDumbBell = function()
   local bell = FindPrefabs('dumbbell_gem', 'dumbbell_marble', 'dumbbell_golden', 'dumbbell')
     or FindPrefabs('dumbbell_bluegem', 'dumbbell_redgem', 'dumbbell_heat')
   return SwitchHand(bell)
-    and (not IsRiding() and Use(bell, bell:HasTag('lifting') and 'STOP_LIFT_DUMBBELL' or 'LIFT_DUMBBELL'))
+    and not Get(ThePlayer, 'replica', 'rider', 'IsRiding')
+    and Use(bell, bell:HasTag('lifting') and 'STOP_LIFT_DUMBBELL' or 'LIFT_DUMBBELL')
 end
 
 --------------------------------------------------------------------------------
@@ -405,6 +414,7 @@ local GHOST_CMD_SKILL = {
 local HAS_GHOST_CMD_CD = { ESCAPE = true, ATTACK_AT = true, HAUNT_AT = true, SCARE = true }
 local IS_GHOST_CMD_AOE = { ATTACK_AT = true, HAUNT_AT = true }
 
+local function IsFollowing(inst, player) return Get(inst, 'replica', 'follower', 'GetLeader') == player end
 local function GhostCommand(name)
   local flower = Find('abigail_flower')
   if not (flower and HasSkill(GHOST_CMD_SKILL[name])) then return end
@@ -477,10 +487,6 @@ fn.ShadowPillarsIndicator = function() return Spell('SHADOW_PILLARS', true) end
 --------------------------------------------------------------------------------
 -- Wigfrid | 薇格弗德
 
-local function IsRecharging(item)
-  return Get(item, 'replica', '_', 'inventoryitem', 'classified', 'recharge', 'value') ~= 180
-end
-
 local function IsValidBattleSong(item) -- function `singable` from componentactions.lua
   if not (item and item:HasTag('battlesong')) then return end -- not battle song at all
 
@@ -488,7 +494,7 @@ local function IsValidBattleSong(item) -- function `singable` from componentacti
   if not (data and HasSkill(data.REQUIRE_SKILL)) then return end
 
   if data.INSTANT then -- Battle Stinger
-    if IsRecharging(item) then return end -- Battle Stinger in CD | 战吼正在冷却
+    if Get(item, 'replica', 'inventoryitem', 'classified', 'recharge', 'value') ~= 180 then return end -- Battle Stinger in CD | 战吼正在冷却
   else -- Battle Song
     for _, v in ipairs(Get(ThePlayer, 'player_classified', 'inspirationsongs') or {}) do
       if v:value() == data.battlesong_netid then return end -- Battle Song already activated
