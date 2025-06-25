@@ -185,6 +185,10 @@ local function CastFromInv(inst, spell_name)
   return SetSpell(inst, spell_name) and Inv() and Inv():CastSpellBookFromInv(inst)
 end
 
+local function TargetAOE(inst, spell_name)
+  return SetSpell(inst, spell_name) and Ctl() and Ctl():StartAOETargetingUsing(inst)
+end
+
 local function CastAOE(inst, spell_name, target_position)
   local spell_id = SetSpell(inst, spell_name)
   if not spell_id then return end
@@ -454,14 +458,21 @@ fn.UseMagicianToolOrStop = function()
   return hat and Do(BufferedAction(ThePlayer, nil, ACTIONS.USEMAGICTOOL, hat), 'UseItemFromInvTile', hat, 1)
 end
 
-local function Spell(name)
-  return IsPlaying('waxwell') and CastAOE(FindFueled('waxwelljournal'), Get(STRINGS, 'SPELLS', name))
+local function Spell(name, is_target_only)
+  if IsPlaying('waxwell') then
+    local AOE = is_target_only and TargetAOE or CastAOE
+    return AOE(FindFueled('waxwelljournal'), Get(STRINGS, 'SPELLS', name))
+  end
 end
 
 fn.ShadowWorker = function() return Spell('SHADOW_WORKER') end
+fn.ShadowWorkerIndicator = function() return Spell('SHADOW_WORKER', true) end
 fn.ShadowProtector = function() return Spell('SHADOW_PROTECTOR') end
+fn.ShadowProtectorIndicator = function() return Spell('SHADOW_PROTECTOR', true) end
 fn.ShadowTrap = function() return Spell('SHADOW_TRAP') end
+fn.ShadowTrapIndicator = function() return Spell('SHADOW_TRAP', true) end
 fn.ShadowPillars = function() return Spell('SHADOW_PILLARS') end
+fn.ShadowPillarsIndicator = function() return Spell('SHADOW_PILLARS', true) end
 
 --------------------------------------------------------------------------------
 -- Wigfrid | 薇格弗德
@@ -541,15 +552,19 @@ local REMOTE_SKILL = {
   BOOST = 'winona_catapult_boost_1',
   ELEMENTAL_VOLLEY = { 'winona_shadow_3', 'winona_lunar_3' },
 }
-local function EngineerRemote(name)
-  return (IsPlaying('winona') and HasSkill(REMOTE_SKILL[name]))
-    and CastAOE(FindFueled('winona_remote'), Get(STRINGS, 'ENGINEER_REMOTE', name))
+local function EngineerRemote(name, is_target_only)
+  if IsPlaying('winona') and HasSkill(REMOTE_SKILL[name]) then
+    local AOE = is_target_only and TargetAOE or CastAOE
+    return AOE(FindFueled('winona_remote'), Get(STRINGS, 'ENGINEER_REMOTE', name))
+  end
 end
 
 fn.CatapultWakeUp = function() return EngineerRemote('WAKEUP') end
 fn.CatapultBoost = function() return EngineerRemote('BOOST') end
 fn.CatapultVolley = function() return EngineerRemote('VOLLEY') end
+fn.CatapultVolleyIndicator = function() return EngineerRemote('VOLLEY', true) end
 fn.CatapultElementalVolley = function() return EngineerRemote('ELEMENTAL_VOLLEY') end
+fn.CatapultElementalVolleyIndicator = function() return EngineerRemote('ELEMENTAL_VOLLEY', true) end
 
 --------------------------------------------------------------------------------
 -- Wormwood | 沃姆伍德

@@ -174,9 +174,13 @@ Config(
   T("Use Magician's Top Hat, or Stop.", '使用魔术师高礼帽，或者停止。')
 )
 Config('ShadowWorker', T('Maxwell: Shadow Servant', '麦斯威尔：暗影仆人'))
+Config('ShadowWorkerIndicator', T('Maxwell: Shadow Servant Indicator', '麦斯威尔：暗影仆人指示器'))
 Config('ShadowProtector', T('Maxwell: Shadow Duelist', '麦斯威尔：暗影角斗士'))
+Config('ShadowProtectorIndicator', T('Maxwell: Shadow Duelist Indicator', '麦斯威尔：暗影角斗士指示器'))
 Config('ShadowTrap', T('Maxwell: Shadow Sneak', '麦斯威尔：暗影陷阱'))
+Config('ShadowTrapIndicator', T('Maxwell: Shadow Sneak Indicator', '麦斯威尔：暗影陷阱指示器'))
 Config('ShadowPillars', T('Maxwell: Shadow Prison', '麦斯威尔：暗影囚牢'))
+Config('ShadowPillarsIndicator', T('Maxwell: Shadow Prison Indicator', '麦斯威尔：暗影囚牢指示器'))
 
 Header('Wigfrid', '薇格弗德')
 Config(
@@ -212,7 +216,9 @@ Config(
 Config('CatapultWakeUp', T('Catapult: Arm', '投石机：武装'))
 Config('CatapultBoost', T('Catapult: Barrage', '投石机：齐射'))
 Config('CatapultVolley', T('Catapult: Target', '投石机：瞄准'))
+Config('CatapultVolleyIndicator', T('Catapult: Target Indicator', '投石机：瞄准指示器'))
 Config('CatapultElementalVolley', T('Catapult: Planar Strike', '投石机：位面袭击'))
+Config('CatapultElementalVolleyIndicator', T('Catapult: Planar Strike Indicator', '投石机：位面袭击指示器'))
 
 Header('Wormwood', '沃姆伍德')
 Config('MakeLivingLog', T('Wormwood: Grow Living Log', '沃姆伍德：生长活木头'))
