@@ -102,6 +102,8 @@ local function FindPrefabs(...)
   end
 end
 
+local function IsRecharging(item) return Get(item, 'replica', 'inventoryitem', 'classified', 'recharge', 'value') ~= 180 end
+
 --------------------------------------------------------------------------------
 -- Inventory Item Action | 格子物品操作
 
@@ -494,7 +496,7 @@ local function IsValidBattleSong(item) -- function `singable` from componentacti
   if not (data and HasSkill(data.REQUIRE_SKILL)) then return end
 
   if data.INSTANT then -- Battle Stinger
-    if Get(item, 'replica', 'inventoryitem', 'classified', 'recharge', 'value') ~= 180 then return end -- Battle Stinger in CD | 战吼正在冷却
+    if IsRecharging(item) then return end -- Battle Stinger in CD | 战吼正在冷却
   else -- Battle Song
     for _, v in ipairs(Get(ThePlayer, 'player_classified', 'inspirationsongs') or {}) do
       if v:value() == data.battlesong_netid then return end -- Battle Song already activated
