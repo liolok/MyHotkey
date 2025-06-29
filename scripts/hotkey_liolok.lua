@@ -45,6 +45,8 @@ local function HasSkill(skill)
   end
 end
 
+local function IsRiding() return Get(ThePlayer, 'replica', 'rider', 'IsRiding') end
+
 --------------------------------------------------------------------------------
 -- Inventory Item | 格子物品
 
@@ -392,7 +394,7 @@ fn.UseDumbBell = function()
   local bell = FindPrefabs('dumbbell_gem', 'dumbbell_marble', 'dumbbell_golden', 'dumbbell')
     or FindPrefabs('dumbbell_bluegem', 'dumbbell_redgem', 'dumbbell_heat')
   return SwitchHand(bell)
-    and not Get(ThePlayer, 'replica', 'rider', 'IsRiding')
+    and not IsRiding()
     and Use(bell, bell:HasTag('lifting') and 'STOP_LIFT_DUMBBELL' or 'LIFT_DUMBBELL')
 end
 
@@ -524,7 +526,7 @@ local function GetStrikeTargetPosition()
 end
 
 fn.StrikeOrBlock = function()
-  if not IsPlaying('wathgrithr') then return end
+  if not IsPlaying('wathgrithr') or IsRiding() then return end
 
   local item = FindPrefabs('spear_wathgrithr_lightning_charged', 'spear_wathgrithr_lightning', 'wathgrithr_shield')
   if item == (Inv() and Inv():GetEquippedItem(EQUIPSLOTS.HANDS)) then -- already equipped on hand slot
