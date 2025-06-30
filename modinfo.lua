@@ -234,8 +234,8 @@ Config(
   'HireMermGuard',
   T('Wurt: Hire Loyal Merm Guard', '沃特：雇佣忠诚鱼人守卫'),
   T(
-    'Food Priority: Ripe Stone Fruit > Kelp Fronds > Freshwater Fish',
-    '食物优先级：成熟石果 > 海带叶 > 淡水鱼'
+    'Food Priority: Stone Fruit > Kelp Patch > Kelp Fronds > Carrot > Ratatouille > Freshwater Fish',
+    '食物优先级：石果 > 海带补丁 > 海带叶 > 胡萝卜 > 蔬菜杂烩 > 淡水鱼'
   )
 )
 

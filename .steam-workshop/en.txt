@@ -88,7 +88,7 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 [h3]Wurt[/h3]
 [list]
 [*]Hire Loyal Merm Guard
-(Food Priority: Ripe Stone Fruit > Kelp Fronds > Freshwater Fish)
+(Food Priority: Stone Fruit > Kelp Patch > Kelp Fronds > Carrot > Ratatouille > Freshwater Fish)
 [/list]
 
 [h3]Woby[/h3]

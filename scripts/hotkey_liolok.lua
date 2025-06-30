@@ -616,7 +616,17 @@ end
 fn.HireMermGuard = function()
   if not IsPlaying('wurt') then return end
 
-  local food = FindPrefabs('rock_avocado_fruit_ripe', 'kelp', 'pondfish')
+  local food = FindPrefabs(
+    'rock_avocado_fruit_ripe_cooked', -- Cooked Stone Fruit | 熟石果
+    'rock_avocado_fruit_ripe', -- Ripe Stone Fruit | 成熟石果
+    'boatpatch_kelp', -- Kelp Patch | 海带补丁
+    'kelp_cooked', -- Cooked Kelp Fronds | 熟海带叶
+    'kelp', -- Kelp Fronds | 海带叶
+    'carrot_cooked', -- Roasted Carrot | 烤胡萝卜
+    'carrot', -- Carrot | 胡萝卜
+    'ratatouille', -- Ratatouille | 蔬菜杂烩
+    'pondfish' -- Freshwater Fish | 淡水鱼
+  )
   if not food then return end
 
   local radius, ignore_height, must_tags = 20, true, { 'mermguard', 'should_hire' }
