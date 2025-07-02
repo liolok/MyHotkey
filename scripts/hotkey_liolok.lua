@@ -208,17 +208,15 @@ local function CastFromInv(inst, spell_name)
   return SetSpell(inst, spell_name) and Inv() and Inv():CastSpellBookFromInv(inst)
 end
 
-local function TargetAOE(inst, spell_name)
-  return SetSpell(inst, spell_name) and Ctl() and Ctl():StartAOETargetingUsing(inst)
-end
-
-local function CastAOE(inst, spell_name, target_position)
+local function CastAOE(inst, spell_name, param)
   local spell_id = SetSpell(inst, spell_name)
   if not spell_id then return end
 
-  local pos = target_position or Get(TheInput, 'GetWorldPosition')
-  local act = BufferedAction(ThePlayer, nil, ACTIONS.CASTAOE, inst, pos)
-  return Do(act, 'LeftClick', pos.x, pos.z, nil, nil, nil, nil, nil, nil, nil, inst, spell_id)
+  if Get(param, 'is_target_only') then return Ctl() and Ctl():StartAOETargetingUsing(inst) end
+
+  local pos = Get(param, 'position') or Get(TheInput, 'GetWorldPosition')
+  local act = BufferedAction(ThePlayer, nil, ACTIONS.CASTAOE, inst, pos, nil, Get(param, 'distance') or 8)
+  return Do(act, 'LeftClick', Get(pos, 'x'), Get(pos, 'z'), nil, nil, nil, nil, nil, nil, nil, inst, spell_id)
 end
 
 local function TryTipCD(name, time)
@@ -362,7 +360,7 @@ local FIRE_SKILL = {
   LUNAR = 'willow_allegiance_lunar_fire',
   SHADOW = 'willow_allegiance_shadow_fire',
 }
-local IS_FIRE_ON_SELF = { BURST = true, FRENZY = true }
+local IS_FIRE_ON_CURSOR = { THROW = true, BALL = true }
 
 local function Fire(name)
   if not (IsPlaying('willow') and HasSkill(FIRE_SKILL[name])) then return end
@@ -372,10 +370,11 @@ local function Fire(name)
   local cooldown_time = Get(TUNING, 'WILLOW_' .. name .. '_FIRE_COOLDOWN')
   if TryTipCD(cooldown_name, cooldown_time) then return end
 
-  local spell_name = Get(STRINGS, 'PYROMANCY', 'FIRE_' .. name) or Get(STRINGS, 'PYROMANCY', name .. '_FIRE')
-  local target_position = (name == 'LUNAR' and GetTargetPosition(6.5)) -- 6.5 from line_reticule_mouse_target_function of prefabs/willow_ember.lua
-    or (IS_FIRE_ON_SELF[name] and Get(ThePlayer, 'GetPosition'))
-  return CastAOE(Find('willow_ember'), spell_name, target_position)
+  return CastAOE(
+    Find('willow_ember'),
+    Get(STRINGS, 'PYROMANCY', 'FIRE_' .. name) or Get(STRINGS, 'PYROMANCY', name .. '_FIRE'),
+    { position = not IS_FIRE_ON_CURSOR[name] and GetTargetPosition(6.5) } -- 6.5 from line_reticule_mouse_target_function of prefabs/willow_ember.lua
+  )
 end
 
 fn.FireThrow = function() return Fire('THROW') end
@@ -433,8 +432,12 @@ local function GhostCommand(name)
     if TryTipCD(cooldown_name, time) then return end
   end
 
-  local Cast = IS_GHOST_CMD_AOE[name] and CastAOE or CastFromInv
-  return Cast(flower, Get(STRINGS, 'GHOSTCOMMANDS', name) or Get(STRINGS, 'ACTIONS', 'COMMUNEWITHSUMMONED', name))
+  local spell_name = Get(STRINGS, 'GHOSTCOMMANDS', name) or Get(STRINGS, 'ACTIONS', 'COMMUNEWITHSUMMONED', name)
+  if IS_GHOST_CMD_AOE[name] then
+    return CastAOE(flower, spell_name, { distance = 20 })
+  else
+    return CastFromInv(flower, spell_name)
+  end
 end
 
 fn.SummonOrRecallAbigail = function()
@@ -474,8 +477,7 @@ end
 
 local function Spell(name, is_target_only)
   if IsPlaying('waxwell') then
-    local AOE = is_target_only and TargetAOE or CastAOE
-    return AOE(FindFueled('waxwelljournal'), Get(STRINGS, 'SPELLS', name))
+    return CastAOE(FindFueled('waxwelljournal'), Get(STRINGS, 'SPELLS', name), { is_target_only = is_target_only })
   end
 end
 
@@ -564,8 +566,9 @@ local REMOTE_SKILL = {
 }
 local function EngineerRemote(name, is_target_only)
   if IsPlaying('winona') and HasSkill(REMOTE_SKILL[name]) then
-    local AOE = is_target_only and TargetAOE or CastAOE
-    return AOE(FindFueled('winona_remote'), Get(STRINGS, 'ENGINEER_REMOTE', name))
+    local remote = FindFueled('winona_remote')
+    local spell_name = Get(STRINGS, 'ENGINEER_REMOTE', name)
+    return CastAOE(remote, spell_name, { is_target_only = is_target_only, distance = Get(TUNING.WINONA_REMOTE_RANGE) })
   end
 end
 
