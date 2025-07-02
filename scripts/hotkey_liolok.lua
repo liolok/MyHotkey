@@ -200,7 +200,7 @@ end
 local function SetSpell(inst, spell_name)
   local book = Get(inst, 'components', 'spellbook')
   for id, item in pairs(Get(book, 'items') or {}) do
-    if item.label == spell_name then return book:SelectSpell(id) and id end
+    if item.label == spell_name then return book and book:SelectSpell(id) and id end
   end
 end
 
