@@ -596,22 +596,22 @@ end
 --------------------------------------------------------------------------------
 -- Wurt | 沃特
 
-fn.HookMermGuard = function(inst) -- let Merm Guards refresh their status
-  return Get(ThePlayer, 'prefab') == 'wurt'
-    and inst:DoPeriodicTask(1, function(inst)
-      local leader = Get(inst, 'replica', 'follower', 'GetLeader')
-      local anim_state = Get(inst, 'AnimState')
-      if not anim_state then return end
+---@param inst Instance
+local function RefreshHirable(inst)
+  local AS = Get(inst, 'AnimState')
+  if not AS then return end
 
-      local is_hungry = anim_state:IsCurrentAnimation('hungry') -- state "funnyidle" from stategraphs/SGmerm.lua
-      local is_hired = anim_state:IsCurrentAnimation('eat') or anim_state:IsCurrentAnimation('buff')
-      if inst:HasTag('should_hire') then
-        if is_hired then inst:RemoveTag('should_hire') end
-      elseif leader ~= ThePlayer or is_hungry then
-        inst:AddTag('should_hire')
-      end
-    end)
+  local is_hired = AS:IsCurrentAnimation('eat') or AS:IsCurrentAnimation('buff')
+  local is_hungry = AS:IsCurrentAnimation('hungry') -- state "funnyidle" from stategraphs/SGmerm.lua
+  if inst:HasTag('hirable') then
+    if is_hired then inst:RemoveTag('hirable') end
+  elseif (Get(inst, 'replica', 'follower', 'GetLeader') ~= ThePlayer) or is_hungry then
+    inst:AddTag('hirable')
+  end
 end
+
+---@param inst Instance
+fn.HookMermGuard = function(inst) return Get(ThePlayer, 'prefab') == 'wurt' and inst:DoPeriodicTask(1, RefreshHirable) end
 
 fn.HireMermGuard = function()
   if not IsPlaying('wurt') then return end
@@ -629,7 +629,7 @@ fn.HireMermGuard = function()
   )
   if not food then return end
 
-  local radius, ignore_height, must_tags = 20, true, { 'mermguard', 'should_hire' }
+  local radius, ignore_height, must_tags = 20, true, { 'mermguard', 'hirable' }
   local merm = FindClosestEntity(ThePlayer, radius, ignore_height, must_tags)
   if not merm then return end
 
