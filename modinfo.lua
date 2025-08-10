@@ -181,6 +181,7 @@ Config('ShadowTrap', T('Maxwell: Shadow Sneak', '麦斯威尔：暗影陷阱'))
 Config('ShadowTrapIndicator', T('Maxwell: Shadow Sneak Indicator', '麦斯威尔：暗影陷阱指示器'))
 Config('ShadowPillars', T('Maxwell: Shadow Prison', '麦斯威尔：暗影囚牢'))
 Config('ShadowPillarsIndicator', T('Maxwell: Shadow Prison Indicator', '麦斯威尔：暗影囚牢指示器'))
+Config('AttackShadowMinion', T('Maxwell: Attack Shadow Puppet', '麦斯威尔：攻击暗影傀儡'))
 
 Header('Wigfrid', '薇格弗德')
 Config(

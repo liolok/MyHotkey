@@ -56,6 +56,7 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 [*]Shadow Duelist (fast cast / show indicator)
 [*]Shadow Sneak (fast cast / show indicator)
 [*]Shadow Prison (fast cast / show indicator)
+[*]Attack Shadow Puppet
 [/list]
 
 [h3]Wigfrid[/h3]

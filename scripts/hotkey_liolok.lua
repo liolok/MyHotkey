@@ -47,6 +47,8 @@ end
 
 local function IsRiding() return Get(ThePlayer, 'replica', 'rider', 'IsRiding') end
 
+local function IsFollowing(inst, player) return Get(inst, 'replica', 'follower', 'GetLeader') == player end
+
 --------------------------------------------------------------------------------
 -- Inventory Item | 格子物品
 
@@ -417,7 +419,6 @@ local GHOST_CMD_SKILL = {
 local HAS_GHOST_CMD_CD = { ESCAPE = true, ATTACK_AT = true, HAUNT_AT = true, SCARE = true }
 local IS_GHOST_CMD_AOE = { ATTACK_AT = true, HAUNT_AT = true }
 
-local function IsFollowing(inst, player) return Get(inst, 'replica', 'follower', 'GetLeader') == player end
 local function GhostCommand(name)
   local flower = Find('abigail_flower')
   if not (flower and HasSkill(GHOST_CMD_SKILL[name])) then return end
@@ -489,6 +490,26 @@ fn.ShadowTrap = function() return Spell('SHADOW_TRAP') end
 fn.ShadowTrapIndicator = function() return Spell('SHADOW_TRAP', true) end
 fn.ShadowPillars = function() return Spell('SHADOW_PILLARS') end
 fn.ShadowPillarsIndicator = function() return Spell('SHADOW_PILLARS', true) end
+
+fn.AttackShadowMinion = function()
+  if not IsPlaying('waxwell') then return end
+
+  local radius, ignore_height, must_tags, cant_tags, must_one_of_tags = 12, true, { 'shadowminion' }, {}, {}
+  local minion =
+    FindClosestEntity(ThePlayer, radius, ignore_height, must_tags, cant_tags, must_one_of_tags, IsFollowing)
+
+  return minion
+    and Do(
+      BufferedAction(ThePlayer, minion, ACTIONS.ATTACK),
+      'LeftClick',
+      Get(ThePlayer, 'GetPosition', 'x'),
+      Get(ThePlayer, 'GetPosition', 'z'),
+      minion,
+      false, -- is_released
+      10, -- control_mods
+      true -- no_force
+    )
+end
 
 --------------------------------------------------------------------------------
 -- Wigfrid | 薇格弗德
