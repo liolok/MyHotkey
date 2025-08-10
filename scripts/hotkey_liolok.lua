@@ -560,8 +560,8 @@ end
 
 local REMOTE_SKILL = {
   WAKEUP = 'winona_portable_structures',
-  VOLLEY = 'winona_catapult_volley_1',
-  BOOST = 'winona_catapult_boost_1',
+  -- VOLLEY = 'winona_catapult_volley_1',
+  -- BOOST = 'winona_catapult_boost_1',
   ELEMENTAL_VOLLEY = { 'winona_shadow_3', 'winona_lunar_3' },
 }
 local function EngineerRemote(name, is_target_only)

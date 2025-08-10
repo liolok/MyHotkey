@@ -214,9 +214,13 @@ Config(
   )
 )
 Config('CatapultWakeUp', T('Catapult: Arm', '投石机：武装'))
-Config('CatapultBoost', T('Catapult: Barrage', '投石机：齐射'))
-Config('CatapultVolley', T('Catapult: Target', '投石机：瞄准'))
-Config('CatapultVolleyIndicator', T('Catapult: Target Indicator', '投石机：瞄准指示器'))
+Config('CatapultBoost', T('Catapult: Barrage', '投石机：齐射'), T("Doesn't require skill", '不需要技能'))
+Config('CatapultVolley', T('Catapult: Target', '投石机：瞄准'), T("Doesn't require skill", '不需要技能'))
+Config(
+  'CatapultVolleyIndicator',
+  T('Catapult: Target Indicator', '投石机：瞄准指示器'),
+  T("Doesn't require skill", '不需要技能')
+)
 Config('CatapultElementalVolley', T('Catapult: Planar Strike', '投石机：位面袭击'))
 Config('CatapultElementalVolleyIndicator', T('Catapult: Planar Strike Indicator', '投石机：位面袭击指示器'))
 
