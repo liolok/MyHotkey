@@ -188,13 +188,15 @@ end
 --------------------------------------------------------------------------------
 -- Cast Spell | 施法
 
-local function GetTargetPosition(distance)
+local function GetTargetPosition(distance, allow_closer)
   local player = Get(ThePlayer, 'GetPosition')
   local cursor = Get(TheInput, 'GetWorldPosition')
   if not (player and cursor) then return end
 
   local dx, dz = cursor.x - player.x, cursor.z - player.z
   local d = math.sqrt(dx ^ 2 + dz ^ 2)
+  if allow_closer and d < distance then return cursor end
+
   local x, z = player.x + dx / d * distance, player.z + dz / d * distance
   return Vector3(x, 0, z)
 end
@@ -435,7 +437,9 @@ local function GhostCommand(name)
 
   local spell_name = Get(STRINGS, 'GHOSTCOMMANDS', name) or Get(STRINGS, 'ACTIONS', 'COMMUNEWITHSUMMONED', name)
   if IS_GHOST_CMD_AOE[name] then
-    return CastAOE(flower, spell_name, { position = name == 'ATTACK_AT' and GetTargetPosition(20), distance = 20 })
+    local param = { distance = 20 }
+    if name == 'ATTACK_AT' then param.position = GetTargetPosition(19.99, true) end
+    return CastAOE(flower, spell_name, param)
   else
     return CastFromInv(flower, spell_name)
   end
