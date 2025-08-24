@@ -435,7 +435,7 @@ local function GhostCommand(name)
 
   local spell_name = Get(STRINGS, 'GHOSTCOMMANDS', name) or Get(STRINGS, 'ACTIONS', 'COMMUNEWITHSUMMONED', name)
   if IS_GHOST_CMD_AOE[name] then
-    return CastAOE(flower, spell_name, { distance = 20 })
+    return CastAOE(flower, spell_name, { position = name == 'ATTACK_AT' and GetTargetPosition(20), distance = 20 })
   else
     return CastFromInv(flower, spell_name)
   end
