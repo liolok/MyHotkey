@@ -244,6 +244,9 @@ Config(
   )
 )
 
+Header('Walter', '沃尔特')
+Config('SwitchSlingshot', T('Walter: Switch Slingshots', '沃尔特：切换弹弓'))
+
 Header('Woby', '沃比')
 Config('WobyRummage', T('Woby: Open/Close', '沃比：打开/关闭'))
 Config('WobyCourier', T('Woby: Deliver', '沃比：运送'))

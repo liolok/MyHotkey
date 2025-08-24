@@ -92,6 +92,11 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 (Food Priority: Stone Fruit > Kelp Patch > Kelp Fronds > Carrot > Ratatouille > Freshwater Fish)
 [/list]
 
+[h3]Walter[/h3]
+[list]
+[*]Switch Slingshots
+[/list]
+
 [h3]Woby[/h3]
 [list]
 [*]Open/Close

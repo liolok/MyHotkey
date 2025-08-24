@@ -54,7 +54,7 @@ local function IsFollowing(inst, player) return Get(inst, 'replica', 'follower',
 
 local function Inv() return Get(ThePlayer, 'replica', 'inventory') end
 
-local function FindInvItemBy(IsRight) -- find right item in inventory | 在所有格子里找正确的物品
+local function FindInvItemBy(IsRight, skip_equips) -- find right item in inventory | 在所有格子里找正确的物品
   local inventory = Inv()
   if not (inventory and type(IsRight) == 'function') then return end
 
@@ -62,7 +62,7 @@ local function FindInvItemBy(IsRight) -- find right item in inventory | 在所�
   if inventory:GetActiveItem() then inventory:ReturnActiveItem() end
 
   -- all equipped items | 所有已装备物品
-  for _, item in pairs(inventory:GetEquips()) do
+  for _, item in pairs(skip_equips and {} or inventory:GetEquips()) do
     if IsRight(item) then return item end
   end
 
@@ -94,7 +94,7 @@ local function Find(prefab, filter)
       if filter.no_tags and item:HasOneOfTags(filter.no_tags) then return end
       return true
     end
-  end)
+  end, Get(filter, 'skip_equips'))
 end
 
 local function FindFueled(prefab) return Find(prefab, { no_tags = 'fueldepleted' }) end
@@ -659,6 +659,11 @@ fn.HireMermGuard = function()
 
   return Do(BufferedAction(ThePlayer, merm, ACTIONS.GIVE, food), 'ControllerUseItemOnSceneFromInvTile', food, merm)
 end
+
+--------------------------------------------------------------------------------
+-- Walter | 沃尔特
+
+fn.SwitchSlingshot = function() return IsPlaying('walter') and SwitchHand(Find('slingshot', { skip_equips = true })) end
 
 --------------------------------------------------------------------------------
 -- Woby | 沃比
