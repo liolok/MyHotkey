@@ -94,7 +94,7 @@ local function Find(prefab, filter)
       if filter.no_tags and item:HasOneOfTags(filter.no_tags) then return end
       return true
     end
-  end, Get(filter, 'skip_equips'))
+  end)
 end
 
 local function FindFueled(prefab) return Find(prefab, { no_tags = 'fueldepleted' }) end
@@ -663,7 +663,18 @@ end
 --------------------------------------------------------------------------------
 -- Walter | 沃尔特
 
-fn.SwitchSlingshot = function() return IsPlaying('walter') and SwitchHand(Find('slingshot', { skip_equips = true })) end
+local IS_SLINGSHOT = {
+  slingshot = true,
+  slingshotex = true,
+  slingshot999ex = true,
+  slingshot2 = true,
+  slingshot2ex = true,
+}
+
+fn.SwitchSlingshot = function()
+  return IsPlaying('walter')
+    and SwitchHand(FindInvItemBy(function(item) return IS_SLINGSHOT[Get(item, 'prefab')] end, true)) -- skip_equips
+end
 
 --------------------------------------------------------------------------------
 -- Woby | 沃比
