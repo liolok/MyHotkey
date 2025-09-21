@@ -13,7 +13,7 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 [*]Jump In / Travel via: Wormhole, Big Slimy Pit, Time Rift, Sinkhole, Stairs
 [*]Open/Close Umbralla: If no Umbralla on ground, will try to drop one and open.
 [*]Murder (Will ignore Scorching Sunfish & Ice Bream)
-[*]Read (Support durability protection)
+[*]Read (Preserve one last usage, also balance durability in Bookcase.)
 [*]Click Container Button: For example Cook/Wrap/Destroy (need press twice to confirm Destroy)
 [*]Save Game (press twice or hold to confirm action)
 [*]Reset Game: Restart the server from the last save. (press twice or hold to confirm action)

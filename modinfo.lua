@@ -101,7 +101,7 @@ Config(
   T('Murder', '谋杀'),
   T('Will ignore Scorching Sunfish & Ice Bream', '会略过炽热太阳鱼和冰鲷鱼')
 )
-Config('Read', T('Read', '阅读'), T('Support durability protection', '支持耐久保护'))
+Config('Read', T('Read', '阅读'), T('Preserve one last usage, also balance durability in Bookcase.', '保留最后一次使用，还会在书架里均衡耐久。'))
 Config(
   'ClickContainerButton',
   T('Click Container Button', '点击容器按钮'),

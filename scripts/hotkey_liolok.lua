@@ -303,9 +303,29 @@ local function CanRead(item)
   local prefab = Get(item, 'prefab')
   local percent = Get(item, 'replica', 'inventoryitem', 'classified', 'percentused', 'value') -- (0, 100]
   local threshold_percent = IS_SMALL_USAGE_BOOK[prefab] and 33 or 20 -- last one usage of 3 or 5
-  return type(percent) == 'number' and percent > threshold_percent
+  return (type(percent) == 'number' and percent > threshold_percent), percent
 end
-fn.Read = function() return IsPlaying() and ThePlayer:HasTag('reader') and Use(FindInvItemBy(CanRead), 'READ') end
+fn.Read = function()
+  local inventory = Inv()
+  if not (IsPlaying() and ThePlayer:HasTag('reader') and inventory) then return end
+
+  local max_book_in_station, max_percent = nil, 0 -- find maximum durability book in bookstation
+  for open_container in pairs(inventory:GetOpenContainers()) do
+    local container = Get(open_container, 'replica', 'container')
+    if Get(open_container, 'prefab') == 'bookstation' and container then
+      for slot = 1, container:GetNumSlots() do
+        local item = container:GetItemInSlot(slot)
+        local can_read, percent = CanRead(item)
+        if can_read and type(percent) == 'number' and percent > max_percent then
+          max_book_in_station = item
+          max_percent = percent
+        end
+      end
+    end
+  end
+  local book = max_book_in_station or FindInvItemBy(CanRead)
+  return Use(book, 'READ')
+end
 
 fn.ClickContainerButton = function() -- credit: Tony workshop-2111412487/main/modules/quick_wrap.lua
   if not (IsPlaying() and Inv()) then return end
