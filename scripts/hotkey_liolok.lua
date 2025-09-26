@@ -327,6 +327,106 @@ fn.Read = function()
   return Use(book, 'READ')
 end
 
+local function CanMove(item, to_container)
+  if not (item and to_container) then return end
+  if not to_container:IsFull() then return true end -- got empty slot so good to go
+  if not Get(item, 'replica', 'stackable') then return end -- item not stackable so negative
+  for slot = 1, to_container:GetNumSlots() do
+    local it = to_container:GetItemInSlot(slot)
+    if Get(it, 'prefab') == Get(item, 'prefab') then
+      if not Get(it, 'replica', 'stackable', 'IsFull') then return true end -- item already inside not fully stacked yet so good to go
+    end
+  end
+end
+
+local function MoveItem(from_container, slot, to_container)
+  if not (from_container and type(slot) == 'number' and to_container) then return end
+  if not CanMove(from_container:GetItemInSlot(slot), to_container) then return end
+
+  local from_inst = Get(from_container, 'inst')
+  local to_inst = Get(to_container, 'inst')
+  if not (from_inst and to_inst) then return end
+
+  if from_inst == ThePlayer then -- from inventory bar to somewhere else
+    SendRPCToServer(RPC.MoveInvItemFromAllOfSlot, slot, to_inst)
+  else
+    SendRPCToServer(RPC.MoveItemFromAllOfSlot, slot, from_inst, to_inst)
+  end
+  return true
+end
+
+local function FindDestinationContainer(from_container, item)
+  local candidate_containers = {}
+  for k, v in pairs(Get(ThePlayer, 'HUD', 'controls', 'containers') or {}) do
+    local container = Get(k, 'replica', 'container')
+    if
+      (v ~= nil and Get(v, 'inst', 'entity', 'IsVisible') and Get(k, 'IsValid')) -- taken from GetOpenContainers()
+      and (container and container ~= from_container)
+      and container:CanTakeItemInSlot(item) -- only means item can go into container theoretically rather than actually
+      and CanMove(item, container)
+    then
+      if Get(container, 'GetWidget', 'buttoninfo') then return container end -- got a button to click? move to it!
+      table.insert(candidate_containers, container)
+    end
+  end
+
+  for _, container in ipairs(candidate_containers) do -- already containing? move to it!
+    if container:FindItem(function(it) return Get(it, 'prefab') == Get(item, 'prefab') end) then return container end
+  end
+
+  -- if no other container found, move item to inventory bar, or from inventory bar to optional backpack
+  return candidate_containers[1] or (from_container ~= Inv() and Inv() or Get(Inv(), 'GetOverflowContainer'))
+end
+
+local IS_GEM = { redgem = true, bluegem = true, purplegem = true, orangegem = true, yellowgem = true, greengem = true }
+local SAME_PREFAB_PREFIX = { 'trinket_', 'winter_food', 'winter_ornament_', 'halloween_ornament_', 'halloweencandy_' }
+local function IsTheSame(item_x, item_y)
+  if not (item_x and item_y) then return false end
+  if item_x == item_y then return true end
+  local a, b = Get(item_x, 'prefab') or 'prefab_a', Get(item_y, 'prefab') or 'prefab_b'
+  if a == b or IS_GEM[a] and IS_GEM[b] then return true end
+  for _, prefix in ipairs(SAME_PREFAB_PREFIX) do
+    if a:match('^' .. prefix) and b:match('^' .. prefix) then return true end
+  end
+end
+
+fn.BatchMove = function()
+  local inventory_bar = Inv()
+  if not (inventory_bar and IsPlaying()) then return end
+
+  local item_slot = Get(TheInput, 'GetHUDEntityUnderMouse', 'widget', 'parent', 'parent')
+  local from_container = Get(item_slot, 'container')
+  local item_hovered = Get(item_slot, 'tile', 'item') or Get(item_slot, 'item')
+  local to_container = FindDestinationContainer(from_container, item_hovered)
+  if not (from_container and item_hovered and to_container) then return end
+
+  local backpack = Get(inventory_bar, 'GetOverflowContainer')
+  local is_to_body = to_container == inventory_bar and from_container ~= backpack
+
+  local is_from_body = from_container == inventory_bar and to_container ~= backpack
+    or from_container == backpack and to_container ~= inventory_bar
+
+  for _, from in ipairs(is_from_body and { inventory_bar, backpack } or { from_container }) do
+    for slot = 1, from:GetNumSlots() do
+      local item = from:GetItemInSlot(slot)
+      if IsTheSame(item_hovered, item) then
+        if to_container:AcceptsStacks() and not Get(item, 'replica', 'stackable', 'IsOverStacked') then
+          if not MoveItem(from, slot, to_container) then break end
+        else -- destination container doesn't accept stack (one item in one slot) or has infinite stack size
+          for _ = 1, to_container:GetNumSlots() do
+            if not MoveItem(from, slot, to_container) then break end
+          end
+          if is_to_body and backpack then
+            for _ = 1, backpack:GetNumSlots() do
+              if not MoveItem(from, slot, backpack) then break end
+            end
+          end
+        end
+      end
+    end
+  end
+end
+
 fn.ClickContainerButton = function() -- credit: Tony workshop-2111412487/main/modules/quick_wrap.lua
   if not (IsPlaying() and Inv()) then return end
 
