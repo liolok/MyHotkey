@@ -3,7 +3,7 @@ local function T(en, zh, zht) return ChooseTranslationTable({ en, zh = zh, zht =
 name = T('Hotkey of liolok', '热键：李皓奇')
 author = T('liolok', '李皓奇')
 local date = '2025-09-27'
-version = date .. '' -- for revision in same day
+version = date .. '-1' -- for revision in same day
 description = T(
   [[󰀏 Tip:
 Enable this mod and click "Apply", its key bindings will be way more easy,
