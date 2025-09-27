@@ -88,6 +88,8 @@ Config(
     '跳入：虫洞、硕大的泥坑、时间裂缝\n游历：洞穴、楼梯'
   )
 )
+Config('ToggleSteeringWheel', T('Steer/Stop', '掌舵/停止'))
+Config('ToggleAnchor', T('Lower/Raise Anchor', '下锚/起锚'))
 Config(
   'ToggleUmbrella',
   T('Open/Close Umbralla', '打开/关闭暗影伞'),

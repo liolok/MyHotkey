@@ -260,12 +260,51 @@ fn.UseArmorSnurtleShell = function()
 end
 
 fn.JumpInOrMigrate = function()
-  if not IsPlaying() then return end
+  if not (IsPlaying() and Get(ThePlayer, 'GetCurrentPlatform')) then return end
 
-  local radius, ignore_height, must_tags = 40, true
+  local radius, ignore_height, must_tags = 40, true, {}
   local cant_tags, must_one_of_tags = { 'channeling' }, { 'teleporter', 'migrator' }
   local target = FindClosestEntity(ThePlayer, radius, ignore_height, must_tags, cant_tags, must_one_of_tags)
   return target and DoControllerAction(target, target:HasTag('teleporter') and 'JUMPIN' or 'MIGRATE')
+end
+
+local function StopSteering()
+  local x, _, z = ThePlayer.Transform:GetWorldPosition()
+  return Do(BufferedAction(ThePlayer, nil, ACTIONS.STOP_STEERING_BOAT), 'RightClick', x, z)
+end
+
+fn.ToggleSteeringWheel = function() -- credit: Tony workshop-2111412487/main/modules/easy_boat_stuff_using.lua
+  if not IsPlaying() then return end
+  if ThePlayer:HasTag('steeringboat') then return StopSteering() end
+
+  local radius, ignore_height = 8, true
+  local must_tags, cant_tags = { 'steeringwheel' }, { 'INLIMBO', 'burnt', 'occupied', 'fire' }
+  local target = FindClosestEntity(ThePlayer, radius, ignore_height, must_tags, cant_tags)
+  return DoControllerAction(target, 'STEER_BOAT')
+end
+
+fn.ToggleAnchor = function() -- credit: Tony workshop-2111412487/main/modules/easy_boat_stuff_using.lua
+  if not IsPlaying() then return end
+
+  local radius, ignore_height, must_tags = 8, true, {}
+  local cant_tags, must_one_of_tags = { 'INLIMBO', 'burnt' }, { 'anchor_raised', 'anchor_lowered' }
+  local target = FindClosestEntity(ThePlayer, radius, ignore_height, must_tags, cant_tags, must_one_of_tags)
+  if not target then return end
+
+  local action
+  if not target:HasTag('anchor_raised') or target:HasTag('anchor_transitioning') then
+    action = 'RAISE_ANCHOR'
+  elseif target:HasTag('anchor_raised') then
+    action = 'LOWER_ANCHOR'
+  end
+  if not action then return end
+
+  if ThePlayer:HasTag('steeringboat') then
+    StopSteering()
+    return ThePlayer:DoTaskInTime(10 * FRAMES, function() DoControllerAction(target, action) end)
+  else
+    return DoControllerAction(target, action)
+  end
 end
 
 fn.ToggleUmbrella = function()

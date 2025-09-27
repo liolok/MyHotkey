@@ -11,6 +11,8 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 (Priority: Walking Cane > The Lazy Explorer > Charged Elding Spear > Wooden Walking Stick > Thulecite Club > Speedy Balloon)
 [*]Equip / Use Snurtle Shell Armor
 [*]Jump In / Travel via: Wormhole, Big Slimy Pit, Time Rift, Sinkhole, Stairs
+[*]Steer/Stop
+[*]Lower/Raise Anchor
 [*]Open/Close Umbralla: If no Umbralla on ground, will try to drop one and open.
 [*]Murder (Will ignore Scorching Sunfish & Ice Bream)
 [*]Read (Preserve one last usage, also balance durability in Bookcase.)
