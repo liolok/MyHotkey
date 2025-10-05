@@ -739,7 +739,7 @@ fn.UseTeleBrella = function()
   if not IsPlaying('winona') then return end
 
   local brella = FindFueled('winona_telebrella')
-  return SwitchHand(brella) and Use(brella, 'REMOTE_TELEPORT')
+  return Use(brella, 'EQUIP') and Use(brella, 'REMOTE_TELEPORT')
 end
 
 local REMOTE_SKILL = {

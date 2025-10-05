@@ -219,10 +219,7 @@ Header('Winona', '薇诺娜')
 Config(
   'UseTeleBrella',
   T('Winona: Portasol', '薇诺娜：传送伞'),
-  T(
-    'Equip a Portasol and Activate it, or switch back to former hand equipment.',
-    '装备一个传送伞并激活，或切换回之前的手部装备。'
-  )
+  T('Equip a Portasol and Activate it', '装备一个传送伞并激活')
 )
 Config('CatapultWakeUp', T('Catapult: Arm', '投石机：武装'))
 Config('CatapultBoost', T('Catapult: Barrage', '投石机：齐射'), T("Doesn't require skill", '不需要技能'))
