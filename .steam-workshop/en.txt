@@ -41,6 +41,11 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 (Priority: Gembell > Marbell > Golden Dumbbell > Dumbbell > Icebell > Firebell > Thermbell)
 [/list]
 
+[h3]Wendy[/h3]
+[list]
+[*]Walk to Pipspook's lost toy
+[/list]
+
 [h3]Abigail[/h3]
 [list]
 [*]Apply Spectral Cure-All (Picnic Casket Supported)

@@ -561,6 +561,33 @@ fn.UseDumbBell = function()
 end
 
 --------------------------------------------------------------------------------
+-- Wendy | 温蒂
+
+local IS_TOY_PREFAB = {
+  lost_toy_1 = true,
+  lost_toy_2 = true,
+  lost_toy_7 = true,
+  lost_toy_10 = true,
+  lost_toy_11 = true,
+  lost_toy_14 = true,
+  lost_toy_18 = true,
+  lost_toy_19 = true,
+  lost_toy_42 = true,
+  lost_toy_43 = true,
+}
+
+local function IsToyPrefab(inst) return IS_TOY_PREFAB[Get(inst, 'prefab')] end
+
+fn.WalkToLostToy = function()
+  if not IsPlaying('wendy') then return end
+
+  local radius, ignore_height, must_tags, cant_tags, must_one_of_tags = 49, true, { 'haunted' }, { 'INLIMBO' }, {}
+  local toy = FindClosestEntity(ThePlayer, radius, ignore_height, must_tags, cant_tags, must_one_of_tags, IsToyPrefab)
+  local pos = Get(toy, 'GetPosition')
+  return pos and Do(BufferedAction(ThePlayer, nil, ACTIONS.WALKTO, nil, pos), 'LeftClick', pos.x, pos.z)
+end
+
+--------------------------------------------------------------------------------
 -- Abigail | 阿比盖尔
 
 fn.UseFastRegenElixir = function()

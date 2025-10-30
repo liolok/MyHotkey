@@ -164,6 +164,9 @@ Priority: Gembell > Marbell > Golden Dumbbell > Dumbbell > Icebell > Firebell > 
   )
 )
 
+Header('Wendy', '温蒂')
+Config('WalkToLostToy', T("Wendy: Walk to Pipspook's lost toy", '温蒂：走向小惊吓遗失的玩具'))
+
 Header('Abigail', '阿比盖尔')
 Config(
   'UseFastRegenElixir',
