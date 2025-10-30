@@ -394,6 +394,14 @@ local function MoveItem(from_container, slot, to_container)
   return true
 end
 
+local function CanTake(item, to_container)
+  if not (item and to_container) then return end
+
+  for slot = 1, to_container:GetNumSlots() do
+    if to_container:CanTakeItemInSlot(item, slot) then return true end
+  end
+end
+
 local function FindDestinationContainer(from_container, item)
   local candidate_containers = {}
   for k, v in pairs(Get(ThePlayer, 'HUD', 'controls', 'containers') or {}) do
@@ -401,7 +409,7 @@ local function FindDestinationContainer(from_container, item)
     if
       (v ~= nil and Get(v, 'inst', 'entity', 'IsVisible') and Get(k, 'IsValid')) -- taken from GetOpenContainers()
       and (container and container ~= from_container)
-      and container:CanTakeItemInSlot(item) -- only means item can go into container theoretically rather than actually
+      and CanTake(item, container) -- only means item can go into container theoretically rather than actually
       and CanMove(item, container)
     then
       if Get(container, 'GetWidget', 'buttoninfo') then return container end -- got a button to click? move to it!
