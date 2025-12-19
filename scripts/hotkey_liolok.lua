@@ -420,9 +420,11 @@ local function FindDestinationContainer(from_container, item)
   for _, container in ipairs(candidate_containers) do -- already containing? move to it!
     if container:FindItem(function(it) return Get(it, 'prefab') == Get(item, 'prefab') end) then return container end
   end
+  if candidate_containers[1] then return candidate_containers[1] end
 
-  -- if no other container found, move item to inventory bar, or from inventory bar to optional backpack
-  return candidate_containers[1] or (from_container ~= Inv() and Inv() or Get(Inv(), 'GetOverflowContainer'))
+  -- if no other container found, move item to inventory bar if not full, or to optional backpack
+  local bar = Inv() -- inventory bar
+  return (bar and bar ~= from_container and not bar:IsFull()) and bar or Get(bar, 'GetOverflowContainer')
 end
 
 local IS_GEM = { redgem = true, bluegem = true, purplegem = true, orangegem = true, yellowgem = true, greengem = true }
