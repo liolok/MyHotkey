@@ -260,7 +260,7 @@ fn.UseArmorSnurtleShell = function()
 end
 
 fn.JumpInOrMigrate = function()
-  if not (IsPlaying() and Get(ThePlayer, 'GetCurrentPlatform')) then return end
+  if not IsPlaying() or Get(ThePlayer, 'GetCurrentPlatform') then return end
 
   local radius, ignore_height, must_tags = 40, true, {}
   local cant_tags, must_one_of_tags = { 'channeling' }, { 'teleporter', 'migrator' }
