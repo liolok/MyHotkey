@@ -482,7 +482,7 @@ fn.ClickContainerButton = function() -- credit: Tony workshop-2111412487/main/mo
   for container in pairs(Inv():GetOpenContainers()) do
     local button = Get(container, 'replica', 'container', 'GetWidget', 'buttoninfo')
     if button and (type(button.validfn) ~= 'function' or button.validfn(container)) then
-      if button.text ~= Get(STRINGS, 'ACTIONS', 'INCINERATE') or IsInCD('Confirm Destroy', 0.5) then
+      if button.text ~= Get(STRINGS, 'MEDAL_UI', 'SLOTSSORT') then
         return type(button.fn) == 'function' and button.fn(container, ThePlayer)
       end
     end

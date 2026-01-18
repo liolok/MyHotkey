@@ -115,10 +115,7 @@ Config('BatchMove', T('Batch Move', '批量移动'))
 Config(
   'ClickContainerButton',
   T('Click Container Button', '点击容器按钮'),
-  T(
-    'For example Cook/Wrap/Destroy (need press twice to confirm Destroy)',
-    '比如烹饪/打包/摧毁（需双击以确认）'
-  )
+  T('For example Cook/Wrap/Destroy', '比如烹饪/打包/摧毁')
 )
 Config(
   'SaveGame',
