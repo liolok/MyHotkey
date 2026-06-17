@@ -177,6 +177,10 @@ Config('AbigailAttackAt', T('Abigail: Attack At', '阿比盖尔：攻击'))
 Config('AbigailHauntAt', T('Abigail: Haunt At', '阿比盖尔：作祟'))
 Config('AbigailScare', T('Abigail: Scare', '阿比盖尔：惊吓'))
 
+Header('WX-78')
+Config('ToggleWxScreech', T('WX-78: Initiate/Terminate Sonic Waves', 'WX-78：启动/终止声波'))
+Config('ToggleWxShielding', T('WX-78: Activate/Deactivate Block', 'WX-78：激活/关闭格挡'))
+
 Header('Maxwell', '麦斯威尔')
 Config(
   'UseMagicianToolOrStop',

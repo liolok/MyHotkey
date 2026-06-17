@@ -57,6 +57,12 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 [*]Scare (fast cast)
 [/list]
 
+[h3]WX-78[/h3]
+[list]
+[*]Initiate/Terminate Sonic Waves
+[*]Activate/Deactivate Block
+[/list]
+
 [h3]Maxwell[/h3]
 [list]
 [*]Use Magician's Top Hat, or Stop.

@@ -178,6 +178,11 @@ local function DoControllerAction(target, action)
   return target and Do(BufferedAction(ThePlayer, target, ACTIONS[action]), 'ControllerActionButton', target)
 end
 
+local function DoRightClickOnPlayer(action)
+  local x, _, z = ThePlayer.Transform:GetWorldPosition()
+  return Do(BufferedAction(ThePlayer, ThePlayer, ACTIONS[action]), 'RightClick', x, z, ThePlayer)
+end
+
 local function Make(prefab) return SendRPCToServer(RPC.MakeRecipeFromMenu, Get(AllRecipes, prefab, 'rpc_id')) end
 
 local function Tip(message)
@@ -662,15 +667,18 @@ fn.AbigailHauntAt = function() return IsPlaying('wendy') and GhostCommand('HAUNT
 fn.AbigailScare = function() return IsPlaying('wendy') and GhostCommand('SCARE') end
 
 --------------------------------------------------------------------------------
+-- WX-78
+
+fn.ToggleWxScreech = function() return IsPlaying('wx78') and DoRightClickOnPlayer('TOGGLEWXSCREECH') end
+fn.ToggleWxShielding = function() return IsPlaying('wx78') and DoRightClickOnPlayer('TOGGLEWXSHIELDING') end
+
+--------------------------------------------------------------------------------
 -- Maxwell | 麦斯威尔
 
 fn.UseMagicianToolOrStop = function()
   if IsInCD("Magician's Top Hat") or not IsPlaying('waxwell') then return end
 
-  if ThePlayer:HasTag('usingmagiciantool') then -- already opened, close it.
-    local x, _, z = ThePlayer.Transform:GetWorldPosition()
-    return Do(BufferedAction(ThePlayer, ThePlayer, ACTIONS.STOPUSINGMAGICTOOL), 'RightClick', x, z, ThePlayer)
-  end
+  if ThePlayer:HasTag('usingmagiciantool') then return DoRightClickOnPlayer('STOPUSINGMAGICTOOL') end -- already opened, close it.
 
   local hat = Find('tophat', 'magiciantool') -- find one to open
   return hat and Do(BufferedAction(ThePlayer, nil, ACTIONS.USEMAGICTOOL, hat), 'UseItemFromInvTile', hat, 1)
