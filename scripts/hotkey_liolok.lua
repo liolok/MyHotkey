@@ -444,6 +444,8 @@ local function IsTheSame(item_x, item_y)
   end
 end
 
+local RPC_QUEUE_RATE_LIMIT = 20 -- scripts/networkclientrpc.lua
+
 fn.BatchMove = function()
   local inventory_bar = Inv()
   if not (inventory_bar and IsPlaying()) then return end
@@ -460,19 +462,28 @@ fn.BatchMove = function()
   local is_from_body = from_container == inventory_bar and to_container ~= backpack
     or from_container == backpack and to_container ~= inventory_bar
 
+  local how_many_rpc_sent = 0
+  local function IsReachingRpcRateLimit()
+    how_many_rpc_sent = how_many_rpc_sent + 1
+    return how_many_rpc_sent >= RPC_QUEUE_RATE_LIMIT
+  end
+
   for _, from in ipairs(is_from_body and { inventory_bar, backpack } or { from_container }) do
     for slot = 1, from:GetNumSlots() do
       local item = from:GetItemInSlot(slot)
       if IsTheSame(item_hovered, item) then
         if to_container:AcceptsStacks() and not Get(item, 'replica', 'stackable', 'IsOverStacked') then
           if not MoveItem(from, slot, to_container) then break end
+          if IsReachingRpcRateLimit() then return end
         else -- destination container doesn't accept stack (one item in one slot) or has infinite stack size
           for _ = 1, to_container:GetNumSlots() do
             if not MoveItem(from, slot, to_container) then break end
+            if IsReachingRpcRateLimit() then return end
           end
           if is_to_body and backpack then
             for _ = 1, backpack:GetNumSlots() do
               if not MoveItem(from, slot, backpack) then break end
+              if IsReachingRpcRateLimit() then return end
             end
           end
         end
