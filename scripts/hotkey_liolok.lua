@@ -551,7 +551,7 @@ local FIRE_SKILL = {
 }
 local IS_FIRE_ON_CURSOR = { THROW = true, BALL = true }
 
-local function Fire(name)
+local function Fire(name, is_target_only)
   if not (IsPlaying('willow') and HasSkill(FIRE_SKILL[name])) then return end
   if not (Inv() and Inv():Has('willow_ember', TUNING['WILLOW_EMBER_' .. name])) then return end
 
@@ -562,13 +562,15 @@ local function Fire(name)
   return CastAOE(
     Find('willow_ember'),
     Get(STRINGS, 'PYROMANCY', 'FIRE_' .. name) or Get(STRINGS, 'PYROMANCY', name .. '_FIRE'),
-    { position = not IS_FIRE_ON_CURSOR[name] and GetTargetPosition(6.5) } -- 6.5 from line_reticule_mouse_target_function of prefabs/willow_ember.lua
+    { is_target_only = is_target_only, position = not IS_FIRE_ON_CURSOR[name] and GetTargetPosition(6.5) } -- 6.5 from line_reticule_mouse_target_function of prefabs/willow_ember.lua
   )
 end
 
 fn.FireThrow = function() return Fire('THROW') end
+fn.FireThrowIndicator = function() return Fire('THROW', true) end
 fn.FireBurst = function() return Fire('BURST') end
 fn.FireBall = function() return Fire('BALL') end
+fn.FireBallIndicator = function() return Fire('BALL', true) end
 fn.FireFrenzy = function() return Fire('FRENZY') end
 fn.FireLunar = function() return Fire('LUNAR') end
 fn.FireShadow = function() return Fire('SHADOW') end
