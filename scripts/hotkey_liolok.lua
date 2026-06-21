@@ -520,12 +520,14 @@ end
 --------------------------------------------------------------------------------
 -- Willow | 薇洛
 
-fn.UseLighter = function()
+fn.UseLighter = function() return IsPlaying('willow') and SwitchHand(Find('lighter')) end
+
+fn.ToggleLighterChannelCast = function()
   if not IsPlaying('willow') then return end
 
   local lighter = Find('lighter')
   local action = ThePlayer:IsChannelCasting() and 'STOP_CHANNELCAST' or 'START_CHANNELCAST'
-  return SwitchHand(lighter) and Use(lighter, action)
+  return Use(lighter, 'EQUIP') and Use(lighter, action)
 end
 
 fn.DropBernie = function() return IsPlaying('willow') and Drop(FindFueled('bernie_inactive')) end

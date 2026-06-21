@@ -25,7 +25,8 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 
 [h3]Willow[/h3]
 [list]
-[*]Lighter: Equip a Lighter and Absorb Fire, or switch back to former hand equipment.
+[*]Lighter: Equip Lighter, or switch back to former hand equipment.
+[*]Absorb Fire or Stop: Equip Lighter and "Absorb Fire", or "Stop Absorbing Fire".
 [*]Drop Bernie
 [*]Flame Cast (fast/manual cast)
 [*]Combustion (fast cast)
