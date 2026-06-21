@@ -142,11 +142,11 @@ Config(
   )
 )
 Config('DropBernie', T('Willow: Drop Bernie', '薇洛：丢弃伯尼'))
-Config('FireThrow', T('Willow: Flame Cast', '薇洛：火焰投掷'))
-Config('FireThrowIndicator', T('Willow: Flame Cast Indicator', '薇洛：火焰投掷指示器'))
+Config('FireThrow', T('Willow: Flame Cast (Fast)', '薇洛：火焰投掷（快速）'))
+Config('FireThrowIndicator', T('Willow: Flame Cast (Manual)', '薇洛：火焰投掷（手动）'))
 Config('FireBurst', T('Willow: Combustion', '薇洛：燃烧术'))
-Config('FireBall', T('Willow: Fire Ball', '薇洛：火球术'))
-Config('FireBallIndicator', T('Willow: Fire Ball Indicator', '薇洛：火球术指示器'))
+Config('FireBall', T('Willow: Fire Ball (Fast)', '薇洛：火球术（快速）'))
+Config('FireBallIndicator', T('Willow: Fire Ball (Manual)', '薇洛：火球术（手动）'))
 Config('FireFrenzy', T('Willow: Burning Frenzy', '薇洛：狂热焚烧'))
 Config('FireLunar', T('Willow: Lunar Fire', '薇洛：月焰'))
 Config('FireShadow', T('Willow: Shadow Fire', '薇洛：暗焰'))
@@ -189,14 +189,14 @@ Config(
   T("Maxwell: Magician's Top Hat", '麦斯威尔：魔术师高礼帽'),
   T("Use Magician's Top Hat, or Stop.", '使用魔术师高礼帽，或者停止。')
 )
-Config('ShadowWorker', T('Maxwell: Shadow Servant', '麦斯威尔：暗影仆人'))
-Config('ShadowWorkerIndicator', T('Maxwell: Shadow Servant Indicator', '麦斯威尔：暗影仆人指示器'))
-Config('ShadowProtector', T('Maxwell: Shadow Duelist', '麦斯威尔：暗影角斗士'))
-Config('ShadowProtectorIndicator', T('Maxwell: Shadow Duelist Indicator', '麦斯威尔：暗影角斗士指示器'))
-Config('ShadowTrap', T('Maxwell: Shadow Sneak', '麦斯威尔：暗影陷阱'))
-Config('ShadowTrapIndicator', T('Maxwell: Shadow Sneak Indicator', '麦斯威尔：暗影陷阱指示器'))
-Config('ShadowPillars', T('Maxwell: Shadow Prison', '麦斯威尔：暗影囚牢'))
-Config('ShadowPillarsIndicator', T('Maxwell: Shadow Prison Indicator', '麦斯威尔：暗影囚牢指示器'))
+Config('ShadowWorker', T('Maxwell: Shadow Servant (Fast)', '麦斯威尔：暗影仆人（快速）'))
+Config('ShadowWorkerIndicator', T('Maxwell: Shadow Servant (Manual)', '麦斯威尔：暗影仆人（手动）'))
+Config('ShadowProtector', T('Maxwell: Shadow Duelist (Fast)', '麦斯威尔：暗影角斗士（快速）'))
+Config('ShadowProtectorIndicator', T('Maxwell: Shadow Duelist (Manual)', '麦斯威尔：暗影角斗士（手动）'))
+Config('ShadowTrap', T('Maxwell: Shadow Sneak (Fast)', '麦斯威尔：暗影陷阱（快速）'))
+Config('ShadowTrapIndicator', T('Maxwell: Shadow Sneak (Manual)', '麦斯威尔：暗影陷阱（手动）'))
+Config('ShadowPillars', T('Maxwell: Shadow Prison (Fast)', '麦斯威尔：暗影囚牢（快速）'))
+Config('ShadowPillarsIndicator', T('Maxwell: Shadow Prison (Manual)', '麦斯威尔：暗影囚牢（手动）'))
 Config('AttackShadowMinion', T('Maxwell: Attack Shadow Puppet', '麦斯威尔：攻击暗影傀儡'))
 
 Header('Wigfrid', '薇格弗德')
@@ -229,14 +229,21 @@ Config(
 )
 Config('CatapultWakeUp', T('Catapult: Arm', '投石机：武装'))
 Config('CatapultBoost', T('Catapult: Barrage', '投石机：齐射'), T("Doesn't require skill", '不需要技能'))
-Config('CatapultVolley', T('Catapult: Target', '投石机：瞄准'), T("Doesn't require skill", '不需要技能'))
 Config(
-  'CatapultVolleyIndicator',
-  T('Catapult: Target Indicator', '投石机：瞄准指示器'),
+  'CatapultVolley',
+  T('Catapult: Target (Fast)', '投石机：瞄准（快速）'),
   T("Doesn't require skill", '不需要技能')
 )
-Config('CatapultElementalVolley', T('Catapult: Planar Strike', '投石机：位面袭击'))
-Config('CatapultElementalVolleyIndicator', T('Catapult: Planar Strike Indicator', '投石机：位面袭击指示器'))
+Config(
+  'CatapultVolleyIndicator',
+  T('Catapult: Target (Manual)', '投石机：瞄准（手动）'),
+  T("Doesn't require skill", '不需要技能')
+)
+Config('CatapultElementalVolley', T('Catapult: Planar Strike (Fast)', '投石机：位面袭击（快速）'))
+Config(
+  'CatapultElementalVolleyIndicator',
+  T('Catapult: Planar Strike (Manual)', '投石机：位面袭击（手动）')
+)
 
 Header('Wormwood', '沃姆伍德')
 Config('MakeLivingLog', T('Wormwood: Grow Living Log', '沃姆伍德：生长活木头'))

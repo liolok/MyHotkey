@@ -27,9 +27,9 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 [list]
 [*]Lighter: Equip a Lighter and Absorb Fire, or switch back to former hand equipment.
 [*]Drop Bernie
-[*]Flame Cast (fast cast)
+[*]Flame Cast (fast/manual cast)
 [*]Combustion (fast cast)
-[*]Fire Ball (fast cast)
+[*]Fire Ball (fast/manual cast)
 [*]Burning Frenzy (fast cast)
 [*]Lunar Fire (fast cast)
 [*]Shadow Fire (fast cast)
@@ -66,10 +66,10 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 [h3]Maxwell[/h3]
 [list]
 [*]Use Magician's Top Hat, or Stop.
-[*]Shadow Servant (fast cast / show indicator)
-[*]Shadow Duelist (fast cast / show indicator)
-[*]Shadow Sneak (fast cast / show indicator)
-[*]Shadow Prison (fast cast / show indicator)
+[*]Shadow Servant (fast/manual cast)
+[*]Shadow Duelist (fast/manual cast)
+[*]Shadow Sneak (fast/manual cast)
+[*]Shadow Prison (fast/manual cast)
 [*]Attack Shadow Puppet
 [/list]
 
@@ -89,8 +89,8 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 [*]Portasol: Equip a Portasol and Activate it
 [*]Catapult: Arm (fast cast)
 [*]Catapult: Barrage (fast cast)
-[*]Catapult: Target (fast cast / show indicator)
-[*]Catapult: Planar Strike (fast cast / show indicator)
+[*]Catapult: Target (fast/manual cast)
+[*]Catapult: Planar Strike (fast/manual cast)
 [/list]
 
 [h3]Wormwood[/h3]
