@@ -115,7 +115,7 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 [list]
 [*]Open/Close
 [*]Deliver
-[*]Dash (bind this key Will disable vanilla double tapping dash)
+[*]Dash (Key binding will disable vanilla double tapping dash)
 [/list]
 
 [h3]Wanda[/h3]

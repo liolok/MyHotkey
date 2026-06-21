@@ -276,7 +276,7 @@ Config('WobyCourier', T('Woby: Deliver', '沃比：运送'))
 Config(
   'WobyDash',
   T('Woby: Dash', '沃比：冲刺'),
-  T('Bind this key Will disable vanilla double tapping dash.', '绑定此键会禁用原生的双击冲刺。')
+  T('Key binding will disable vanilla double tapping dash', '键位绑定会禁用原生的双击冲刺')
 )
 
 Header('Wanda', '旺达')
