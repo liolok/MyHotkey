@@ -228,17 +228,6 @@ local function CastAOE(inst, spell_name, param)
   return Do(act, 'LeftClick', Get(pos, 'x'), Get(pos, 'z'), nil, nil, nil, nil, nil, nil, nil, inst, spell_id)
 end
 
-local function TryTipCD(name, time)
-  if not (type(name) == 'string' and type(time) == 'number') then return end
-
-  local cooldown = Get(ThePlayer, 'components', 'spellbookcooldowns')
-  local percent = cooldown and cooldown:GetSpellCooldownPercent(name)
-  if type(percent) ~= 'number' then return end
-
-  Tip(math.ceil(percent * time) .. 's')
-  return true
-end
-
 --------------------------------------------------------------------------------
 -- General Hotkey | 通用热键
 
@@ -555,10 +544,6 @@ local function Fire(name, is_target_only)
   if not (IsPlaying('willow') and HasSkill(FIRE_SKILL[name])) then return end
   if not (Inv() and Inv():Has('willow_ember', TUNING['WILLOW_EMBER_' .. name])) then return end
 
-  local cooldown_name = name:lower() .. '_fire'
-  local cooldown_time = Get(TUNING, 'WILLOW_' .. name .. '_FIRE_COOLDOWN')
-  if TryTipCD(cooldown_name, cooldown_time) then return end
-
   return CastAOE(
     Find('willow_ember'),
     Get(STRINGS, 'PYROMANCY', 'FIRE_' .. name) or Get(STRINGS, 'PYROMANCY', name .. '_FIRE'),
@@ -632,7 +617,6 @@ local GHOST_CMD_SKILL = {
   HAUNT_AT = 'wendy_ghostcommand_3',
   SCARE = 'wendy_ghostcommand_3',
 }
-local HAS_GHOST_CMD_CD = { ESCAPE = true, ATTACK_AT = true, HAUNT_AT = true, SCARE = true }
 local IS_GHOST_CMD_AOE = { ATTACK_AT = true, HAUNT_AT = true }
 
 local function GhostCommand(name)
@@ -640,14 +624,6 @@ local function GhostCommand(name)
   if not (flower and HasSkill(GHOST_CMD_SKILL[name])) then return end
 
   if ThePlayer:HasTag('ghostfriend_notsummoned') then return Use(flower, 'CASTSUMMON') end
-
-  if HAS_GHOST_CMD_CD[name] then
-    local is_gestalt_attack = name == 'ATTACK_AT' and FindEntity(ThePlayer, 80, IsFollowing, { 'abigail', 'gestalt' })
-    local cooldown_name = is_gestalt_attack and 'do_ghost_attackat' or 'ghostcommand'
-    local time = is_gestalt_attack and (TUNING.WENDYSKILL_GESTALT_ATTACKAT_COMMAND_COOLDOWN or 10)
-      or (TUNING.WENDYSKILL_COMMAND_COOLDOWN or 4)
-    if TryTipCD(cooldown_name, time) then return end
-  end
 
   local spell_name = Get(STRINGS, 'GHOSTCOMMANDS', name) or Get(STRINGS, 'ACTIONS', 'COMMUNEWITHSUMMONED', name)
   if IS_GHOST_CMD_AOE[name] then
