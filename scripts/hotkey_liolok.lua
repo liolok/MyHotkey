@@ -684,6 +684,52 @@ fn.ToggleWxScreech = function() return IsPlaying('wx78') and DoRightClickOnPlaye
 fn.ToggleWxShielding = function() return IsPlaying('wx78') and DoRightClickOnPlayer('TOGGLEWXSHIELDING') end
 
 --------------------------------------------------------------------------------
+-- Woodie | 伍迪
+
+local IS_WERE_ITEM = { wereitem_beaver = true, wereitem_goose = true, wereitem_moose = true }
+
+local function FindFirstWereItem()
+  local bar = Inv() -- inventory bar
+  if not bar then return end
+
+  for slot = 1, bar:GetNumSlots() do
+    local item = bar:GetItemInSlot(slot)
+    if IS_WERE_ITEM[Get(item, 'prefab')] then return item end
+  end
+
+  local backpack = Get(bar, 'GetOverflowContainer')
+  if not backpack then return end
+
+  for slot = 1, backpack:GetNumSlots() do
+    local item = backpack:GetItemInSlot(slot)
+    if IS_WERE_ITEM[Get(item, 'prefab')] then return item end
+  end
+end
+
+local function UnequipAll() -- credit: 川小胖 workshop-3020497678
+  local inv_rep, inv_cmp = Inv(), Get(ThePlayer, 'components', 'inventory')
+  if not inv_rep then return end
+
+  for _, item in pairs(inv_rep:GetEquips() or {}) do
+    if item and not item:HasTag('backpack') then
+      if inv_cmp then
+        inv_cmp:ControllerUseItemOnSelfFromInvTile(item)
+      else -- 川小胖: skip the inventory_classified and send rpc directly to ignore the stupid busy time (see inventory_classified:IsBusy)
+        SendRPCToServer(RPC.ControllerUseItemOnSelfFromInvTile, ACTIONS.UNEQUIP.code, item)
+      end
+    end
+  end
+  return true
+end
+
+fn.UseWereItem = function()
+  if not IsPlaying('woodie') then return end
+
+  local idol = FindFirstWereItem()
+  return idol and UnequipAll() and Use(idol, 'EAT')
+end
+
+--------------------------------------------------------------------------------
 -- Maxwell | 麦斯威尔
 
 fn.UseMagicianToolOrStop = function()

@@ -198,6 +198,16 @@ Header('WX-78')
 Config('ToggleWxScreech', T('WX-78: Initiate/Terminate Sonic Waves', 'WX-78：启动/终止声波'))
 Config('ToggleWxShielding', T('WX-78: Activate/Deactivate Block', 'WX-78：激活/关闭格挡'))
 
+Header('Woodie', '伍迪')
+Config(
+  'UseWereItem',
+  T('Woodie: Kitschy Idol', '伍迪：俗气雕像'),
+  T(
+    'Find first idol in inventory bar then backpack, unequip all except backpack then eat.',
+    '在物品栏和背包找到第一个雕像，卸下背包之外所有装备再吃。'
+  )
+)
+
 Header('Maxwell', '麦斯威尔')
 Config(
   'UseMagicianToolOrStop',

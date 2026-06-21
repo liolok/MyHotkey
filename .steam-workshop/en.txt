@@ -65,6 +65,11 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 [*]Activate/Deactivate Block
 [/list]
 
+[h3]Woodie[/h3]
+[list]
+[*]Kitschy Idol: Find first idol in inventory bar then backpack, unequip all except backpack then eat.
+[/list]
+
 [h3]Maxwell[/h3]
 [list]
 [*]Use Magician's Top Hat, or Stop.
