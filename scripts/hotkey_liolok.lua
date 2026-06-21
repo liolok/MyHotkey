@@ -544,6 +544,14 @@ local function Fire(name, is_target_only)
   if not (IsPlaying('willow') and HasSkill(FIRE_SKILL[name])) then return end
   if not (Inv() and Inv():Has('willow_ember', TUNING['WILLOW_EMBER_' .. name])) then return end
 
+  if name == 'LUNAR' then -- don't cancel Lunar Flame!
+    local percent = Get(ThePlayer, 'components', 'spellbookcooldowns'):GetSpellCooldownPercent('lunar_fire') or 0
+    local cooldown = TUNING.WILLOW_LUNAR_FIRE_COOLDOWN or 13
+    local fire_time = TUNING.WILLOW_LUNAR_FIRE_TIME or 5
+    local time_spent = (1 - percent) * cooldown
+    if time_spent <= fire_time + 0.1 then return end
+  end
+
   return CastAOE(
     Find('willow_ember'),
     Get(STRINGS, 'PYROMANCY', 'FIRE_' .. name) or Get(STRINGS, 'PYROMANCY', name .. '_FIRE'),
