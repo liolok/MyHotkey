@@ -573,13 +573,25 @@ fn.FireShadow = function() return Fire('SHADOW') end
 --------------------------------------------------------------------------------
 -- Wolfgang | 沃尔夫冈
 
-fn.UseDumbBell = function()
+local function FindDumbbell()
+  return FindPrefabs(
+    'dumbbell_gem',
+    'dumbbell_marble',
+    'dumbbell_golden',
+    'dumbbell',
+    'dumbbell_bluegem',
+    'dumbbell_redgem',
+    'dumbbell_heat'
+  )
+end
+
+fn.UseDumbBell = function() return IsPlaying('wolfgang') and SwitchHand(FindDumbbell()) end
+
+fn.LiftDumbbellOrStop = function()
   if not IsPlaying('wolfgang') then return end
 
-  local bell = FindPrefabs('dumbbell_gem', 'dumbbell_marble', 'dumbbell_golden', 'dumbbell')
-    or FindPrefabs('dumbbell_bluegem', 'dumbbell_redgem', 'dumbbell_heat')
-  return SwitchHand(bell)
-    and not IsRiding()
+  local bell = FindDumbbell()
+  return (Use(bell, 'EQUIP') and not IsRiding())
     and Use(bell, bell:HasTag('lifting') and 'STOP_LIFT_DUMBBELL' or 'LIFT_DUMBBELL')
 end
 

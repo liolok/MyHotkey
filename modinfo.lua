@@ -161,9 +161,19 @@ Config(
   'UseDumbBell',
   T('Wolfgang: Dumbbell', '沃尔夫冈：哑铃'),
   T(
-    [[Equip a Dumbbell and start lifting, or switch back to former hand equipment.
+    [[Equip Dumbbell, or switch back to former hand equipment.
 Priority: Gembell > Marbell > Golden Dumbbell > Dumbbell > Icebell > Firebell > Thermbell]],
-    [[装备一个哑铃并开始举重，或切换回之前的手部装备。
+    [[装备哑铃，或切换回之前的手部装备。
+优先级：宝石 > 大理石 > 黄金 > 石头 > 冰铃 > 火铃 > 热铃]]
+  )
+)
+Config(
+  'LiftDumbbellOrStop',
+  T('Wolfgang: Lift Dumbbell or Stop', '沃尔夫冈：举重/停止'),
+  T(
+    [[Equip Dumbbell and "Lift", or "Stop Lifting".
+Priority: Gembell > Marbell > Golden Dumbbell > Dumbbell > Icebell > Firebell > Thermbell]],
+    [[装备哑铃并“举起”，或者“停止举重”。
 优先级：宝石 > 大理石 > 黄金 > 石头 > 冰铃 > 火铃 > 热铃]]
   )
 )

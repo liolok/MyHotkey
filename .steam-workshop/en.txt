@@ -38,9 +38,10 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 
 [h3]Wolfgang[/h3]
 [list]
-[*]Dumbbell: Equip a Dumbbell and start lifting, or switch back to former hand equipment.
-(Priority: Gembell > Marbell > Golden Dumbbell > Dumbbell > Icebell > Firebell > Thermbell)
+[*]Dumbbell: Equip Dumbbell, or switch back to former hand equipment.
+[*]Lift Dumbbell or Stop: Equip Dumbbell and "Lift", or "Stop Lifting".
 [/list]
+(Priority: Gembell > Marbell > Golden Dumbbell > Dumbbell > Icebell > Firebell > Thermbell)
 
 [h3]Wendy[/h3]
 [list]
