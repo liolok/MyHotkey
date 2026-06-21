@@ -744,11 +744,22 @@ fn.UseBattleSong = function()
     )
 end
 
+local function IsWalkButtonDown()
+  return TheInput:IsControlPressed(CONTROL_MOVE_UP)
+    or TheInput:IsControlPressed(CONTROL_MOVE_DOWN)
+    or TheInput:IsControlPressed(CONTROL_MOVE_LEFT)
+    or TheInput:IsControlPressed(CONTROL_MOVE_RIGHT)
+end
+
 local function GetStrikeTargetPosition()
   if not (TheWorld and TheWorld.Map) then return end
 
-  for distance = 7.99, 0.1, -0.1 do
-    local p = GetTargetPosition(distance)
+  local furthest = 7.99
+  if not Get(ThePlayer, 'components', 'locomotor', 'is_prediction_enabled') then
+    if IsWalkButtonDown() then furthest = 7 end -- to avoid turning back during walking
+  end
+  for distance = furthest, 0.1, -0.1 do
+    local p = GetTargetPosition(distance, true) -- allow_closer
     if p and TheWorld.Map:IsPassableAtPoint(p.x, 0, p.z) then return p end
   end
 end

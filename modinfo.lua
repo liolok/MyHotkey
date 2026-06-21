@@ -208,7 +208,10 @@ Config(
 Config(
   'StrikeOrBlock',
   T('Wigfrid: Lightning Strike / Block', '薇格弗德：闪电突袭/格挡'),
-  T('Dash distance up to 8 walls', '冲刺距离最远可达两格地皮')
+  T(
+    'Dash up to 8 walls far, short dash to cursor is also allowed.',
+    '冲刺最远可达两格地皮，也可以短距离冲到光标处。'
+  )
 )
 
 Header('Webber', '韦伯')
