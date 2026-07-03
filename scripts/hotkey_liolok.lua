@@ -314,6 +314,8 @@ fn.ToggleUmbrella = function()
   end
 end
 
+fn.Dance = function() return IsPlaying() and require('usercommands').RunUserCommand('dance', {}, ThePlayer) end
+
 local BLOCK_MURDER = { oceanfish_small_8_inv = true, oceanfish_medium_8_inv = true } -- Scorching Sunfish & Ice Bream | 炽热太阳鱼和冰鲷鱼
 local function CanMurder(item) -- murderable and health of componentactions.lua
   return (item and not BLOCK_MURDER[item.prefab])

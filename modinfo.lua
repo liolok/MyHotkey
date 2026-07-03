@@ -98,6 +98,7 @@ Config(
     '如果地上没有暗影伞，会尝试丢下一个并打开。'
   )
 )
+Config('Dance', T('Dance', '跳舞'), T('For Wendy and Maxwell players', '给温蒂和老麦玩家用'))
 Config(
   'Murder',
   T('Murder', '谋杀'),
