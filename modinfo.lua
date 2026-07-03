@@ -49,6 +49,8 @@ for i = 1, #numpad do
   keys[#keys + 1] = { description = 'Numpad ' .. key, data = 'KEY_KP_' .. key:upper() }
 end
 
+keys_placeholder = { { description = T('Please Enable Mod and Apply', '请启用模组并应用'), data = 'KEY_DISABLED' } }
+
 local function Header(...)
   configuration_options[#configuration_options + 1] =
     { name = T(...), options = { { description = '', data = 0 } }, default = 0 }
@@ -56,7 +58,7 @@ end
 
 local function Config(name, label, hover)
   configuration_options[#configuration_options + 1] =
-    { name = name, label = label, hover = hover, options = keys, default = 'KEY_DISABLED' }
+    { name = name, label = label, hover = hover, options = keys_placeholder, default = 'KEY_DISABLED' }
 end
 
 Config(

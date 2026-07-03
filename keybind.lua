@@ -53,6 +53,7 @@ end
 local configs = {}
 local is_keybind = {}
 for _, config in ipairs(modinfo.configuration_options) do
+  if config.options == modinfo.keys_placeholder then config.options = modinfo.keys end
   if config.options == modinfo.keys then
     table.insert(configs, config)
     is_keybind[config.name] = true
