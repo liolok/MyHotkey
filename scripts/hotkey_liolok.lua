@@ -1014,6 +1014,14 @@ local function FindWatch(name) return Find('pocketwatch_' .. name, 'pocketwatch_
 fn.UsePocketWatchHeal = function() return IsPlaying('wanda') and Use(FindWatch('heal'), 'CAST_POCKETWATCH') end
 fn.UsePocketWatchWarp = function() return IsPlaying('wanda') and Use(FindWatch('warp'), 'CAST_POCKETWATCH') end
 
+fn.UsePocketWatchRevive = function() -- credit: RICK workshop-2895442474/scripts/CharacterKeybinds.lua:L650
+  if not IsPlaying('wanda') then return end
+
+  local watch = FindWatch('revive')
+  local ghost = watch and ThePlayer:GetNearestPlayer(false) -- isalive
+  return ghost and ThePlayer:IsNear(ghost, 40) and UseOnScene(watch, 'CAST_POCKETWATCH', ghost)
+end
+
 --------------------------------------------------------------------------------
 
 return fn

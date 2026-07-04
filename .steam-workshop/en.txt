@@ -130,6 +130,7 @@ No need to restart game, [url=https://steamcommunity.com/sharedfiles/filedetails
 [list]
 [*]Activate Ageless Watch
 [*]Activate Backstep Watch
+[*]Revive with Second Chance Watch
 [/list]
 
 [h1]Recommendations[/h1]

@@ -316,3 +316,4 @@ Config(
 Header('Wanda', '旺达')
 Config('UsePocketWatchHeal', T('Wanda: Activate Ageless Watch', '旺达：激活不老表'))
 Config('UsePocketWatchWarp', T('Wanda: Activate Backstep Watch', '旺达：激活倒走表'))
+Config('UsePocketWatchRevive', T('Wanda: Revive with Second Chance Watch', '旺达：第二次机会表复活队友'))
