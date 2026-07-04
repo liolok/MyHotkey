@@ -19,6 +19,14 @@ icon = 'modicon.tex'
 icon_atlas = 'modicon.xml'
 configuration_options = {}
 
+keys_placeholder = {
+  {
+    description = T('Please Enable Mod First', '请先启用模组'),
+    hover = T('Please "Enable" this mod and click "Apply"', '请「启用」本模组并点击「应用」'),
+    data = 'KEY_DISABLED',
+  },
+}
+
 local keyboard = { -- from STRINGS.UI.CONTROLSSCREEN.INPUTS[1] of strings.lua, need to match constants.lua too.
   { 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12', 'Print', 'ScrolLock', 'Pause' },
   { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' },
@@ -48,8 +56,6 @@ for i = 1, #numpad do
   local key = numpad[i]
   keys[#keys + 1] = { description = 'Numpad ' .. key, data = 'KEY_KP_' .. key:upper() }
 end
-
-keys_placeholder = { { description = T('Please Enable Mod and Apply', '请启用模组并应用'), data = 'KEY_DISABLED' } }
 
 local function Header(...)
   configuration_options[#configuration_options + 1] =
