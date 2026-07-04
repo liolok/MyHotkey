@@ -111,6 +111,8 @@ local function IsRecharging(item) return Get(item, 'replica', 'inventoryitem', '
 --------------------------------------------------------------------------------
 -- Inventory Item Action | 格子物品操作
 
+local function ComInv() return Get(ThePlayer, 'components', 'inventory') end
+
 local function Ctl() return Get(ThePlayer, 'components', 'playercontroller') end
 
 local function Drop(item)
@@ -127,13 +129,26 @@ end
 
 local function Use(item, action)
   if item then
-    if Get(TheWorld, 'ismastersim') and Inv() then -- local forest-only world
-      Inv():UseItemFromInvTile(item)
+    local act = BufferedAction(ThePlayer, nil, ACTIONS[action], item)
+    if ComInv() and Get(TheWorld, 'ismastersim') then -- ThePlayer has inventory component in local forest-only world
+      ComInv():UseItemFromInvTile(item, act.action.code, act.action.mod_name)
     elseif Ctl() then
-      Ctl():RemoteUseItemFromInvTile(BufferedAction(ThePlayer, nil, ACTIONS[action], item), item)
+      Ctl():RemoteUseItemFromInvTile(act, item)
     end
     return true
   end
+end
+
+local function UseOnScene(item, action, target)
+  if not (item and action) then return end
+
+  local act = BufferedAction(ThePlayer, target, ACTIONS[action], item)
+  if ComInv() and Get(TheWorld, 'ismastersim') then -- ThePlayer has inventory component in local forest-only world
+    ComInv():ControllerUseItemOnSceneFromInvTile(item, target, act.action.code, act.action.mod_name)
+  elseif Ctl() then
+    Ctl():RemoteControllerUseItemOnSceneFromInvTile(act, item)
+  end
+  return true
 end
 
 local former_hand = {}
@@ -709,13 +724,10 @@ local function FindFirstWereItem()
 end
 
 local function UnequipAll() -- credit: 川小胖 workshop-3020497678
-  local inv_rep, inv_cmp = Inv(), Get(ThePlayer, 'components', 'inventory')
-  if not inv_rep then return end
-
-  for _, item in pairs(inv_rep:GetEquips() or {}) do
+  for _, item in pairs(Inv() and Inv():GetEquips() or {}) do
     if item and not item:HasTag('backpack') then
-      if inv_cmp then
-        inv_cmp:ControllerUseItemOnSelfFromInvTile(item)
+      if ComInv() then
+        ComInv():ControllerUseItemOnSelfFromInvTile(item)
       else -- 川小胖: skip the inventory_classified and send rpc directly to ignore the stupid busy time (see inventory_classified:IsBusy)
         SendRPCToServer(RPC.ControllerUseItemOnSelfFromInvTile, ACTIONS.UNEQUIP.code, item)
       end
@@ -933,9 +945,7 @@ fn.HireMermGuard = function()
 
   local radius, ignore_height, must_tags = 20, true, { 'mermguard', 'hirable' }
   local merm = FindClosestEntity(ThePlayer, radius, ignore_height, must_tags)
-  if not merm then return end
-
-  return Do(BufferedAction(ThePlayer, merm, ACTIONS.GIVE, food), 'ControllerUseItemOnSceneFromInvTile', food, merm)
+  return merm and UseOnScene(food, 'GIVE', merm)
 end
 
 --------------------------------------------------------------------------------
