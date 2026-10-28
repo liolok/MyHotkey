@@ -8,8 +8,7 @@ No need to restart game, [customize shortcuts](https://steamcommunity.com/shared
 
 - Drop Lantern (or Light Bulb if no Lantern)
 - Open/Close Polar Bearger Bin
-- Walking Cane: Equip a speed-up hand tool, or switch back to former hand equipment.
-  - (Priority: Walking Cane > The Lazy Explorer > King's Staff > Charged Elding Spear > Wooden Walking Stick > Thulecite Club > Speedy Balloon)
+- Walking Cane: Equip a speed-up hand tool, or switch back to former hand equipment. (Priority: Walking Cane > The Lazy Explorer > King's Staff > Charged Elding Spear > Wooden Walking Stick > Thulecite Club > Speedy Balloon)
 - Equip / Use Snurtle Shell Armor
 - Jump In / Travel via: Wormhole, Big Slimy Pit, Time Rift, Sinkhole, Stairs
 - Steer/Stop
@@ -39,8 +38,7 @@ No need to restart game, [customize shortcuts](https://steamcommunity.com/shared
 ### Wolfgang
 
 - Dumbbell: Equip Dumbbell, or switch back to former hand equipment.
-- Lift Dumbbell or Stop: Equip Dumbbell and "Lift", or "Stop Lifting".
-  - (Priority: Gembell > Marbell > Golden Dumbbell > Dumbbell > Icebell > Firebell > Thermbell)
+- Lift Dumbbell or Stop: Equip Dumbbell and "Lift", or "Stop Lifting". (Priority: Gembell > Marbell > Golden Dumbbell > Dumbbell > Icebell > Firebell > Thermbell)
 
 ### Wendy
 
