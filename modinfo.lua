@@ -2,8 +2,7 @@ local function T(en, zh, zht) return ChooseTranslationTable({ en, zh = zh, zht =
 
 name = T('Hotkey of liolok', '热键：李皓奇')
 author = T('liolok', '李皓奇')
-local date = '2026-07-05'
-version = date .. '' -- for revision in same day
+version = 'VERSION_PLACEHOLDER'
 description = T(
   [[󰀏 Tip:
 Enable this mod and click "Apply", its key bindings will be way more easy,
@@ -11,7 +10,7 @@ and also adjustable in bottom of Settings > Controls page.]],
   [[󰀏 提示：
 启用本模组并点击「应用」，它的按键绑定会变得非常方便，
 并且也可以在设置 > 控制页面下方实时调整。]]
-) .. '\n󰀰 ' .. T('Last updated at: ', '最后更新于：') .. date
+) .. '\n󰀰 ' .. T('Version: ', '版本：') .. version
 api_version = 10
 dst_compatible = true
 client_only_mod = true
