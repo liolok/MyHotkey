@@ -255,7 +255,7 @@ end
 fn.UseCane = function()
   return IsPlaying()
     and SwitchHand(
-      FindPrefabs('cane', 'orangestaff', 'spear_wathgrithr_lightning', 'walking_stick', 'ruins_bat')
+      FindPrefabs('cane', 'orangestaff', 'king_cane', 'spear_wathgrithr_lightning', 'walking_stick', 'ruins_bat')
         or FindFueled('balloonspeed')
     )
 end
