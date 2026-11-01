@@ -17,6 +17,7 @@ No need to restart game, [customize shortcuts](https://steamcommunity.com/shared
 - Dance (For Wendy and Maxwell players)
 - Murder (Will ignore Scorching Sunfish & Ice Bream)
 - Read (Preserve one last usage, also balance durability in Bookcase.)
+- Telepoof to Furthest: (If equipped The Lazy Explorer or King's Staff socketed with Orange Gem, Telepoof to furthest passible orange spiral position directed by the mouse cursor.)
 - Batch Move
 - Click Container Button: For example Cook/Wrap/Destroy
 - Save Game (press twice or hold to confirm action)

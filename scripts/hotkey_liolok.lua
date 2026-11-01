@@ -1,5 +1,7 @@
 local fn = {}
 
+local T = TUNING.HOTKEY_LIOLOK or {}
+
 --------------------------------------------------------------------------------
 -- Utility Function | 工具函数
 
@@ -25,10 +27,17 @@ local function Get(head_node, ...)
   return current_node
 end
 
+local function IsThirdPartyModPanelShown()
+  return Get(ThePlayer, 'HUD', 'controls', 'TMI', 'IsTooManyItemsMenuShow') -- Too Many Items
+    or Get(T, 'CONTROLS', 'CPMAPanel', 'IsShow') -- 圆形摆放：https://steamcommunity.com/sharedfiles/filedetails/?id=2914336761
+    or (type(rawget(_G, 'IsBSPJPlayHelperReady')) == 'function' and _G.IsBSPJPlayHelperReady()) -- 基地投影：https://steamcommunity.com/sharedfiles/filedetails/?id=2928652892
+end
+
 local function IsPlaying(character)
   if not (TheWorld and ThePlayer) then return end -- in game, yeah
   if character and ThePlayer.prefab ~= character then return end -- optionally check for right character
   if ThePlayer.HUD and ThePlayer.HUD:HasInputFocus() then return end -- typing or in some menu
+  if IsThirdPartyModPanelShown() then return end
   return true -- it's all good, man
 end
 
@@ -377,6 +386,70 @@ fn.Read = function()
   return Use(book, 'READ')
 end
 
+--------------------------------------------------------------------------------
+-- Telepoof to Furthest | 最远传送
+
+local function CanBlink()
+  local hand = Inv() and Inv():GetEquippedItem(EQUIPSLOTS.HANDS)
+  return (hand and hand:HasActionComponent('blinkstaff'))
+    and not Inv():GetActiveItem() -- nothing is blocking mouse cursor
+    and not TheInput:GetHUDEntityUnderMouse() -- cursor not hovering HUD like clock or inventory bar
+    and not (ThePlayer:HasTag('steeringboat') or ThePlayer:HasTag('rotatingboat')) -- messing with shitty boat
+end
+
+local function CanBlinkTo(x, z)
+  local map = Get(TheWorld, 'Map')
+  if not map then return false end
+  if not (map:IsAboveGroundAtPoint(x, 0, z) or map:GetPlatformAtPoint(x, z) ~= nil) then return false end
+
+  local from = Get(ThePlayer, 'GetPosition') or Vector3(0, 0, 0)
+  local to = Vector3(x, 0, z)
+  return IsTeleportingPermittedFromPointToPoint(from.x, from.y, from.z, to.x, to.y, to.z)
+end
+
+local function GetMostFarPosition()
+  if not CanBlink() then return end
+
+  local player_x, player_z = Get(ThePlayer, 'GetPosition', 'x'), Get(ThePlayer, 'GetPosition', 'z')
+  local cursor_x, cursor_z = Get(TheInput, 'GetWorldPosition', 'x'), Get(TheInput, 'GetWorldPosition', 'z')
+  if not (player_x and player_z and cursor_x and cursor_z) then return end
+
+  local dx, dz = cursor_x - player_x, cursor_z - player_z
+  local distance = math.sqrt(dx ^ 2 + dz ^ 2) -- distance between player and cursor
+  local dist_max = ACTIONS.BLINK.distance or 36
+  if distance > dist_max / 9 then -- dead zone
+    for dist = dist_max, dist_max / 3, -0.1 do
+      local ratio = dist / distance
+      local x, z = player_x + dx * ratio, player_z + dz * ratio
+      if CanBlinkTo(x, z) then return x, z end
+    end
+  end
+end
+
+fn.BlinkToMostFar = function()
+  local x, z = GetMostFarPosition()
+  return x and z and SendRPCToServer(RPC.RightClick, ACTIONS.BLINK.code, x, z)
+end
+
+fn.RefreshBlinkMarker = function(self) -- inject playercontroller component
+  local OldOnUpdate = self.OnUpdate
+  function self:OnUpdate(...)
+    local marker = 'generic_blink_marker_to_furthest'
+    if Get(T, 'handler', 'BlinkToMostFar') then -- key binding enabled
+      self[marker] = self[marker] or SpawnPrefab('generic_blink_marker')
+      self[marker]:Refresh(GetMostFarPosition())
+    elseif self[marker] then -- key binding disabled in game
+      self[marker]:Remove()
+      self[marker] = nil
+    end
+
+    return OldOnUpdate(self, ...)
+  end
+end
+
+--------------------------------------------------------------------------------
+-- Batch Move | 批量移动
+
 local function CanMove(item, to_container)
   if not (item and to_container) then return end
   if not to_container:IsFull() then return true end -- got empty slot so good to go
@@ -497,6 +570,8 @@ fn.BatchMove = function()
     end
   end
 end
+
+--------------------------------------------------------------------------------
 
 fn.ClickContainerButton = function() -- credit: Tony workshop-2111412487/main/modules/quick_wrap.lua
   if not (IsPlaying() and Inv()) then return end

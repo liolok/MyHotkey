@@ -120,6 +120,16 @@ Config(
     '保留最后一次使用，还会在书架里均衡耐久。'
   )
 )
+Config(
+  'BlinkToMostFar',
+  T('Telepoof to Furthest', '最远传送'),
+  T(
+    [[If equipped The Lazy Explorer or King's Staff socketed with Orange Gem,
+Telepoof to furthest passible orange spiral position directed by the mouse cursor.]],
+    [[装备懒人魔杖或镶嵌橙宝石的国王魔杖时，
+传送到鼠标光标所指方向最远且可以落脚的橙色漩涡位置。]]
+  )
+)
 Config('BatchMove', T('Batch Move', '批量移动'))
 Config(
   'ClickContainerButton',
