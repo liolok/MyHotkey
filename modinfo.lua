@@ -166,6 +166,7 @@ Config(
   )
 )
 Config('DropBernie', T('Willow: Drop Bernie', '薇洛：丢弃伯尼'))
+Config('PickUpBernie', T('Willow: Pick Up Bernie', '薇洛：拾起伯尼'))
 Config('FireThrow', T('Willow: Flame Cast (Fast)', '薇洛：火焰投掷（快速）'))
 Config('FireThrowIndicator', T('Willow: Flame Cast (Manual)', '薇洛：火焰投掷（手动）'))
 Config('FireBurst', T('Willow: Combustion', '薇洛：燃烧术'))

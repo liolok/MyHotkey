@@ -624,6 +624,15 @@ end
 
 fn.DropBernie = function() return IsPlaying('willow') and Drop(FindFueled('bernie_inactive')) end
 
+fn.PickUpBernie = function()
+  if not IsPlaying('willow') then return end
+
+  local x, y, z = ThePlayer.Transform:GetWorldPosition()
+  for _, v in ipairs(TheSim:FindEntities(x, y, z, 4, { 'nopunch' })) do
+    if Get(v, 'prefab') == 'bernie_inactive' then return DoControllerAction(v, 'PICKUP') end
+  end
+end
+
 local FIRE_SKILL = {
   THROW = 'willow_embers',
   BURST = 'willow_fire_burst',

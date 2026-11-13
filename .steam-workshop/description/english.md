@@ -29,6 +29,7 @@ No need to restart game, [customize shortcuts](https://steamcommunity.com/shared
 - Lighter: Equip Lighter, or switch back to former hand equipment.
 - Absorb Fire or Stop: Equip Lighter and "Absorb Fire", or "Stop Absorbing Fire".
 - Drop Bernie
+- Pick Up Bernie
 - Flame Cast (fast/manual cast)
 - Combustion (fast cast)
 - Fire Ball (fast/manual cast)
