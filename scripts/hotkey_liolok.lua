@@ -628,8 +628,9 @@ fn.PickUpBernie = function()
   if not IsPlaying('willow') then return end
 
   local x, y, z = ThePlayer.Transform:GetWorldPosition()
-  for _, v in ipairs(TheSim:FindEntities(x, y, z, 4, { 'nopunch' })) do
-    if Get(v, 'prefab') == 'bernie_inactive' then return DoControllerAction(v, 'PICKUP') end
+  for _, v in ipairs(TheSim:FindEntities(x, y, z, 4, { '_inventoryitem' }, { 'INLIMBO' })) do
+    local prefab = Get(v, 'prefab')
+    if prefab == 'bernie_inactive' or prefab == 'bernie_active' then return DoControllerAction(v, 'PICKUP') end
   end
 end
 
