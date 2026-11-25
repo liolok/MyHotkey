@@ -26,7 +26,7 @@ local Text = require('widgets/text')
 local TEMPLATES = require('widgets/redux/templates')
 local OptionsScreen = require('screens/redux/optionsscreen')
 
-local KEYBOARD = { KEY_QUOTE = 39, KEY_BACKQUOTE = 96 } -- for missing definitions in constants.lua
+local KEYBOARD = { KEY_QUOTE = 39, KEY_COMMA = 44, KEY_BACKQUOTE = 96 } -- for missing definitions in constants.lua
 
 -- emoji of Middle Mouse Button, Mouse Button 4 and 5 => code number
 local MOUSE = { ['\238\132\130'] = 1002, ['\238\132\131'] = 1005, ['\238\132\132'] = 1006 }
