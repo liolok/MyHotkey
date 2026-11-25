@@ -257,6 +257,8 @@ end
 
 fn.DropLantern = function() return IsPlaying() and Drop(FindFueled('lantern') or Find('lightbulb')) end
 
+fn.UseLantern = function() return IsPlaying() and SwitchHand(FindFueled('lantern')) end
+
 fn.UseBeargerFurSack = function()
   return (not IsInCD('Polar Bearger Bin') and IsPlaying()) and Use(Find('beargerfur_sack'), 'RUMMAGE')
 end

@@ -72,6 +72,14 @@ Config(
   T('Drop Light Bulb if no Lantern', '没有提灯的话会丢弃荧光果')
 )
 Config(
+  'UseLantern',
+  T('Equip Lantern', '装备提灯'),
+  T(
+    'Equip a Lantern or switch back to former hand equipment.',
+    '装备一个提灯，或切换回之前的手部装备。'
+  )
+)
+Config(
   'UseBeargerFurSack',
   T('Polar Bearger Bin', '极地熊獾桶'),
   T('Open/Close Polar Bearger Bin', '打开/关闭极地熊獾桶')
