@@ -7,6 +7,7 @@ No need to restart game, [customize shortcuts](https://steamcommunity.com/shared
 ### General
 
 - Drop Lantern (or Light Bulb if no Lantern)
+- Equip Lantern: Equip a Lantern or switch back to former hand equipment.
 - Open/Close Polar Bearger Bin
 - Walking Cane: Equip a speed-up hand tool, or switch back to former hand equipment. (Priority: Walking Cane > The Lazy Explorer > King's Staff > Charged Elding Spear > Wooden Walking Stick > Thulecite Club > Speedy Balloon)
 - Equip / Use Snurtle Shell Armor
